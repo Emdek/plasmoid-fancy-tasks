@@ -1,6 +1,6 @@
 /***********************************************************************************
 * Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
-* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -18,10 +18,10 @@
 *
 ***********************************************************************************/
 
-#include "FancyTasksTask.h"
+#include "Task.h"
 
-#include <QTimer>
-#include <QVarLengthArray>
+#include <QtCore/QTimer>
+#include <QtCore/QVarLengthArray>
 
 #include <KLocale>
 #include <NETRootInfo>

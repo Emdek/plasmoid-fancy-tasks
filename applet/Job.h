@@ -1,6 +1,6 @@
 /***********************************************************************************
 * Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
-* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 #ifndef FANCYTASKSJOB_HEADER
 #define FANCYTASKSJOB_HEADER
 
-#include "FancyTasksApplet.h"
+#include "Applet.h"
 
 #include <KIcon>
 #include <KMenu>

@@ -1,6 +1,6 @@
 /***********************************************************************************
 * Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
-* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -18,43 +18,47 @@
 *
 ***********************************************************************************/
 
-#ifndef FANCYTASKSDROPZONE_HEADER
-#define FANCYTASKSDROPZONE_HEADER
+#ifndef FANCYTASKSSEPARATOR_HEADER
+#define FANCYTASKSSEPARATOR_HEADER
 
-#include <QPainter>
-#include <QPointer>
-#include <QGraphicsWidget>
+#include <QtCore/QPointer>
+#include <QtGui/QGraphicsSceneMouseEvent>
+
+#include <Plasma/SvgWidget>
 
 namespace FancyTasks
 {
 
 class Applet;
 
-class DropZone : public QGraphicsWidget
+class Separator : public Plasma::SvgWidget
 {
     Q_OBJECT
 
     public:
-        DropZone(Applet *applet);
+        Separator(Plasma::Svg *svg, Applet *applet);
 
-        int index() const;
+        QPainterPath shape() const;
         bool isVisible() const;
 
     protected:
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-        void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
-        void dropEvent(QGraphicsSceneDragDropEvent *event);
+        void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
     public slots:
         void setSize(qreal size);
-        void show(int index);
-        void hide(bool force = false);
+        void updateOrientation();
+        void show();
+        void hide();
 
     private:
         QPointer<Applet> m_applet;
         qreal m_size;
-        int m_index;
-        bool m_visible;
+        bool m_isVisible;
+
+    signals:
+        void hoverMoved(QGraphicsWidget *item, qreal across);
+        void hoverLeft();
 };
 
 }

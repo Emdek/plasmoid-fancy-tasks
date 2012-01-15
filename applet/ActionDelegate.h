@@ -1,6 +1,6 @@
 /***********************************************************************************
 * Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
-* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -18,47 +18,26 @@
 *
 ***********************************************************************************/
 
-#ifndef FANCYTASKSSEPARATOR_HEADER
-#define FANCYTASKSSEPARATOR_HEADER
+#ifndef FANCYTASKSACTIONDELEGATE_H
+#define FANCYTASKSACTIONDELEGATE_H
 
-#include <QPointer>
-#include <QGraphicsSceneMouseEvent>
-
-#include <Plasma/SvgWidget>
+#include <QtGui/QStyledItemDelegate>
 
 namespace FancyTasks
 {
 
-class Applet;
-
-class Separator : public Plasma::SvgWidget
+class ActionDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
-    public:
-        Separator(Plasma::Svg *svg, Applet *applet);
+public:
+    ActionDelegate(QObject *parent = NULL);
 
-        QPainterPath shape() const;
-        bool isVisible() const;
-
-    protected:
-        void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-    public slots:
-        void setSize(qreal size);
-        void updateOrientation();
-        void show();
-        void hide();
-
-    private:
-        QPointer<Applet> m_applet;
-        qreal m_size;
-        bool m_isVisible;
-
-    signals:
-        void hoverMoved(QGraphicsWidget *item, qreal across);
-        void hoverLeft();
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QString displayText(const QVariant &value, const QLocale &locale) const;
 };
 
 }

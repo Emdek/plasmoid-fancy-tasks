@@ -1,6 +1,6 @@
 /***********************************************************************************
 * Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
-* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -22,21 +22,21 @@
 
 #include "config-fancytasks.h"
 
-#include "FancyTasksApplet.h"
-#include "FancyTasksConfiguration.h"
-#include "FancyTasksIcon.h"
-#include "FancyTasksTask.h"
-#include "FancyTasksLauncher.h"
-#include "FancyTasksJob.h"
-#include "FancyTasksSeparator.h"
-#include "FancyTasksDropZone.h"
-#include "FancyTasksMenu.h"
+#include "Applet.h"
+#include "Configuration.h"
+#include "Icon.h"
+#include "Task.h"
+#include "Launcher.h"
+#include "Job.h"
+#include "Separator.h"
+#include "DropZone.h"
+#include "Menu.h"
 
 #include <cmath>
 
-#include <QPainter>
-#include <QGraphicsView>
-#include <QDesktopWidget>
+#include <QtGui/QPainter>
+#include <QtGui/QGraphicsView>
+#include <QtGui/QDesktopWidget>
 
 #include <KRun>
 #include <KIcon>
@@ -2005,5 +2005,3 @@ QPixmap Applet::windowPreview(WId window, int size)
 }
 
 }
-
-#include "FancyTasksApplet.moc"

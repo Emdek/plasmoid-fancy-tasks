@@ -1,6 +1,6 @@
 /***********************************************************************************
 * Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
-* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -18,26 +18,39 @@
 *
 ***********************************************************************************/
 
-#ifndef FANCYTASKSACTIONDELEGATE_H
-#define FANCYTASKSACTIONDELEGATE_H
+#ifndef FANCYTASKSMENU_HEADER
+#define FANCYTASKSMENU_HEADER
 
-#include <QStyledItemDelegate>
+#include "Applet.h"
+
+#include <KMenu>
 
 namespace FancyTasks
 {
 
-class ActionDelegate : public QStyledItemDelegate
+class Menu : public KMenu
 {
     Q_OBJECT
 
-public:
-    ActionDelegate(QObject *parent = NULL);
+    public:
+        Menu(QList<WId> windows = QList<WId>(), QWidget *parent = NULL);
 
-    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    QString displayText(const QVariant &value, const QLocale &locale) const;
+        QAction* addAction(WId window);
+        QAction* addAction(const QIcon &icon, const QString &text, WId window = 0);
+
+    protected:
+        void dragEnterEvent(QDragEnterEvent *event);
+        void dragMoveEvent(QDragMoveEvent *event);
+        void dragLeaveEvent(QDragLeaveEvent *event);
+        void dropEvent(QDropEvent *event);
+        void mousePressEvent(QMouseEvent *event);
+        void mouseMoveEvent(QMouseEvent *event);
+        void mouseReleaseEvent(QMouseEvent *event);
+        void contextMenuEvent(QContextMenuEvent *event);
+
+    private:
+        QPoint m_dragStartPosition;
+        QAction *m_currentAction;
 };
 
 }

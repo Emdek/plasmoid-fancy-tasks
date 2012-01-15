@@ -18,7 +18,7 @@
 *
 ***********************************************************************************/
 
-#include "FancyPanel.h"
+#include "Panel.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -157,5 +157,3 @@ Plasma::Applet* FancyPanel::addApplet(const QString &name, const QVariantList &a
 
     return NULL;
 }
-
-#include "FancyPanel.moc"

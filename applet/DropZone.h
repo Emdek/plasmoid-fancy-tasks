@@ -1,6 +1,6 @@
 /***********************************************************************************
 * Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
-* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -18,39 +18,43 @@
 *
 ***********************************************************************************/
 
-#ifndef FANCYTASKSMENU_HEADER
-#define FANCYTASKSMENU_HEADER
+#ifndef FANCYTASKSDROPZONE_HEADER
+#define FANCYTASKSDROPZONE_HEADER
 
-#include "FancyTasksApplet.h"
-
-#include <KMenu>
+#include <QtCore/QPointer>
+#include <QtGui/QPainter>
+#include <QtGui/QGraphicsWidget>
 
 namespace FancyTasks
 {
 
-class Menu : public KMenu
+class Applet;
+
+class DropZone : public QGraphicsWidget
 {
     Q_OBJECT
 
     public:
-        Menu(QList<WId> windows = QList<WId>(), QWidget *parent = NULL);
+        DropZone(Applet *applet);
 
-        QAction* addAction(WId window);
-        QAction* addAction(const QIcon &icon, const QString &text, WId window = 0);
+        int index() const;
+        bool isVisible() const;
 
     protected:
-        void dragEnterEvent(QDragEnterEvent *event);
-        void dragMoveEvent(QDragMoveEvent *event);
-        void dragLeaveEvent(QDragLeaveEvent *event);
-        void dropEvent(QDropEvent *event);
-        void mousePressEvent(QMouseEvent *event);
-        void mouseMoveEvent(QMouseEvent *event);
-        void mouseReleaseEvent(QMouseEvent *event);
-        void contextMenuEvent(QContextMenuEvent *event);
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
+        void dropEvent(QGraphicsSceneDragDropEvent *event);
+
+    public slots:
+        void setSize(qreal size);
+        void show(int index);
+        void hide(bool force = false);
 
     private:
-        QPoint m_dragStartPosition;
-        QAction *m_currentAction;
+        QPointer<Applet> m_applet;
+        qreal m_size;
+        int m_index;
+        bool m_visible;
 };
 
 }

@@ -1,3 +1,6 @@
+1.0.97 (01.02.2012):
+- code cleanup.
+
 1.0.96 (01.12.2011):
 - removed group colors (upstream change in libtaskmanager);
 - more friendly install script;

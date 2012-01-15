@@ -10,7 +10,7 @@ include_directories(
    ${KDE4_INCLUDES}
    )
 
-set(fancypanel_SRCS FancyPanel.cpp)
+set(fancypanel_SRCS Panel.cpp)
 
 add_subdirectory(locale)
 

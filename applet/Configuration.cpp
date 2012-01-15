@@ -1,6 +1,6 @@
 /***********************************************************************************
 * Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
-* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -18,13 +18,13 @@
 *
 ***********************************************************************************/
 
-#include "FancyTasksConfiguration.h"
-#include "FancyTasksActionDelegate.h"
-#include "FancyTasksApplet.h"
-#include "FancyTasksLauncher.h"
+#include "Configuration.h"
+#include "ActionDelegate.h"
+#include "Applet.h"
+#include "Launcher.h"
 
-#include <QLabel>
-#include <QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QHBoxLayout>
 
 #include <KUrl>
 #include <KIcon>
