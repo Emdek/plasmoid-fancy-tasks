@@ -1,0 +1,675 @@
+# translation of plasma_applet_fancytasks.po to Ukrainian
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Yuri Chornoivan <yurchor@ukr.net>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: plasma_applet_fancytasks\n"
+"Report-Msgid-Bugs-To: emdeck@gmail.com\n"
+"POT-Creation-Date: 2010-04-27 16:49+0200\n"
+"PO-Revision-Date: 2009-12-25 07:41+0200\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <translation@linux.org.ua>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: FancyTasksActionDelegate.cpp:122
+msgid "Mouse Button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:123
+msgid "Disabled"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:124
+msgid "Left"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:125
+msgid "Middle"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:126
+msgid "Right"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:129
+msgid "Modifier Key"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:130 FancyTasksConfiguration.cpp:101
+#: FancyTasksConfiguration.cpp:112
+msgid "None"
+msgstr "Немає"
+
+#: FancyTasksActionDelegate.cpp:160
+msgid "Left mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:164
+msgid "Middle mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:168
+msgid "Right mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:177
+msgid "Ctrl modifier"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:181
+msgid "Shift modifier"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:185
+msgid "Alt modifier"
+msgstr ""
+
+#: FancyTasksApplet.cpp:1849
+msgid "Entries"
+msgstr "Записи"
+
+#: FancyTasksConfiguration.cpp:53
+msgid "Add Application..."
+msgstr "Додати програму..."
+
+#: FancyTasksConfiguration.cpp:54
+msgid "Add File or Directory..."
+msgstr "Додати файл або каталог..."
+
+#: FancyTasksConfiguration.cpp:55
+msgid "Add Menu"
+msgstr "Додати меню"
+
+#. i18n: file: ui/findApplication.ui:26
+#. i18n: ectx: property (windowTitle), widget (QWidget, findApplication)
+#: FancyTasksConfiguration.cpp:71 po/rc.cpp:57 rc.cpp:57
+msgid "Find Application"
+msgstr "Знайти програму"
+
+#: FancyTasksConfiguration.cpp:77
+msgid "Do Not Group"
+msgstr "Не групувати"
+
+#: FancyTasksConfiguration.cpp:78 FancyTasksConfiguration.cpp:83
+#: FancyTasksConfiguration.cpp:97
+msgid "Manually"
+msgstr "Вручну"
+
+#: FancyTasksConfiguration.cpp:79
+msgid "By Program Name"
+msgstr "За назвою програми"
+
+#: FancyTasksConfiguration.cpp:82
+msgid "Do Not Sort"
+msgstr "Не впорядковувати"
+
+#: FancyTasksConfiguration.cpp:84
+msgid "Alphabetically"
+msgstr "За абеткою"
+
+#: FancyTasksConfiguration.cpp:85
+msgid "By Desktop"
+msgstr "За стільницею"
+
+#: FancyTasksConfiguration.cpp:95
+msgid "Instantly"
+msgstr "Негайно"
+
+#: FancyTasksConfiguration.cpp:96
+msgid "After delay"
+msgstr "З затримкою"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+#: FancyTasksConfiguration.cpp:130
+msgid "Zoom"
+msgstr "Масштаб"
+
+#: FancyTasksConfiguration.cpp:101
+msgid "Jump"
+msgstr "Перехід"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+msgid "Spotlight"
+msgstr "Прожектор"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+#: FancyTasksConfiguration.cpp:131
+msgid "Glow"
+msgstr "Заграва"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:132
+msgid "Fade"
+msgstr "Згасання"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Bounce"
+msgstr "Відскакування"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Blink"
+msgstr "Блимання"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Rotate"
+msgstr "Обертання"
+
+#: FancyTasksConfiguration.cpp:123
+msgid "Never"
+msgstr "Ніколи"
+
+#: FancyTasksConfiguration.cpp:124
+msgid "On mouse-over"
+msgstr "При наведенні вказівника"
+
+#: FancyTasksConfiguration.cpp:125
+msgid "For active icon"
+msgstr "Для активної піктограми"
+
+#: FancyTasksConfiguration.cpp:126
+msgid "Always"
+msgstr "Завжди"
+
+#: FancyTasksConfiguration.cpp:129
+msgid "No indication"
+msgstr "Без позначення"
+
+#: FancyTasksConfiguration.cpp:147 FancyTasksConfiguration.cpp:175
+#: FancyTasksConfiguration.cpp:330 FancyTasksConfiguration.cpp:350
+msgid "--- separator ---"
+msgstr "--- роздільник ---"
+
+#: FancyTasksConfiguration.cpp:153 FancyTasksConfiguration.cpp:167
+#: FancyTasksConfiguration.cpp:253
+msgid "--- tasks area ---"
+msgstr "--- область завдань ---"
+
+#: FancyTasksConfiguration.cpp:158 FancyTasksConfiguration.cpp:171
+#: FancyTasksConfiguration.cpp:257
+msgid "--- jobs area ---"
+msgstr "--- область завдань ---"
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Item"
+msgstr "Інструмент запуску"
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Task"
+msgstr "Інструмент запуску"
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Launcher"
+msgstr "Інструмент запуску"
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Menu"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Children List"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Windows"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Close Task"
+msgstr "Закрити завдання:"
+
+#. i18n: file: ui/general.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, general)
+#: FancyTasksConfiguration.cpp:220 po/rc.cpp:63 rc.cpp:63
+msgid "General"
+msgstr "Загальне"
+
+#. i18n: file: ui/appearance.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
+#. i18n: file: ui/appearance.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
+#. i18n: file: ui/appearance.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
+#. i18n: file: ui/appearance.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
+#: FancyTasksConfiguration.cpp:221 po/rc.cpp:12 po/rc.cpp:15 rc.cpp:12
+#: rc.cpp:15
+msgid "Appearance"
+msgstr "Вигляд"
+
+#. i18n: file: ui/arrangement.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, arrangement)
+#: FancyTasksConfiguration.cpp:222 po/rc.cpp:45 rc.cpp:45
+msgid "Arrangement"
+msgstr "Компонування"
+
+#. i18n: file: ui/actions.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, actions)
+#: FancyTasksConfiguration.cpp:223 po/rc.cpp:3 rc.cpp:3
+#, fuzzy
+msgid "Actions"
+msgstr "Анімація"
+
+#: FancyTasksConfiguration.cpp:417
+msgid "Launcher with this URL was already added."
+msgstr "Пункт запуску з цією адресою вже було додано."
+
+#: FancyTasksConfiguration.cpp:467
+msgid "Add This Menu"
+msgstr "Додати це меню"
+
+#: FancyTasksIcon.cpp:1545 FancyTasksLauncher.cpp:303
+msgctxt "@action:inmenu"
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: FancyTasksIcon.cpp:1666
+msgid "1 job"
+msgid_plural "%1 jobs"
+msgstr[0] "%1 задача"
+msgstr[1] "%1 задачі"
+msgstr[2] "%1 задач"
+
+#: FancyTasksJob.cpp:88
+msgid "%1 [Paused]"
+msgstr "%1 [Призупинено]"
+
+#: FancyTasksJob.cpp:92
+msgid "%1 (%2 remaining) "
+msgstr "%1 (лишилося %2) "
+
+#: FancyTasksJob.cpp:127
+msgid "%1 [Finished]"
+msgstr "%1 [Завершено]"
+
+#: FancyTasksJob.cpp:176
+msgid "Close Job"
+msgstr "Закрити задачу"
+
+#: FancyTasksJob.cpp:184
+msgid "Pause Job"
+msgstr "Призупинити задачу"
+
+#: FancyTasksJob.cpp:188
+msgid "Resume Job"
+msgstr "Поновити задачу"
+
+#: FancyTasksJob.cpp:199
+msgid "Cancel Job"
+msgstr "Скасувати задачу"
+
+#: FancyTasksJob.cpp:205
+msgid "Close on Finish"
+msgstr "Закрити по завершенню"
+
+#: FancyTasksLauncher.cpp:194 FancyTasksLauncher.cpp:472
+msgid "Open"
+msgstr "Відкрити"
+
+#: FancyTasksLauncher.cpp:298
+msgctxt "@action:inmenu"
+msgid "&Move Here\t<shortcut>%1</shortcut>"
+msgstr "П&ересунути сюди\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:299
+msgctxt "@action:inmenu"
+msgid "&Copy Here\t<shortcut>%1</shortcut>"
+msgstr "&Копіювати сюди\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:300
+msgctxt "@action:inmenu"
+msgid "&Link Here\t<shortcut>%1</shortcut>"
+msgstr "С&творити тут посилання\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:390
+msgctxt "@info"
+msgid "Do you really want to empty the trash? All items will be deleted."
+msgstr "Ви справді бажаєте спорожнити смітник? Весь його вміст буде втрачено."
+
+#: FancyTasksLauncher.cpp:390
+msgctxt "@action:button"
+msgid "Empty Trash"
+msgstr "Спорожнити смітник"
+
+#: FancyTasksLauncher.cpp:402
+msgid "Trash"
+msgstr "Смітник"
+
+#: FancyTasksLauncher.cpp:403
+msgid "One item"
+msgid_plural "%1 items"
+msgstr[0] "%1 об’єкт"
+msgstr[1] "%1 об’єкти"
+msgstr[2] "%1 об’єктів"
+
+#: FancyTasksLauncher.cpp:403
+msgid "Empty"
+msgstr "Порожній"
+
+#: FancyTasksLauncher.cpp:416 FancyTasksTask.cpp:172
+msgid "%1 Settings"
+msgstr "Налаштувати віджет «%1»"
+
+#: FancyTasksLauncher.cpp:460
+msgid "Menu Editor"
+msgstr "Редактор меню"
+
+#: FancyTasksLauncher.cpp:461
+msgid "Menu"
+msgstr "Меню"
+
+#: FancyTasksLauncher.cpp:466
+msgid "Run"
+msgstr "Запустити"
+
+#: FancyTasksLauncher.cpp:477
+msgid "Browse"
+msgstr "Навігація"
+
+#: FancyTasksLauncher.cpp:486
+msgid "&Empty Trashcan"
+msgstr "С&порожнити смітник"
+
+#: FancyTasksLauncher.cpp:490
+msgid "Edit"
+msgstr "Змінити"
+
+#: FancyTasksLauncher.cpp:491
+msgid "Launcher"
+msgstr "Інструмент запуску"
+
+#: FancyTasksTask.cpp:325
+msgid "Application"
+msgstr "Програма"
+
+#: FancyTasksTask.cpp:334
+msgid "Starting application..."
+msgstr "Запуск програми..."
+
+#: FancyTasksTask.cpp:334
+msgid "On all desktops"
+msgstr "На всіх стільницях"
+
+#: FancyTasksTask.cpp:334
+msgctxt "Which virtual desktop a window is currently on"
+msgid "On %1"
+msgstr "На %1"
+
+#. i18n: file: ui/actions.ui:60
+#. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
+#: po/rc.cpp:6 rc.cpp:6
+#, fuzzy
+msgid "Action"
+msgstr "Програма"
+
+#. i18n: file: ui/actions.ui:65
+#. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
+#: po/rc.cpp:9 rc.cpp:9
+#, fuzzy
+msgid "Activation"
+msgstr "Анімація"
+
+#. i18n: file: ui/appearance.ui:32
+#. i18n: ectx: property (text), widget (QCheckBox, useThumbnails)
+#: po/rc.cpp:18 rc.cpp:18
+msgid "Use thumbnails instead of icons"
+msgstr "Використовувати мініатюри замість піктограм"
+
+#. i18n: file: ui/appearance.ui:41
+#. i18n: ectx: property (text), widget (QLabel, titleLabelModeLabel)
+#: po/rc.cpp:21 rc.cpp:21
+msgid "Show title label:"
+msgstr "Показувати мітку з назвою:"
+
+#. i18n: file: ui/appearance.ui:54
+#. i18n: ectx: property (text), widget (QLabel, customBackgroundPathLabel)
+#: po/rc.cpp:24 rc.cpp:24
+msgid "Custom background image:"
+msgstr "Нетипове зображення тла:"
+
+#. i18n: file: ui/appearance.ui:70
+#. i18n: ectx: property (text), widget (QLabel, activeIconIndicationLabel)
+#: po/rc.cpp:27 rc.cpp:27
+msgid "Indication for active icon:"
+msgstr "Позначення для активної піктограми:"
+
+#. i18n: file: ui/appearance.ui:85
+#. i18n: ectx: property (title), widget (QGroupBox, animationsGoupBox)
+#: po/rc.cpp:30 rc.cpp:30
+msgid "Animations"
+msgstr "Анімація"
+
+#. i18n: file: ui/appearance.ui:91
+#. i18n: ectx: property (text), widget (QLabel, moveAnimationLabel)
+#: po/rc.cpp:33 rc.cpp:33
+msgid "Moving between icons:"
+msgstr "Пересування між піктограмами:"
+
+#. i18n: file: ui/appearance.ui:107
+#. i18n: ectx: property (text), widget (QLabel, demandsAttentionAnimationLabel)
+#: po/rc.cpp:36 rc.cpp:36
+msgid "Tasks needing attention:"
+msgstr "Завдання, що потребують уваги:"
+
+#. i18n: file: ui/appearance.ui:117
+#. i18n: ectx: property (text), widget (QCheckBox, parabolicMoveAnimation)
+#: po/rc.cpp:39 rc.cpp:39
+msgid "Parabolic"
+msgstr "Параболічне"
+
+#. i18n: file: ui/appearance.ui:124
+#. i18n: ectx: property (text), widget (QLabel, startupAnimationLabel)
+#: po/rc.cpp:42 rc.cpp:42
+msgid "Starting tasks:"
+msgstr "Завдання, що запускаються:"
+
+#. i18n: file: ui/arrangement.ui:22
+#. i18n: ectx: property (text), widget (QLabel, availableActionsLabel)
+#: po/rc.cpp:48 rc.cpp:48
+msgid "Available actions:"
+msgstr "Можливі дії:"
+
+#. i18n: file: ui/arrangement.ui:29
+#. i18n: ectx: property (text), widget (QLabel, currentActionsLabel)
+#: po/rc.cpp:51 rc.cpp:51
+msgid "Current actions:"
+msgstr "Поточні дії:"
+
+#. i18n: file: ui/arrangement.ui:44
+#. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
+#: po/rc.cpp:54 rc.cpp:54
+msgid "Add launcher"
+msgstr "Додати інструмент запуску"
+
+#. i18n: file: ui/findApplication.ui:32
+#. i18n: ectx: property (clickMessage), widget (KLineEdit, query)
+#: po/rc.cpp:60 rc.cpp:60
+msgid "Search..."
+msgstr "Шукати..."
+
+#. i18n: file: ui/general.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, groupingAndSortingGroupBox)
+#: po/rc.cpp:66 rc.cpp:66
+msgid "Grouping and sorting"
+msgstr "Групування і впорядкування"
+
+#. i18n: file: ui/general.ui:32
+#. i18n: ectx: property (text), widget (QLabel, groupingStrategyLabel)
+#: po/rc.cpp:69 rc.cpp:69
+msgid "Grouping:"
+msgstr "Групування:"
+
+#. i18n: file: ui/general.ui:48
+#. i18n: ectx: property (text), widget (QLabel, sortingStrategyLabel)
+#: po/rc.cpp:72 rc.cpp:72
+msgid "Sorting:"
+msgstr "Впорядкування:"
+
+#. i18n: file: ui/general.ui:61
+#. i18n: ectx: property (title), widget (QGroupBox, filtersGroupBox)
+#: po/rc.cpp:75 rc.cpp:75
+msgid "Filters"
+msgstr "Фільтри"
+
+#. i18n: file: ui/general.ui:67
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentDesktop)
+#: po/rc.cpp:78 rc.cpp:78
+msgid "Only show tasks from the current desktop"
+msgstr "Показувати тільки завдання з поточної стільниці"
+
+#. i18n: file: ui/general.ui:74
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentScreen)
+#: po/rc.cpp:81 rc.cpp:81
+msgid "Only show tasks from the current screen"
+msgstr "Показувати тільки завдання з поточного екрана"
+
+#. i18n: file: ui/general.ui:81
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyMinimized)
+#: po/rc.cpp:84 rc.cpp:84
+msgid "Only show tasks that are minimized"
+msgstr "Показувати лише мінімізовані завдання"
+
+#. i18n: file: ui/general.ui:88
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyTasksWithLaunchers)
+#: po/rc.cpp:87 rc.cpp:87
+#, fuzzy
+msgid "Only show tasks that have launchers"
+msgstr "Показувати лише мінімізовані завдання"
+
+#. i18n: file: ui/general.ui:98
+#. i18n: ectx: property (title), widget (QGroupBox, jobsGroupBox)
+#: po/rc.cpp:90 rc.cpp:90
+msgid "Jobs"
+msgstr "Завдання"
+
+#. i18n: file: ui/general.ui:106
+#. i18n: ectx: property (text), widget (QLabel, jobCloseModeLabel)
+#: po/rc.cpp:93 rc.cpp:93
+msgid "Close jobs:"
+msgstr "Закрити завдання:"
+
+#. i18n: file: ui/general.ui:121
+#. i18n: ectx: property (text), widget (QCheckBox, connectJobsWithTasks)
+#: po/rc.cpp:96 rc.cpp:96
+msgid "Connect jobs with tasks"
+msgstr "З’єднати задачі з завданнями"
+
+#. i18n: file: ui/general.ui:128
+#. i18n: ectx: property (text), widget (QCheckBox, groupJobs)
+#: po/rc.cpp:99 rc.cpp:99
+msgid "Group similar jobs"
+msgstr "Групувати подібні задачі"
+
+#. i18n: file: ui/group.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, group)
+#: po/rc.cpp:102 rc.cpp:102
+msgid "Group settings"
+msgstr "Параметри групи"
+
+#. i18n: file: ui/group.ui:40
+#. i18n: ectx: property (toolTip), widget (KIconButton, icon)
+#: po/rc.cpp:105 rc.cpp:105
+msgid "Group icon"
+msgstr "Піктограма групи"
+
+#. i18n: file: ui/group.ui:49
+#. i18n: ectx: property (text), widget (QLabel, colorLabel)
+#: po/rc.cpp:108 rc.cpp:108
+msgid "Group color:"
+msgstr "Колір групи:"
+
+#. i18n: file: ui/group.ui:65
+#. i18n: ectx: property (text), widget (QLabel, nameLabel)
+#: po/rc.cpp:111 rc.cpp:111
+msgid "Group name:"
+msgstr "Назва групи:"
+
+#: po/rc.cpp:112 rc.cpp:112
+#, fuzzy
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Назва групи:"
+
+#: po/rc.cpp:113 rc.cpp:113
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+
+#~ msgid "Use default tool tips"
+#~ msgstr "Використовувати типові підказки"
+
+#~ msgid "Add this application"
+#~ msgstr "Додати цю програму"
+
+#~ msgid "Highlight"
+#~ msgstr "Підсвічування"
+
+#~ msgid "Remove"
+#~ msgstr "Вилучити"
+
+#~ msgid "Only show launchers"
+#~ msgstr "Показувати лише інструменти запуску"
+
+#~ msgid "Draw reflections"
+#~ msgstr "Малювати віддзеркалення"
+
+#~ msgid "Pre-allocate space"
+#~ msgstr "Попереднє виділення простору"
+
+#~ msgid "Advanced"
+#~ msgstr "Додатково"
+
+#~ msgid "Delay of activation when dragging files:"
+#~ msgstr "Затримка активації під час перетягування файли:"
+
+#~ msgid ""
+#~ "Delay after which the window of a task will be raised to allow dragging "
+#~ "onto it."
+#~ msgstr "Затримка підняття вікна завдання для перетягування до нього."
+
+#~ msgid " ms"
+#~ msgstr " мс"
+
+#~ msgid "Preview size:"
+#~ msgstr "Розмір мініатюри вмісту:"
+
+#~ msgid "Size of the window and file previews in the tool-tip."
+#~ msgstr "Розмір вікна і мініатюр вмісту файлів у підказках."
+
+#~ msgid " px"
+#~ msgstr " пк"
+
+#~ msgid "Draw icon overlay on thumbnails"
+#~ msgstr "Накладати піктограму на мініатюри"
+
+#~ msgid "Draw applet background"
+#~ msgstr "Малювати тло аплетів"
+
+#~ msgid "This file must be compatible with Plasma themes."
+#~ msgstr "Цей файл має бути сумісним з темами Плазми."
+
+#~ msgid "Maximum icon size:"
+#~ msgstr "Максимальний розмір піктограм:"
+
+#~ msgid ""
+#~ "This size will be used if available, but if the containment is too small "
+#~ "it will shrink to fit in."
+#~ msgstr ""
+#~ "Цьому розміру надаватиметься перевага, але якщо контейнер буде замалим, "
+#~ "його буде зменшено."
+
+#~ msgid ""
+#~ "This label will only be shown when an icon is big enough to make it "
+#~ "readable."
+#~ msgstr ""
+#~ "Цю мітку буде показано, лише якщо піктограма буде досить великою, щоб "
+#~ "мітку можна було побачити."

@@ -1,0 +1,53 @@
+[Desktop Entry]
+Name=Fancy Tasks
+Name[da]=Fancy Tasks
+Name[en_GB]=Fancy Tasks
+Name[es]=Tareas elegantes
+Name[et]=Vahvad ülesanded
+Name[fr]=Fancy Tasks
+Name[hr]=Fensi zadaće
+Name[km]=ភារកិច្ចល្អ​
+Name[nb]=Flotte oppgaver
+Name[nds]=Smuck Opgaven
+Name[nl]=Elegante taken
+Name[pl]=Eleganckie zadania
+Name[pt]=Tarefas Bonitas
+Name[pt_BR]=Tarefas Bonitas
+Name[ro]=Sarcini extravagante
+Name[sv]=Snygga uppgifter
+Name[tr]=Zevkli Görevler
+Name[uk]=Красиві завдання
+Name[x-test]=xxFancy Tasksxx
+
+Comment=Plasmoid providing a fancy representation of your tasks and launchers.
+Comment[da]=Plasmoid som giver en flot repræsentation af dine opgaver og programstartere.
+Comment[en_GB]=Plasmoid providing a fancy representation of your tasks and launchers.
+Comment[es]=Plasmoide que representa de manera elaborada sus tareas y lanzadores
+Comment[et]=Sinu ülesandeid ja käivitajaid vahvalt esitav plasmoid.
+Comment[fr]=Plasmoïde fournissant une agréable représentation de vos tâches et lanceurs
+Comment[hr]=Plasmoid koji prikazuje ukrašene predstavnike Vaših zadaća i pokretača.
+Comment[km]=Plasmoid ផ្ដល់​នូវ​ការ​បង្ហាញ​ដ៏ល្អ​​នៃកិច្ចការ និង​កម្មវិធី​ចាប់ផ្ដើម​របស់​អ្នក ។
+Comment[nb]=Skjermelement som gir en flott visning av dine oppgaver og startere.
+Comment[nds]=Plasma-Lüttprogramm, dat en smuck Weddergaav vun Dien Opgaven und Opropers praatstellt.
+Comment[nl]=Plasmoid die een elegante representatie van uw taken en starters levert.
+Comment[pl]=Plazmoid zapewniający elegancką prezentację dla zadań i aktywatorów
+Comment[pt]=Um plasmóide que oferece uma representação bonita das suas tarefas e lançadores.
+Comment[pt_BR]=Um plasmoide que oferece uma representação bonita das suas tarefas e lançadores.
+Comment[sv]=Plasmoid för snygg representation av uppgifter och startprogram.
+Comment[uk]=Плазмоїд для форматованого представлення ваших завдань і інструментів запуску.
+Comment[x-test]=xxPlasmoid providing a fancy representation of your tasks and launchers.xx
+
+Icon=view-pim-tasks
+Type=Service
+ServiceTypes=Plasma/Applet
+
+X-KDE-Library=plasma_applet_fancytasks
+X-KDE-PluginInfo-Author=Michał Dutkiewicz aka Emdek
+X-KDE-PluginInfo-Email=emdeck@gmail.com
+X-KDE-PluginInfo-Name=fancytasks
+X-KDE-PluginInfo-Version=1.0.96
+X-KDE-PluginInfo-Website=http://emdek.cba.pl/
+X-KDE-PluginInfo-Category=Windows and Tasks
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true

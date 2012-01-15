@@ -1,0 +1,252 @@
+1.0.96 (01.12.2011):
+- removed group colors (upstream change in libtaskmanager);
+- more friendly install script;
+- removed compile time dependency on gettext.
+
+1.0.95 (05.08.2011):
+- fixed icons not disappearing after task is removed;
+- removed konq dependency;
+- show icon for non existing launchers;
+- adapted to changes in KDE 4.7.
+
+1.0.94 (28.08.2010):
+- use action settings also for tool tips and task indicators;
+- fix highlight windows effect in tool tip;
+- some other fixes and changes.
+
+1.0.93 (27.04.2010):
+- fixed possible crash when checking for task window.
+
+1.0.92 (25.02.2010):
+- fixes in icon rendering.
+
+1.0.91 (03.02.2010):
+- added settings to manage how icon actions should be triggered;
+- initial work on option to show only tasks that have corresponding launchers;
+- applet tries to maintain it's center point on desktop (when unlocked);
+- code cleanups;
+- some fixes.
+
+1.0.90 (02.02.2010):
+- removed custom tool tip implementation;
+- removed QImageBlitz dependency;
+- code cleanups and small fixes.
+
+1.0.0 (01.02.2010):
+- first release of milestone 1.0;
+- small fixes.
+
+0.9.9a (26.01.2010):
+- added workaround for bug that could cause applet crash on desktop containment on KDE 4.4.
+
+0.9.9 (24.12.2009):
+- added new themes: Snow, Black Glass and White Glass by Tomasz Dudzik;
+- use middle click to toggle Present Windows effect on group (KDE 4.4);
+- use group menu to activate window when dragging something on it (KDE 4.4);
+- new group menus that allows to:
+ - drag windows from menu to other desktops (dropping on Pager);
+ - invoking window context menu on menu entries using right click;
+ - activating window when dragging something over menu entry;
+- initial work on use new native tool tips possibilities in KDE 4.4;
+- when focusing applet set focus to icon of active window or group;
+- improved dialog for adding application launchers;
+- center all pop ups over icons;
+- fixes for icon glow;
+- fix for possible crash when painting task light;
+- code cleanups;
+- other small fixes.
+
+0.9.8 (14.09.2009):
+- added hidden options to not paint background and icon reflections, details in README;
+- fixed crash when removing "tasks area";
+- fixed task icons arrangement after adding "tasks area" after removing it;
+- fixed blink animation (caused some icons being not painted in default setup);
+- fixed saving and restoring configuration in testing panel;
+- fixed animation for unknown job progress;
+- fixed delayed close of jobs;
+- disconnect task from launchers when changing strategy from "no sorting";
+- paint reflection always on screen edge when on panel;
+- jump animation direction now depends on applet location;
+- other fixes and small improvements.
+
+0.9.7 (09.09.2009):
+- added possibility to add menus;
+- added entries menu also to contextual actions;
+- added possibility to control group windows using task indicator;
+- improved applet behavior on vertical panels;
+- improved testing panel;
+- new spotlight image by Tomasz Dudzik;
+- more transparent focus indicator;
+- code cleanups and improvements;
+- other fixes and changes.
+
+0.9.6 (25.08.2009):
+- enabled panel controller in test panel;
+- added initial keyboard navigation support;
+- added effect for icon that has focus (artwork by Tomasz Dudzik);
+- added option to set effect for active icon (active task or active group);
+- added option to show title label for active icon;
+- added fall back group menu in case when default Plasma tool tips are used;
+- added patch to improve tool tips behavior on dual head setups (by qwertz-1);
+- improved trash integration;
+- better reflection contrast;
+- use Plasma tool tips by default;
+- preserve initial arrangement when opening configuration dialog for first time;
+- improved animation handling in icon class;
+- some code cleanups and improvements.
+
+0.9.5 (16.08.2009):
+- added experimental panel for applet for testing purposes;
+- added option to use default Plasma tool tips;
+- added hidden option to set initial zoom level for zoom move animations (add entry "initialZoomLevel" in applets configuration file with value from 0 to 1);
+- added dialog for searching for applications to add as launchers;
+- add "Empty trashcan" action if launcher points to trash:/;
+- many improvements to icon positioning in layout;
+- load favorites from Kickoff as launchers as default set;
+- fixed previews not always shown in tool tips;
+- show task icon instead of launcher when no sorting;
+- moved configuration related methods to own class;
+- other improvements and fixes.
+
+0.9.4 (09.08.2009):
+- added possibility to group similar (from one application type) jobs;
+- added possibility to connect job with task of the same application;
+- added option to set if job should close after finish to job context menu;
+- improved highlight window in tool tips, idea by Steven Blenkinsop;
+- improved window minimizing effects;
+- clicking on icon demanding attention (any button) will stop demand attention animation;
+- fixed showing of drop indicator when dragging over task icons;
+- fixed calculating of active icon.
+
+0.9.3 (19.07.2009):
+- initial support for showing application jobs progress;
+- added job progress artwork by Tomasz Dudzik;
+- fixed minimizing of tasks when applet is not in panel, idea by Sandro Garcia;
+- code cleanups;
+- some other fixes and changes.
+
+0.9.2 (15.07.2009):
+- new default Air theme by Tomasz Dudzik;
+- added alternative dark background and moved along with old background to themes directory;
+- readded option to set custom background;
+- fixed not embedded parts of theme;
+- fixed possible crash after canceling group settings;
+- code cleanups.
+
+0.9.1 (12.07.2009):
+- added Portuguese translation by Sandro Garcia;
+- fixed painting of background on desktop;
+- fixed compilation bugs on some systems;
+- fixed possible crash when closing applet with tasks connected with launchers.
+
+0.9 (12.07.2009):
+- added support for KWin Highlight Window effect;
+- added support for inserting separators;
+- added support for showing tasks not only at end of dock;
+- added arrangement editor;
+- added glow effect for previews under mouse cursor;
+- added title to icon context menu;
+- added workaround for showing hidden panel with applet when one of tasks demands attention;
+- added Russian translation by Ritt K.;
+- some theme updates by Tomasz Dudzik;
+- highlight icon effect replaced by glow;
+- use middle click to create new instance;
+- open launcher of task icon using middle click;
+- close task when using left click with Shift pressed;
+- improvements to drop indicator behavior;
+- improvements to icon animations;
+- improvements to text label painting;
+- improvements to launcher to task transition process;
+- always draw reflections;
+- draw light on reflection;
+- code cleanups;
+- many other fixes and changes.
+
+0.8.1 (12.04.2009):
+- fixed performance regression;
+- fixed crash on applet creation in some cases.
+
+0.8 (12.04.2009):
+- added dock theme element (based on Sabre Tiger Plasma theme by Eldarion);
+- replaced solid color dots by themed ones for marking icons with running tasks;
+- highlighting animations now use theme elements;
+- use standard active state effect for active icon;
+- now it is possible to adjust size using applet handles when on desktop;
+- always paint background when on desktop and never otherwise;
+- titles font size is now proportional to icon;
+- fixed crash when clicking on group icon before tool tip was first shown;
+- fixed crash occurring sometimes during startup to task transition;
+- next round of cleanup of configuration interface;
+- some other fixes and changes.
+
+0.7 (31.03.2009):
+- initial support for launcher to task transition;
+- re size panel if not maximized and applet size changes;
+- make active icon slightly more transparent than rest;
+- added possibility drag task icons to Pager to move their windows to other desktop;
+- added possibility drag launcher icons and drop them like normal URLs;
+- added context menu for launchers on tool tip preview;
+- show tool tip when dragging to group icon to allow activate one of the windows;
+- improved alignment of previews of multiple windows;
+- improved manual grouping;
+- improved startup to task transition;
+- fixed high CPU usage when in not maximized panel;
+- code cleanups;
+- some other fixes and improvements.
+
+0.6 (24.03.2009):
+- added visual drop indicator;
+- better window thumbnails with Composite;
+- icons are now bigger, especially when reflections are disabled and selected move animation does not involve size changes;
+- reuse tool tip instead of group menu;
+- close task using middle click on icon or tool tip preview;
+- added context menu for tasks on tool tip preview;
+- left click on file tool tip preview to open it;
+- split long words in tool tip texts;
+- keep files thumbnail aspect ratio;
+- many other small improvements.
+
+0.5 (17.03.2009):
+- added live preview of windows (when Compositing is active and Taskbar Thumbnail plugin is enabled);
+- improved generation of window thumbnails;
+- cleanup of configuration interface (some options removed, other moved);
+- added simple effect for mouse press;
+- use theme color for highlight effects;
+- use generic name of desktop file if exists;
+- draw dots on icons with running tasks;
+- moved middle click preview to standard tool tip;
+- simplified reflection algorithm, now they don't jump anymore;
+- added install.sh script.
+
+0.4 (10.03.2009):
+- improved filters;
+- added initial support for sorting and grouping;
+- added support for translations;
+- added German translation by Jan Gerrit;
+- added Polish translation by me;
+- added menu with tasks and shortcuts shown after activating keyboard shortcut;
+- added menu for browsing contents of directory for shortcuts of directories;
+- improved menus and tool tips positioning;
+- switch windows on mouse wheel move;
+- first attempt to separate visual and logical parts of icon class.
+
+0.3 (24.02.2009):
+- added option to set (maximum) icon size;
+- added option to show only launchers;
+- added option to draw link overlay on launchers;
+- added possibility to rearrange icons by drag and drop;
+- added small spacing around icons;
+- improved reflection algorithm;
+- keep window thumbnail aspect ratio;
+- respect Plasma lock for adding and removing shortcuts.
+
+0.2 (22.02.2009):
+- improved stability;
+- improved tasks window show and hide actions;
+- added option to select own background file;
+- added option to set delay of window activation when dragging files over icon;
+- implemented setting of icon geometry for KWin minimize effect;
+- background is now not drawn when there are no tasks.
+
+0.1 (20.02.2009):
+- initial release.

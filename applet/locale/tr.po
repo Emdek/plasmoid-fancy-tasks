@@ -1,0 +1,618 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Serdar Soytetir <tulliana@gmail.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: plasma_applet_fancytasks\n"
+"Report-Msgid-Bugs-To: emdeck@gmail.com\n"
+"POT-Creation-Date: 2010-04-27 16:49+0200\n"
+"PO-Revision-Date: 2009-10-28 16:30+0200\n"
+"Last-Translator: Serdar Soytetir <tulliana@gmail.com>\n"
+"Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 0.3\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: FancyTasksActionDelegate.cpp:122
+msgid "Mouse Button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:123
+msgid "Disabled"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:124
+msgid "Left"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:125
+msgid "Middle"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:126
+msgid "Right"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:129
+msgid "Modifier Key"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:130 FancyTasksConfiguration.cpp:101
+#: FancyTasksConfiguration.cpp:112
+msgid "None"
+msgstr "Hiçbiri"
+
+#: FancyTasksActionDelegate.cpp:160
+msgid "Left mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:164
+msgid "Middle mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:168
+msgid "Right mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:177
+msgid "Ctrl modifier"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:181
+msgid "Shift modifier"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:185
+msgid "Alt modifier"
+msgstr ""
+
+#: FancyTasksApplet.cpp:1849
+msgid "Entries"
+msgstr "Girdiler"
+
+#: FancyTasksConfiguration.cpp:53
+msgid "Add Application..."
+msgstr "Uygulama Ekle..."
+
+#: FancyTasksConfiguration.cpp:54
+msgid "Add File or Directory..."
+msgstr "Dosya veya Dizin Bul..."
+
+#: FancyTasksConfiguration.cpp:55
+msgid "Add Menu"
+msgstr "Menü Ekle"
+
+#. i18n: file: ui/findApplication.ui:26
+#. i18n: ectx: property (windowTitle), widget (QWidget, findApplication)
+#: FancyTasksConfiguration.cpp:71 po/rc.cpp:57 rc.cpp:57
+msgid "Find Application"
+msgstr "Uygulama Bul"
+
+#: FancyTasksConfiguration.cpp:77
+msgid "Do Not Group"
+msgstr "Gruplandırma"
+
+#: FancyTasksConfiguration.cpp:78 FancyTasksConfiguration.cpp:83
+#: FancyTasksConfiguration.cpp:97
+msgid "Manually"
+msgstr "Elle"
+
+#: FancyTasksConfiguration.cpp:79
+msgid "By Program Name"
+msgstr "Uygulama Adına Göre"
+
+#: FancyTasksConfiguration.cpp:82
+msgid "Do Not Sort"
+msgstr "Sıralama"
+
+#: FancyTasksConfiguration.cpp:84
+msgid "Alphabetically"
+msgstr "Alfabetik olarak"
+
+#: FancyTasksConfiguration.cpp:85
+msgid "By Desktop"
+msgstr "Masaüstüne Göre"
+
+#: FancyTasksConfiguration.cpp:95
+msgid "Instantly"
+msgstr "Hemen"
+
+#: FancyTasksConfiguration.cpp:96
+msgid "After delay"
+msgstr "Gecikmeden sonra"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+#: FancyTasksConfiguration.cpp:130
+msgid "Zoom"
+msgstr "Büyüt"
+
+#: FancyTasksConfiguration.cpp:101
+msgid "Jump"
+msgstr "Atla"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+msgid "Spotlight"
+msgstr "spot Işığı"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+#: FancyTasksConfiguration.cpp:131
+msgid "Glow"
+msgstr "Parlama"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:132
+msgid "Fade"
+msgstr "Soldur"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Bounce"
+msgstr "Kabarcık"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Blink"
+msgstr "Parlat"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Rotate"
+msgstr "Döndür"
+
+#: FancyTasksConfiguration.cpp:123
+msgid "Never"
+msgstr "Asla"
+
+#: FancyTasksConfiguration.cpp:124
+msgid "On mouse-over"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:125
+msgid "For active icon"
+msgstr "Etkin simge için"
+
+#: FancyTasksConfiguration.cpp:126
+msgid "Always"
+msgstr "Her zaman"
+
+#: FancyTasksConfiguration.cpp:129
+msgid "No indication"
+msgstr "Gösterge Yok"
+
+#: FancyTasksConfiguration.cpp:147 FancyTasksConfiguration.cpp:175
+#: FancyTasksConfiguration.cpp:330 FancyTasksConfiguration.cpp:350
+msgid "--- separator ---"
+msgstr "--- ayraç ---"
+
+#: FancyTasksConfiguration.cpp:153 FancyTasksConfiguration.cpp:167
+#: FancyTasksConfiguration.cpp:253
+msgid "--- tasks area ---"
+msgstr "--- görev alanı ---"
+
+#: FancyTasksConfiguration.cpp:158 FancyTasksConfiguration.cpp:171
+#: FancyTasksConfiguration.cpp:257
+msgid "--- jobs area ---"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Item"
+msgstr "Başlatıcı"
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Task"
+msgstr "Başlatıcı"
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Launcher"
+msgstr "Başlatıcı"
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Menu"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Children List"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Windows"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Close Task"
+msgstr "Görevleri kapat:"
+
+#. i18n: file: ui/general.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, general)
+#: FancyTasksConfiguration.cpp:220 po/rc.cpp:63 rc.cpp:63
+msgid "General"
+msgstr "Genel"
+
+#. i18n: file: ui/appearance.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
+#. i18n: file: ui/appearance.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
+#. i18n: file: ui/appearance.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
+#. i18n: file: ui/appearance.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
+#: FancyTasksConfiguration.cpp:221 po/rc.cpp:12 po/rc.cpp:15 rc.cpp:12
+#: rc.cpp:15
+msgid "Appearance"
+msgstr "Görünüm"
+
+#. i18n: file: ui/arrangement.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, arrangement)
+#: FancyTasksConfiguration.cpp:222 po/rc.cpp:45 rc.cpp:45
+msgid "Arrangement"
+msgstr "Yerleşim"
+
+#. i18n: file: ui/actions.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, actions)
+#: FancyTasksConfiguration.cpp:223 po/rc.cpp:3 rc.cpp:3
+#, fuzzy
+msgid "Actions"
+msgstr "Canlandırmalar"
+
+#: FancyTasksConfiguration.cpp:417
+msgid "Launcher with this URL was already added."
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:467
+msgid "Add This Menu"
+msgstr "Bu Menüyü Ekle"
+
+#: FancyTasksIcon.cpp:1545 FancyTasksLauncher.cpp:303
+msgctxt "@action:inmenu"
+msgid "Cancel"
+msgstr "İptal"
+
+#: FancyTasksIcon.cpp:1666
+msgid "1 job"
+msgid_plural "%1 jobs"
+msgstr[0] "%1 görev"
+
+#: FancyTasksJob.cpp:88
+msgid "%1 [Paused]"
+msgstr "%1 [Duraklatıldı]"
+
+#: FancyTasksJob.cpp:92
+msgid "%1 (%2 remaining) "
+msgstr "%1 (%2 kaldı) "
+
+#: FancyTasksJob.cpp:127
+msgid "%1 [Finished]"
+msgstr "%1 [Tamamlandı]"
+
+#: FancyTasksJob.cpp:176
+msgid "Close Job"
+msgstr "Görevi Kapat"
+
+#: FancyTasksJob.cpp:184
+msgid "Pause Job"
+msgstr "Görevi Duraklat"
+
+#: FancyTasksJob.cpp:188
+msgid "Resume Job"
+msgstr "Görevi Devam Ettir"
+
+#: FancyTasksJob.cpp:199
+msgid "Cancel Job"
+msgstr "Görevi İptal Et"
+
+#: FancyTasksJob.cpp:205
+msgid "Close on Finish"
+msgstr "Tamamlandığında Kapat"
+
+#: FancyTasksLauncher.cpp:194 FancyTasksLauncher.cpp:472
+msgid "Open"
+msgstr "Aç"
+
+#: FancyTasksLauncher.cpp:298
+msgctxt "@action:inmenu"
+msgid "&Move Here\t<shortcut>%1</shortcut>"
+msgstr "Buraya &Taşı\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:299
+msgctxt "@action:inmenu"
+msgid "&Copy Here\t<shortcut>%1</shortcut>"
+msgstr "Buraya &Kopyala\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:300
+msgctxt "@action:inmenu"
+msgid "&Link Here\t<shortcut>%1</shortcut>"
+msgstr "Buraya &Bağ Koy\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:390
+msgctxt "@info"
+msgid "Do you really want to empty the trash? All items will be deleted."
+msgstr ""
+"Çöp Kutusunu boşaltmak istediğinizden emin misiniz? Tüm ögeler silinecek."
+
+#: FancyTasksLauncher.cpp:390
+msgctxt "@action:button"
+msgid "Empty Trash"
+msgstr "Çöp Kutusunu Boşalt"
+
+#: FancyTasksLauncher.cpp:402
+msgid "Trash"
+msgstr "Çöpe Gönder"
+
+#: FancyTasksLauncher.cpp:403
+msgid "One item"
+msgid_plural "%1 items"
+msgstr[0] "%1 öge"
+
+#: FancyTasksLauncher.cpp:403
+msgid "Empty"
+msgstr "Boşalt"
+
+#: FancyTasksLauncher.cpp:416 FancyTasksTask.cpp:172
+msgid "%1 Settings"
+msgstr "%1 Ayarları"
+
+#: FancyTasksLauncher.cpp:460
+msgid "Menu Editor"
+msgstr "Menü Düzenleyici"
+
+#: FancyTasksLauncher.cpp:461
+msgid "Menu"
+msgstr "Menü"
+
+#: FancyTasksLauncher.cpp:466
+msgid "Run"
+msgstr "Çalıştır"
+
+#: FancyTasksLauncher.cpp:477
+msgid "Browse"
+msgstr "Gözat"
+
+#: FancyTasksLauncher.cpp:486
+msgid "&Empty Trashcan"
+msgstr "Çöp Kutusunu &Boşalt"
+
+#: FancyTasksLauncher.cpp:490
+msgid "Edit"
+msgstr "Düzenle"
+
+#: FancyTasksLauncher.cpp:491
+msgid "Launcher"
+msgstr "Başlatıcı"
+
+#: FancyTasksTask.cpp:325
+msgid "Application"
+msgstr "Uygulama"
+
+#: FancyTasksTask.cpp:334
+msgid "Starting application..."
+msgstr "Uygulama başlatılıyor..."
+
+#: FancyTasksTask.cpp:334
+msgid "On all desktops"
+msgstr "Tüm masaüstlerinde"
+
+#: FancyTasksTask.cpp:334
+msgctxt "Which virtual desktop a window is currently on"
+msgid "On %1"
+msgstr "%1 Üzerinde"
+
+#. i18n: file: ui/actions.ui:60
+#. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
+#: po/rc.cpp:6 rc.cpp:6
+#, fuzzy
+msgid "Action"
+msgstr "Uygulama"
+
+#. i18n: file: ui/actions.ui:65
+#. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
+#: po/rc.cpp:9 rc.cpp:9
+#, fuzzy
+msgid "Activation"
+msgstr "Canlandırmalar"
+
+#. i18n: file: ui/appearance.ui:32
+#. i18n: ectx: property (text), widget (QCheckBox, useThumbnails)
+#: po/rc.cpp:18 rc.cpp:18
+msgid "Use thumbnails instead of icons"
+msgstr "Simgeler yerine küçük resimler göster"
+
+#. i18n: file: ui/appearance.ui:41
+#. i18n: ectx: property (text), widget (QLabel, titleLabelModeLabel)
+#: po/rc.cpp:21 rc.cpp:21
+msgid "Show title label:"
+msgstr "Başlık etiketini göster:"
+
+#. i18n: file: ui/appearance.ui:54
+#. i18n: ectx: property (text), widget (QLabel, customBackgroundPathLabel)
+#: po/rc.cpp:24 rc.cpp:24
+msgid "Custom background image:"
+msgstr "Özel arkaplan resmi:"
+
+#. i18n: file: ui/appearance.ui:70
+#. i18n: ectx: property (text), widget (QLabel, activeIconIndicationLabel)
+#: po/rc.cpp:27 rc.cpp:27
+msgid "Indication for active icon:"
+msgstr ""
+
+#. i18n: file: ui/appearance.ui:85
+#. i18n: ectx: property (title), widget (QGroupBox, animationsGoupBox)
+#: po/rc.cpp:30 rc.cpp:30
+msgid "Animations"
+msgstr "Canlandırmalar"
+
+#. i18n: file: ui/appearance.ui:91
+#. i18n: ectx: property (text), widget (QLabel, moveAnimationLabel)
+#: po/rc.cpp:33 rc.cpp:33
+msgid "Moving between icons:"
+msgstr ""
+
+#. i18n: file: ui/appearance.ui:107
+#. i18n: ectx: property (text), widget (QLabel, demandsAttentionAnimationLabel)
+#: po/rc.cpp:36 rc.cpp:36
+msgid "Tasks needing attention:"
+msgstr "Görev dikkat istiyor:"
+
+#. i18n: file: ui/appearance.ui:117
+#. i18n: ectx: property (text), widget (QCheckBox, parabolicMoveAnimation)
+#: po/rc.cpp:39 rc.cpp:39
+msgid "Parabolic"
+msgstr "Parabolik"
+
+#. i18n: file: ui/appearance.ui:124
+#. i18n: ectx: property (text), widget (QLabel, startupAnimationLabel)
+#: po/rc.cpp:42 rc.cpp:42
+msgid "Starting tasks:"
+msgstr "Görevler başlatılıyor:"
+
+#. i18n: file: ui/arrangement.ui:22
+#. i18n: ectx: property (text), widget (QLabel, availableActionsLabel)
+#: po/rc.cpp:48 rc.cpp:48
+msgid "Available actions:"
+msgstr "Kullanılabilir eylemler:"
+
+#. i18n: file: ui/arrangement.ui:29
+#. i18n: ectx: property (text), widget (QLabel, currentActionsLabel)
+#: po/rc.cpp:51 rc.cpp:51
+msgid "Current actions:"
+msgstr "Geçerli eylemler:"
+
+#. i18n: file: ui/arrangement.ui:44
+#. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
+#: po/rc.cpp:54 rc.cpp:54
+msgid "Add launcher"
+msgstr "Başlatıcı ekle"
+
+#. i18n: file: ui/findApplication.ui:32
+#. i18n: ectx: property (clickMessage), widget (KLineEdit, query)
+#: po/rc.cpp:60 rc.cpp:60
+msgid "Search..."
+msgstr "Ara..."
+
+#. i18n: file: ui/general.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, groupingAndSortingGroupBox)
+#: po/rc.cpp:66 rc.cpp:66
+msgid "Grouping and sorting"
+msgstr "Gruplama ve sıralama"
+
+#. i18n: file: ui/general.ui:32
+#. i18n: ectx: property (text), widget (QLabel, groupingStrategyLabel)
+#: po/rc.cpp:69 rc.cpp:69
+msgid "Grouping:"
+msgstr "Gruplama:"
+
+#. i18n: file: ui/general.ui:48
+#. i18n: ectx: property (text), widget (QLabel, sortingStrategyLabel)
+#: po/rc.cpp:72 rc.cpp:72
+msgid "Sorting:"
+msgstr "Sıralama:"
+
+#. i18n: file: ui/general.ui:61
+#. i18n: ectx: property (title), widget (QGroupBox, filtersGroupBox)
+#: po/rc.cpp:75 rc.cpp:75
+msgid "Filters"
+msgstr "Filtreler"
+
+#. i18n: file: ui/general.ui:67
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentDesktop)
+#: po/rc.cpp:78 rc.cpp:78
+msgid "Only show tasks from the current desktop"
+msgstr "Sadece geçerli masaüstündeki görevleri göster"
+
+#. i18n: file: ui/general.ui:74
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentScreen)
+#: po/rc.cpp:81 rc.cpp:81
+msgid "Only show tasks from the current screen"
+msgstr "Sadece geçerli ekrandaki görevleri göster"
+
+#. i18n: file: ui/general.ui:81
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyMinimized)
+#: po/rc.cpp:84 rc.cpp:84
+msgid "Only show tasks that are minimized"
+msgstr "Sadece küçültülmüş görevleri göster"
+
+#. i18n: file: ui/general.ui:88
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyTasksWithLaunchers)
+#: po/rc.cpp:87 rc.cpp:87
+#, fuzzy
+msgid "Only show tasks that have launchers"
+msgstr "Sadece küçültülmüş görevleri göster"
+
+#. i18n: file: ui/general.ui:98
+#. i18n: ectx: property (title), widget (QGroupBox, jobsGroupBox)
+#: po/rc.cpp:90 rc.cpp:90
+msgid "Jobs"
+msgstr "Görevler"
+
+#. i18n: file: ui/general.ui:106
+#. i18n: ectx: property (text), widget (QLabel, jobCloseModeLabel)
+#: po/rc.cpp:93 rc.cpp:93
+msgid "Close jobs:"
+msgstr "Görevleri kapat:"
+
+#. i18n: file: ui/general.ui:121
+#. i18n: ectx: property (text), widget (QCheckBox, connectJobsWithTasks)
+#: po/rc.cpp:96 rc.cpp:96
+msgid "Connect jobs with tasks"
+msgstr ""
+
+#. i18n: file: ui/general.ui:128
+#. i18n: ectx: property (text), widget (QCheckBox, groupJobs)
+#: po/rc.cpp:99 rc.cpp:99
+msgid "Group similar jobs"
+msgstr "Benzer görevleri grupla"
+
+#. i18n: file: ui/group.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, group)
+#: po/rc.cpp:102 rc.cpp:102
+msgid "Group settings"
+msgstr "Grup ayarları"
+
+#. i18n: file: ui/group.ui:40
+#. i18n: ectx: property (toolTip), widget (KIconButton, icon)
+#: po/rc.cpp:105 rc.cpp:105
+msgid "Group icon"
+msgstr "Grup simgesi"
+
+#. i18n: file: ui/group.ui:49
+#. i18n: ectx: property (text), widget (QLabel, colorLabel)
+#: po/rc.cpp:108 rc.cpp:108
+msgid "Group color:"
+msgstr "Grup rengi:"
+
+#. i18n: file: ui/group.ui:65
+#. i18n: ectx: property (text), widget (QLabel, nameLabel)
+#: po/rc.cpp:111 rc.cpp:111
+msgid "Group name:"
+msgstr "Grup ismi:"
+
+#: po/rc.cpp:112 rc.cpp:112
+#, fuzzy
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Grup ismi:"
+
+#: po/rc.cpp:113 rc.cpp:113
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+
+#~ msgid "Use default tool tips"
+#~ msgstr "Öntanımlı ipuçlarını kullan"
+
+#~ msgid "Add this application"
+#~ msgstr "Bu uygulamayı ekle"
+
+#~ msgid "Highlight"
+#~ msgstr "Vurgulama"
+
+#~ msgid "Remove"
+#~ msgstr "Sil"
+
+#~ msgid "Only show launchers"
+#~ msgstr "Sadece başlatıcıları göster"
+
+#~ msgid "Draw reflections"
+#~ msgstr "Yansımaları göster"

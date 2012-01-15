@@ -1,0 +1,603 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: plasma_applet_fancytasks\n"
+"Report-Msgid-Bugs-To: emdeck@gmail.com\n"
+"POT-Creation-Date: 2010-04-27 16:49+0200\n"
+"PO-Revision-Date: 2009-09-10 15:31+0100\n"
+"Last-Translator: José Nuno Coelho Pires <jncp@netcabo.pt>\n"
+"Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-POFile-SpellExtra: ms\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: FancyTasksActionDelegate.cpp:122
+msgid "Mouse Button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:123
+msgid "Disabled"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:124
+msgid "Left"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:125
+msgid "Middle"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:126
+msgid "Right"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:129
+msgid "Modifier Key"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:130 FancyTasksConfiguration.cpp:101
+#: FancyTasksConfiguration.cpp:112
+msgid "None"
+msgstr "Nenhum"
+
+#: FancyTasksActionDelegate.cpp:160
+msgid "Left mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:164
+msgid "Middle mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:168
+msgid "Right mouse button"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:177
+msgid "Ctrl modifier"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:181
+msgid "Shift modifier"
+msgstr ""
+
+#: FancyTasksActionDelegate.cpp:185
+msgid "Alt modifier"
+msgstr ""
+
+#: FancyTasksApplet.cpp:1849
+msgid "Entries"
+msgstr "Elementos"
+
+#: FancyTasksConfiguration.cpp:53
+msgid "Add Application..."
+msgstr "Adicionar uma Aplicação..."
+
+#: FancyTasksConfiguration.cpp:54
+msgid "Add File or Directory..."
+msgstr "Adicionar um Ficheiro ou Pasta..."
+
+#: FancyTasksConfiguration.cpp:55
+msgid "Add Menu"
+msgstr "Adicionar um Menu"
+
+#. i18n: file: ui/findApplication.ui:26
+#. i18n: ectx: property (windowTitle), widget (QWidget, findApplication)
+#: FancyTasksConfiguration.cpp:71 po/rc.cpp:57 rc.cpp:57
+msgid "Find Application"
+msgstr "Procurar uma Aplicação"
+
+#: FancyTasksConfiguration.cpp:77
+msgid "Do Not Group"
+msgstr "Não Agrupar"
+
+#: FancyTasksConfiguration.cpp:78 FancyTasksConfiguration.cpp:83
+#: FancyTasksConfiguration.cpp:97
+msgid "Manually"
+msgstr "Manualmente"
+
+#: FancyTasksConfiguration.cpp:79
+msgid "By Program Name"
+msgstr "Pelo Nome do Programa"
+
+#: FancyTasksConfiguration.cpp:82
+msgid "Do Not Sort"
+msgstr "Não Ordenar"
+
+#: FancyTasksConfiguration.cpp:84
+msgid "Alphabetically"
+msgstr "Alfabeticamente"
+
+#: FancyTasksConfiguration.cpp:85
+msgid "By Desktop"
+msgstr "Por Ecrã"
+
+#: FancyTasksConfiguration.cpp:95
+msgid "Instantly"
+msgstr "Instantaneamente"
+
+#: FancyTasksConfiguration.cpp:96
+msgid "After delay"
+msgstr "Ao fim de algum tempo"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+#: FancyTasksConfiguration.cpp:130
+msgid "Zoom"
+msgstr "Ampliação"
+
+#: FancyTasksConfiguration.cpp:101
+msgid "Jump"
+msgstr "Salto"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+msgid "Spotlight"
+msgstr "Foco Luminoso"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+#: FancyTasksConfiguration.cpp:131
+msgid "Glow"
+msgstr "Brilho"
+
+#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:132
+msgid "Fade"
+msgstr "Desvanecer"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Bounce"
+msgstr "Saltos"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Blink"
+msgstr "Piscar"
+
+#: FancyTasksConfiguration.cpp:112
+msgid "Rotate"
+msgstr "Rodar"
+
+#: FancyTasksConfiguration.cpp:123
+msgid "Never"
+msgstr "Nunca"
+
+#: FancyTasksConfiguration.cpp:124
+msgid "On mouse-over"
+msgstr "À passagem do rato"
+
+#: FancyTasksConfiguration.cpp:125
+msgid "For active icon"
+msgstr "Para o ícone activo"
+
+#: FancyTasksConfiguration.cpp:126
+msgid "Always"
+msgstr "Sempre"
+
+#: FancyTasksConfiguration.cpp:129
+msgid "No indication"
+msgstr "Sem indicação"
+
+#: FancyTasksConfiguration.cpp:147 FancyTasksConfiguration.cpp:175
+#: FancyTasksConfiguration.cpp:330 FancyTasksConfiguration.cpp:350
+msgid "--- separator ---"
+msgstr "--- separador ---"
+
+#: FancyTasksConfiguration.cpp:153 FancyTasksConfiguration.cpp:167
+#: FancyTasksConfiguration.cpp:253
+msgid "--- tasks area ---"
+msgstr "--- área de tarefas ---"
+
+#: FancyTasksConfiguration.cpp:158 FancyTasksConfiguration.cpp:171
+#: FancyTasksConfiguration.cpp:257
+msgid "--- jobs area ---"
+msgstr "--- área de tarefas ---"
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Item"
+msgstr "Lançador"
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Task"
+msgstr "Lançador"
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Activate Launcher"
+msgstr "Lançador"
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Menu"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Children List"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+msgid "Show Item Windows"
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:194
+#, fuzzy
+msgid "Close Task"
+msgstr "Fechar as tarefas:"
+
+#. i18n: file: ui/general.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, general)
+#: FancyTasksConfiguration.cpp:220 po/rc.cpp:63 rc.cpp:63
+msgid "General"
+msgstr "Geral"
+
+#. i18n: file: ui/appearance.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
+#. i18n: file: ui/appearance.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
+#. i18n: file: ui/appearance.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
+#. i18n: file: ui/appearance.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
+#: FancyTasksConfiguration.cpp:221 po/rc.cpp:12 po/rc.cpp:15 rc.cpp:12
+#: rc.cpp:15
+msgid "Appearance"
+msgstr "Aparência"
+
+#. i18n: file: ui/arrangement.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, arrangement)
+#: FancyTasksConfiguration.cpp:222 po/rc.cpp:45 rc.cpp:45
+msgid "Arrangement"
+msgstr "Disposição"
+
+#. i18n: file: ui/actions.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, actions)
+#: FancyTasksConfiguration.cpp:223 po/rc.cpp:3 rc.cpp:3
+#, fuzzy
+msgid "Actions"
+msgstr "Animações"
+
+#: FancyTasksConfiguration.cpp:417
+msgid "Launcher with this URL was already added."
+msgstr ""
+
+#: FancyTasksConfiguration.cpp:467
+msgid "Add This Menu"
+msgstr "Adicionar Este Menu"
+
+#: FancyTasksIcon.cpp:1545 FancyTasksLauncher.cpp:303
+msgctxt "@action:inmenu"
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: FancyTasksIcon.cpp:1666
+msgid "1 job"
+msgid_plural "%1 jobs"
+msgstr[0] "1 tarefa"
+msgstr[1] "%1 tarefas"
+
+#: FancyTasksJob.cpp:88
+msgid "%1 [Paused]"
+msgstr "%1 [Pausa]"
+
+#: FancyTasksJob.cpp:92
+msgid "%1 (%2 remaining) "
+msgstr "%1 (faltam %2) "
+
+#: FancyTasksJob.cpp:127
+msgid "%1 [Finished]"
+msgstr "%1 [Terminada]"
+
+#: FancyTasksJob.cpp:176
+msgid "Close Job"
+msgstr "Fechar a Tarefa"
+
+#: FancyTasksJob.cpp:184
+msgid "Pause Job"
+msgstr "Pausar a Tarefa"
+
+#: FancyTasksJob.cpp:188
+msgid "Resume Job"
+msgstr "Prosseguir a Tarefa"
+
+#: FancyTasksJob.cpp:199
+msgid "Cancel Job"
+msgstr "Cancelar a Tarefa"
+
+#: FancyTasksJob.cpp:205
+msgid "Close on Finish"
+msgstr "Fechar ao Terminar"
+
+#: FancyTasksLauncher.cpp:194 FancyTasksLauncher.cpp:472
+msgid "Open"
+msgstr "Abrir"
+
+#: FancyTasksLauncher.cpp:298
+msgctxt "@action:inmenu"
+msgid "&Move Here\t<shortcut>%1</shortcut>"
+msgstr "&Mover para Aqui\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:299
+msgctxt "@action:inmenu"
+msgid "&Copy Here\t<shortcut>%1</shortcut>"
+msgstr "&Copiar para Aqui\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:300
+msgctxt "@action:inmenu"
+msgid "&Link Here\t<shortcut>%1</shortcut>"
+msgstr "&Criar uma Ligação Aqui\t<shortcut>%1</shortcut>"
+
+#: FancyTasksLauncher.cpp:390
+msgctxt "@info"
+msgid "Do you really want to empty the trash? All items will be deleted."
+msgstr "Deseja mesmo esvaziar o Lixo? Todos os itens serão removidos."
+
+#: FancyTasksLauncher.cpp:390
+msgctxt "@action:button"
+msgid "Empty Trash"
+msgstr "Esvaziar o Lixo"
+
+#: FancyTasksLauncher.cpp:402
+msgid "Trash"
+msgstr "Lixo"
+
+#: FancyTasksLauncher.cpp:403
+msgid "One item"
+msgid_plural "%1 items"
+msgstr[0] "Um item"
+msgstr[1] "%1 itens"
+
+#: FancyTasksLauncher.cpp:403
+msgid "Empty"
+msgstr "Vazio"
+
+#: FancyTasksLauncher.cpp:416 FancyTasksTask.cpp:172
+msgid "%1 Settings"
+msgstr "Configuração do %1"
+
+#: FancyTasksLauncher.cpp:460
+msgid "Menu Editor"
+msgstr "Editor do Menu"
+
+#: FancyTasksLauncher.cpp:461
+msgid "Menu"
+msgstr "Menu"
+
+#: FancyTasksLauncher.cpp:466
+msgid "Run"
+msgstr "Executar"
+
+#: FancyTasksLauncher.cpp:477
+msgid "Browse"
+msgstr "Escolher"
+
+#: FancyTasksLauncher.cpp:486
+msgid "&Empty Trashcan"
+msgstr "&Esvaziar o Lixo"
+
+#: FancyTasksLauncher.cpp:490
+msgid "Edit"
+msgstr "Editar"
+
+#: FancyTasksLauncher.cpp:491
+msgid "Launcher"
+msgstr "Lançador"
+
+#: FancyTasksTask.cpp:325
+msgid "Application"
+msgstr "Aplicação"
+
+#: FancyTasksTask.cpp:334
+msgid "Starting application..."
+msgstr "A iniciar a aplicação..."
+
+#: FancyTasksTask.cpp:334
+msgid "On all desktops"
+msgstr "Em todos os ecrãs"
+
+#: FancyTasksTask.cpp:334
+msgctxt "Which virtual desktop a window is currently on"
+msgid "On %1"
+msgstr "Em %1"
+
+#. i18n: file: ui/actions.ui:60
+#. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
+#: po/rc.cpp:6 rc.cpp:6
+#, fuzzy
+msgid "Action"
+msgstr "Aplicação"
+
+#. i18n: file: ui/actions.ui:65
+#. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
+#: po/rc.cpp:9 rc.cpp:9
+#, fuzzy
+msgid "Activation"
+msgstr "Animações"
+
+#. i18n: file: ui/appearance.ui:32
+#. i18n: ectx: property (text), widget (QCheckBox, useThumbnails)
+#: po/rc.cpp:18 rc.cpp:18
+msgid "Use thumbnails instead of icons"
+msgstr "Usar miniaturas em vez de ícones"
+
+#. i18n: file: ui/appearance.ui:41
+#. i18n: ectx: property (text), widget (QLabel, titleLabelModeLabel)
+#: po/rc.cpp:21 rc.cpp:21
+msgid "Show title label:"
+msgstr "Mostrar a legenda do título:"
+
+#. i18n: file: ui/appearance.ui:54
+#. i18n: ectx: property (text), widget (QLabel, customBackgroundPathLabel)
+#: po/rc.cpp:24 rc.cpp:24
+msgid "Custom background image:"
+msgstr "Imagem de fundo personalizada:"
+
+#. i18n: file: ui/appearance.ui:70
+#. i18n: ectx: property (text), widget (QLabel, activeIconIndicationLabel)
+#: po/rc.cpp:27 rc.cpp:27
+msgid "Indication for active icon:"
+msgstr "Indicação do ícone activo:"
+
+#. i18n: file: ui/appearance.ui:85
+#. i18n: ectx: property (title), widget (QGroupBox, animationsGoupBox)
+#: po/rc.cpp:30 rc.cpp:30
+msgid "Animations"
+msgstr "Animações"
+
+#. i18n: file: ui/appearance.ui:91
+#. i18n: ectx: property (text), widget (QLabel, moveAnimationLabel)
+#: po/rc.cpp:33 rc.cpp:33
+msgid "Moving between icons:"
+msgstr "Movimento entre ícones:"
+
+#. i18n: file: ui/appearance.ui:107
+#. i18n: ectx: property (text), widget (QLabel, demandsAttentionAnimationLabel)
+#: po/rc.cpp:36 rc.cpp:36
+msgid "Tasks needing attention:"
+msgstr "Tarefas que necessitam de atenção:"
+
+#. i18n: file: ui/appearance.ui:117
+#. i18n: ectx: property (text), widget (QCheckBox, parabolicMoveAnimation)
+#: po/rc.cpp:39 rc.cpp:39
+msgid "Parabolic"
+msgstr "Parabólico"
+
+#. i18n: file: ui/appearance.ui:124
+#. i18n: ectx: property (text), widget (QLabel, startupAnimationLabel)
+#: po/rc.cpp:42 rc.cpp:42
+msgid "Starting tasks:"
+msgstr "Tarefas a iniciar:"
+
+#. i18n: file: ui/arrangement.ui:22
+#. i18n: ectx: property (text), widget (QLabel, availableActionsLabel)
+#: po/rc.cpp:48 rc.cpp:48
+msgid "Available actions:"
+msgstr "Acções disponíveis:"
+
+#. i18n: file: ui/arrangement.ui:29
+#. i18n: ectx: property (text), widget (QLabel, currentActionsLabel)
+#: po/rc.cpp:51 rc.cpp:51
+msgid "Current actions:"
+msgstr "Acções actuais:"
+
+#. i18n: file: ui/arrangement.ui:44
+#. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
+#: po/rc.cpp:54 rc.cpp:54
+msgid "Add launcher"
+msgstr "Adicionar um lançador"
+
+#. i18n: file: ui/findApplication.ui:32
+#. i18n: ectx: property (clickMessage), widget (KLineEdit, query)
+#: po/rc.cpp:60 rc.cpp:60
+msgid "Search..."
+msgstr "Procurar..."
+
+#. i18n: file: ui/general.ui:26
+#. i18n: ectx: property (title), widget (QGroupBox, groupingAndSortingGroupBox)
+#: po/rc.cpp:66 rc.cpp:66
+msgid "Grouping and sorting"
+msgstr "Agrupamento e ordenação"
+
+#. i18n: file: ui/general.ui:32
+#. i18n: ectx: property (text), widget (QLabel, groupingStrategyLabel)
+#: po/rc.cpp:69 rc.cpp:69
+msgid "Grouping:"
+msgstr "Agrupamento:"
+
+#. i18n: file: ui/general.ui:48
+#. i18n: ectx: property (text), widget (QLabel, sortingStrategyLabel)
+#: po/rc.cpp:72 rc.cpp:72
+msgid "Sorting:"
+msgstr "Ordenação:"
+
+#. i18n: file: ui/general.ui:61
+#. i18n: ectx: property (title), widget (QGroupBox, filtersGroupBox)
+#: po/rc.cpp:75 rc.cpp:75
+msgid "Filters"
+msgstr "Filtros"
+
+#. i18n: file: ui/general.ui:67
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentDesktop)
+#: po/rc.cpp:78 rc.cpp:78
+msgid "Only show tasks from the current desktop"
+msgstr "Mostrar apenas as tarefas do ecrã actual"
+
+#. i18n: file: ui/general.ui:74
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentScreen)
+#: po/rc.cpp:81 rc.cpp:81
+msgid "Only show tasks from the current screen"
+msgstr "Mostrar apenas as tarefas do ecrã actual"
+
+#. i18n: file: ui/general.ui:81
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyMinimized)
+#: po/rc.cpp:84 rc.cpp:84
+msgid "Only show tasks that are minimized"
+msgstr "Mostrar apenas as tarefas minimizadas"
+
+#. i18n: file: ui/general.ui:88
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyTasksWithLaunchers)
+#: po/rc.cpp:87 rc.cpp:87
+#, fuzzy
+msgid "Only show tasks that have launchers"
+msgstr "Mostrar apenas as tarefas minimizadas"
+
+#. i18n: file: ui/general.ui:98
+#. i18n: ectx: property (title), widget (QGroupBox, jobsGroupBox)
+#: po/rc.cpp:90 rc.cpp:90
+msgid "Jobs"
+msgstr "Tarefas"
+
+#. i18n: file: ui/general.ui:106
+#. i18n: ectx: property (text), widget (QLabel, jobCloseModeLabel)
+#: po/rc.cpp:93 rc.cpp:93
+msgid "Close jobs:"
+msgstr "Fechar as tarefas:"
+
+#. i18n: file: ui/general.ui:121
+#. i18n: ectx: property (text), widget (QCheckBox, connectJobsWithTasks)
+#: po/rc.cpp:96 rc.cpp:96
+msgid "Connect jobs with tasks"
+msgstr "Ligar as tarefas às acções"
+
+#. i18n: file: ui/general.ui:128
+#. i18n: ectx: property (text), widget (QCheckBox, groupJobs)
+#: po/rc.cpp:99 rc.cpp:99
+msgid "Group similar jobs"
+msgstr "Agrupar as tarefas semelhantes"
+
+#. i18n: file: ui/group.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, group)
+#: po/rc.cpp:102 rc.cpp:102
+msgid "Group settings"
+msgstr "Configuração do grupo"
+
+#. i18n: file: ui/group.ui:40
+#. i18n: ectx: property (toolTip), widget (KIconButton, icon)
+#: po/rc.cpp:105 rc.cpp:105
+msgid "Group icon"
+msgstr "Ícone do grupo"
+
+#. i18n: file: ui/group.ui:49
+#. i18n: ectx: property (text), widget (QLabel, colorLabel)
+#: po/rc.cpp:108 rc.cpp:108
+msgid "Group color:"
+msgstr "Cor do grupo:"
+
+#. i18n: file: ui/group.ui:65
+#. i18n: ectx: property (text), widget (QLabel, nameLabel)
+#: po/rc.cpp:111 rc.cpp:111
+msgid "Group name:"
+msgstr "Nome do grupo:"
+
+#: po/rc.cpp:112 rc.cpp:112
+#, fuzzy
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Nome do grupo:"
+
+#: po/rc.cpp:113 rc.cpp:113
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+
+#~ msgid "Use default tool tips"
+#~ msgstr "Usar as dicas predefinidas"
+
+#~ msgid "Add this application"
+#~ msgstr "Adicionar esta aplicação"
