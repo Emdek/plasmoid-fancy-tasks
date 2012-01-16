@@ -1,5 +1,5 @@
 /***********************************************************************************
-* Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
+* Fancy Tasks: Plasmoid providing fancy visualization of tasks, launchers and jobs.
 * Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or

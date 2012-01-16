@@ -18,49 +18,13 @@
 *
 ***********************************************************************************/
 
-#ifndef FANCYTASKSSEPARATOR_HEADER
-#define FANCYTASKSSEPARATOR_HEADER
-
-#include <QtCore/QPointer>
-#include <QtGui/QGraphicsSceneMouseEvent>
-
-#include <Plasma/SvgWidget>
+#include "Manager.h"
 
 namespace FancyTasks
 {
 
-class Applet;
-
-class Separator : public Plasma::SvgWidget
+Manager::Manager(QObject *parent) : QObject(parent)
 {
-    Q_OBJECT
-
-    public:
-        Separator(Plasma::Svg *svg, Applet *applet);
-
-        QPainterPath shape() const;
-        bool isVisible() const;
-
-    protected:
-        void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-    public slots:
-        void setSize(qreal size);
-        void updateOrientation();
-        void show();
-        void hide();
-
-    private:
-        QPointer<Applet> m_applet;
-        qreal m_size;
-        bool m_isVisible;
-
-    signals:
-        void hoverMoved(QGraphicsWidget *item, qreal across);
-        void hoverLeft();
-};
-
 }
 
-#endif
+}

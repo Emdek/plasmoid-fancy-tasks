@@ -1,5 +1,5 @@
 /***********************************************************************************
-* Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
+* Fancy Tasks: Plasmoid providing fancy visualization of tasks, launchers and jobs.
 * Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
@@ -23,14 +23,15 @@
 #include "config-fancytasks.h"
 
 #include "Applet.h"
-#include "Configuration.h"
 #include "Icon.h"
+#include "Manager.h"
 #include "Task.h"
 #include "Launcher.h"
 #include "Job.h"
+#include "Menu.h"
 #include "Separator.h"
 #include "DropZone.h"
-#include "Menu.h"
+#include "Configuration.h"
 
 #include <cmath>
 
