@@ -374,7 +374,16 @@ QString Task::title() const
 
 QString Task::description() const
 {
-    return ((m_taskType == StartupType)?i18n("Starting application..."):(m_abstractItem->isOnAllDesktops()?i18n("On all desktops"):i18nc("Which virtual desktop a window is currently on", "On %1", KWindowSystem::desktopName(m_abstractItem->desktop()))));
+    if (m_taskType == StartupType)
+    {
+        return i18n("Starting application...");
+    }
+    else if (m_abstractItem)
+    {
+        return (m_abstractItem->isOnAllDesktops()?i18n("On all desktops"):i18nc("Which virtual desktop a window is currently on", "On %1", KWindowSystem::desktopName(m_abstractItem->desktop())));
+    }
+
+    return QString();
 }
 
 QString Task::command() const
