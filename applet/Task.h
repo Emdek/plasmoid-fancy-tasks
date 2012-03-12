@@ -63,7 +63,7 @@ class Task : public QObject
         QString command() const;
         QList<WId> windows();
         bool isActive() const;
-        bool demandsAttention() const;
+        bool isDemandingAttention() const;
 
     public slots:
         void setTask(AbstractGroupableItem *abstractItem);

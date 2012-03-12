@@ -583,7 +583,7 @@ void Applet::updateConfiguration()
 
                 m_layout->removeItem(m_layout->itemAt(i));
 
-                object->deleteLater();
+                delete object;
 
                 --i;
             }
@@ -819,12 +819,12 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
 
     if (!icon)
     {
-       return;
+        return;
     }
 
     m_layout->removeItem(icon);
 
-    icon->deleteLater();
+    delete icon;
 }
 
 void Applet::changeTaskPosition(AbstractGroupableItem *abstractItem)
@@ -939,7 +939,7 @@ void Applet::removeLauncher(Launcher *launcher)
 
     m_layout->removeItem(icon);
 
-    icon->deleteLater();
+    delete icon;
 }
 
 void Applet::changeLauncher(Launcher *launcher, const KUrl &oldUrl, bool force)
@@ -1699,7 +1699,7 @@ KMenu* Applet::contextMenu()
         {
             font.setItalic(true);
         }
-        else if (icon->demandsAttention())
+        else if (icon->isDemandingAttention())
         {
             font.setBold(true);
         }

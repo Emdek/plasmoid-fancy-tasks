@@ -72,7 +72,7 @@ Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *parent) : QGraphics
     m_dragTimer(0),
     m_highlightTimer(0),
     m_menuVisible(false),
-    m_demandsAttention(false),
+    m_isDemandingAttention(false),
     m_jobsRunning(false),
     m_isVisible(true),
     m_isPressed(false)
@@ -611,11 +611,11 @@ void Icon::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     update();
 
-    if (m_demandsAttention)
+    if (m_isDemandingAttention)
     {
         stopAnimation();
 
-        m_demandsAttention = false;
+        m_isDemandingAttention = false;
     }
 
     if (m_itemType == TaskType || m_itemType == GroupType)
@@ -1019,9 +1019,9 @@ void Icon::taskChanged(ItemChanges changes)
 
     if (changes & StateChanged)
     {
-        if (m_task->demandsAttention())
+        if (m_task->isDemandingAttention())
         {
-            if (!m_demandsAttention)
+            if (!m_isDemandingAttention)
             {
                 m_applet->needsVisualFocus();
             }
@@ -1030,14 +1030,14 @@ void Icon::taskChanged(ItemChanges changes)
             {
                 startAnimation(m_applet->demandsAttentionAnimation(), 1000, true);
 
-                m_demandsAttention = true;
+                m_isDemandingAttention = true;
             }
         }
-        else if (m_demandsAttention && !m_task->demandsAttention())
+        else if (m_isDemandingAttention && !m_task->isDemandingAttention())
         {
             stopAnimation();
 
-            m_demandsAttention = false;
+            m_isDemandingAttention = false;
         }
     }
 
@@ -1166,7 +1166,7 @@ void Icon::jobChanged(ItemChanges changes)
 
 void Icon::jobDemandsAttention()
 {
-    if (!m_demandsAttention)
+    if (!m_isDemandingAttention)
     {
         m_applet->needsVisualFocus();
     }
@@ -1175,7 +1175,7 @@ void Icon::jobDemandsAttention()
     {
         startAnimation(m_applet->demandsAttentionAnimation(), 1000, true);
 
-        m_demandsAttention = true;
+        m_isDemandingAttention = true;
     }
 
     jobChanged(StateChanged);
@@ -1236,7 +1236,7 @@ void Icon::addJob(Job *job)
     jobChanged(StateChanged);
 
     connect(job, SIGNAL(changed(ItemChanges)), this, SLOT(jobChanged(ItemChanges)));
-    connect(job, SIGNAL(demandsAttention()), this, SLOT(jobDemandsAttention()));
+    connect(job, SIGNAL(m_animationTimeLine()), this, SLOT(jobDemandsAttention()));
     connect(job, SIGNAL(close(FancyTasksJob*)), this, SLOT(removeJob(FancyTasksJob*)));
 }
 
@@ -1769,9 +1769,9 @@ bool Icon::isVisible() const
     return m_isVisible;
 }
 
-bool Icon::demandsAttention() const
+bool Icon::isDemandingAttention() const
 {
-    return m_demandsAttention;
+    return m_isDemandingAttention;
 }
 
 }

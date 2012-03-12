@@ -64,7 +64,7 @@ class Icon : public QGraphicsWidget
         KIcon icon();
         qreal factor() const;
         bool isVisible() const;
-        bool demandsAttention() const;
+        bool isDemandingAttention() const;
 
     public slots:
         void show();
@@ -137,7 +137,7 @@ class Icon : public QGraphicsWidget
         int m_dragTimer;
         int m_highlightTimer;
         bool m_menuVisible;
-        bool m_demandsAttention;
+        bool m_isDemandingAttention;
         bool m_jobsRunning;
         bool m_isVisible;
         bool m_isPressed;

@@ -401,7 +401,7 @@ bool Task::isActive() const
     return (m_abstractItem?m_abstractItem->isActive():false);
 }
 
-bool Task::demandsAttention() const
+bool Task::isDemandingAttention() const
 {
     return (m_abstractItem?m_abstractItem->demandsAttention():false);
 }
