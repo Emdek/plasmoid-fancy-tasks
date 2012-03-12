@@ -1699,7 +1699,7 @@ KMenu* Applet::contextMenu()
 
         if (icon->itemType() == GroupType)
         {
-            Menu *groupMenu = new Menu(icon->task());
+            Menu *groupMenu = new Menu(icon->task(), this);
 
             action->setMenu(groupMenu);
 
@@ -1730,6 +1730,25 @@ KMenu* Applet::contextMenu()
     }
 
     return menu;
+}
+
+Task* Applet::taskForWindow(WId window)
+{
+    if (m_tasks.contains(window) && m_tasks[window])
+    {
+        return m_tasks[window];
+    }
+
+    TaskManager::Task *task = TaskManager::TaskManager::self()->findTask(window);
+
+    if (!task)
+    {
+        return NULL;
+    }
+
+    m_tasks[window] = new Task(new TaskManager::TaskItem(this, task), new TaskManager::GroupManager(this));
+
+    return m_tasks[window];
 }
 
 Launcher* Applet::launcherForUrl(KUrl url)

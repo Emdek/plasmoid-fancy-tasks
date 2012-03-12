@@ -1261,14 +1261,14 @@ void Icon::addWindow(WId window)
         return;
     }
 
-    TaskManager::Task *task = TaskManager::TaskManager::self()->findTask(window);
+    Task *task = m_applet->taskForWindow(window);
 
     if (!task)
     {
         return;
     }
 
-    Light *taskLight = new Light(new Task(new TaskManager::TaskItem(this, task), new TaskManager::GroupManager(this)), m_applet, this);
+    Light *taskLight = new Light(task, m_applet, this);
     taskLight->setSize(m_size);
 
     m_layout->insertItem(1, taskLight);
@@ -1528,7 +1528,7 @@ void Icon::performAction(IconAction action, Task *task)
             {
                 m_menuVisible = true;
 
-                Menu *groupMenu = new Menu(task);
+                Menu *groupMenu = new Menu(task, m_applet);
                 groupMenu->addSeparator();
                 groupMenu->addAction(KIcon("process-stop"), i18nc("@action:inmenu", "Cancel"));
                 groupMenu->exec(m_applet->containment()->corona()->popupPosition(this, groupMenu->sizeHint(), Qt::AlignCenter));

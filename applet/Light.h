@@ -63,8 +63,8 @@ class Light : public QGraphicsWidget
 
     private:
         QPointer<Applet> m_applet;
-        QPointer<Icon> m_icon;
         QPointer<Task> m_task;
+        QPointer<Icon> m_icon;
         WId m_window;
         int m_dragTimer;
         int m_highlightTimer;

@@ -33,8 +33,8 @@ namespace FancyTasks
 
 Light::Light(Task *task, Applet *applet, Icon *icon) : QGraphicsWidget(icon),
     m_applet(applet),
-    m_icon(icon),
     m_task(task),
+    m_icon(icon),
     m_dragTimer(0),
     m_highlightTimer(0)
 {

@@ -171,6 +171,7 @@ class Applet : public Plasma::Applet
         void itemDropped(Icon *icon, int index);
         void itemDragged(Icon *icon, const QPointF &position, const QMimeData *mimeData);
         KMenu* contextMenu();
+        Task* taskForWindow(WId window);
         Launcher* launcherForUrl(KUrl url);
         Launcher* launcherForTask(Task *task);
         Icon* iconForMimeData(const QMimeData *mimeData);
@@ -240,6 +241,7 @@ class Applet : public Plasma::Applet
         QQueue<QPointer<Job> > m_jobsQueue;
         QList<QGraphicsWidget*> m_visibleItems;
         QList<QPointer<Launcher> > m_launchers;
+        QMap<WId, QPointer<Task> > m_tasks;
         QMap<QString, QPointer<Job> > m_jobs;
         QMap<Launcher*, QPointer<Icon> > m_launcherIcons;
         QMap<Job*, QPointer<Icon> > m_jobIcons;

@@ -19,6 +19,7 @@
 ***********************************************************************************/
 
 #include "Menu.h"
+#include "Applet.h"
 #include "Task.h"
 
 #include <QtGui/QApplication>
@@ -28,8 +29,9 @@
 namespace FancyTasks
 {
 
-Menu::Menu(Task *parent) : KMenu(),
-    m_task(parent),
+Menu::Menu(Task *task, Applet *applet) : KMenu(),
+    m_applet(applet),
+    m_task(task),
     m_currentAction(NULL)
 {
     QList<WId> windows = m_task->windows();
@@ -57,16 +59,11 @@ void Menu::dragMoveEvent(QDragMoveEvent *event)
     {
         m_currentAction = action;
 
-        TaskManager::Task *taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
+        Task *task = m_applet->taskForWindow(action->data().toULongLong());
 
-        if (taskPointer)
+        if (task)
         {
-            TaskManager::GroupManager *groupManager = new TaskManager::GroupManager(this);
-            Task *task = new Task(new TaskManager::TaskItem(groupManager, taskPointer), groupManager);
             task->activate();
-
-            delete task;
-            delete groupManager;
         }
     }
 }
@@ -124,13 +121,10 @@ void Menu::mouseReleaseEvent(QMouseEvent *event)
 
     if (action && action->data().type() == QVariant::ULongLong)
     {
-        TaskManager::Task *taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
+        Task *task = m_applet->taskForWindow(action->data().toULongLong());
 
-        if (taskPointer)
+        if (task)
         {
-            TaskManager::GroupManager *groupManager = new TaskManager::GroupManager(this);
-            Task *task = new Task(new TaskManager::TaskItem(groupManager, taskPointer), groupManager);
-
             if (event->button() == Qt::LeftButton)
             {
                 task->activate();
@@ -139,9 +133,6 @@ void Menu::mouseReleaseEvent(QMouseEvent *event)
             {
                 task->close();
             }
-
-            delete task;
-            delete groupManager;
         }
     }
 
@@ -154,19 +145,13 @@ void Menu::contextMenuEvent(QContextMenuEvent *event)
 
     if (action && action->data().type() == QVariant::ULongLong)
     {
-        TaskManager::Task *taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
+        Task *task = m_applet->taskForWindow(action->data().toULongLong());
 
-        if (taskPointer)
+        if (task)
         {
-            TaskManager::GroupManager *groupManager = new TaskManager::GroupManager(this);
-            Task *task = new Task(new TaskManager::TaskItem(groupManager, taskPointer), groupManager);
-
             KMenu *menu = task->contextMenu();
             menu->exec(event->globalPos());
-
-            delete task;
-            delete groupManager;
-            delete menu;
+            menu->deleteLater();
         }
     }
 }

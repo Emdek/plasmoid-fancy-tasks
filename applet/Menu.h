@@ -21,11 +21,14 @@
 #ifndef FANCYTASKSMENU_HEADER
 #define FANCYTASKSMENU_HEADER
 
+#include <QtCore/QPointer>
+
 #include <KMenu>
 
 namespace FancyTasks
 {
 
+class Applet;
 class Task;
 
 class Menu : public KMenu
@@ -33,7 +36,7 @@ class Menu : public KMenu
     Q_OBJECT
 
     public:
-        Menu(Task *parent = NULL);
+        Menu(Task *task, Applet *applet);
 
         QAction* addAction(WId window);
         QAction* addAction(const QIcon &icon, const QString &text, WId window = 0);
@@ -49,7 +52,8 @@ class Menu : public KMenu
         void contextMenuEvent(QContextMenuEvent *event);
 
     private:
-        Task *m_task;
+        QPointer<Applet> m_applet;
+        QPointer<Task> m_task;
         QAction *m_currentAction;
         QPoint m_dragStartPosition;
 };
