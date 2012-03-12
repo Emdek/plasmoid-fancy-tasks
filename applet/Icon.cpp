@@ -943,7 +943,7 @@ void Icon::publishGeometry(Task *task)
         task = m_task;
     }
 
-    if (!task || task->taskType() != TaskType)
+    if (!task || !(task->taskType() == TaskType || task->taskType() == GroupType))
     {
         return;
     }

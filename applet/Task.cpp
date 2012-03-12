@@ -20,9 +20,6 @@
 
 #include "Task.h"
 
-#include <QtCore/QTimer>
-#include <QtCore/QVarLengthArray>
-
 #include <KLocale>
 #include <NETRootInfo>
 #include <KWindowSystem>
@@ -131,6 +128,19 @@ void Task::publishIconGeometry(const QRect &geometry)
     if (m_task && m_task->task())
     {
         m_task->task()->publishIconGeometry(geometry);
+    }
+    else if (m_group)
+    {
+        TaskManager::ItemList items = m_group->members();
+
+        for (int i = 0; i < items.count(); ++i)
+        {
+            if (items.at(i)->itemType() == TaskManager::TaskItemType)
+            {
+                TaskItem *task = qobject_cast<TaskItem*>(items.at(i));
+                task->task()->publishIconGeometry(geometry);
+            }
+        }
     }
 }
 
