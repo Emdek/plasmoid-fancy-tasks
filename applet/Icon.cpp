@@ -1261,7 +1261,14 @@ void Icon::addWindow(WId window)
         return;
     }
 
-    Light *taskLight = new Light(window, m_applet, this);
+    TaskManager::Task *task = TaskManager::TaskManager::self()->findTask(window);
+
+    if (!task)
+    {
+        return;
+    }
+
+    Light *taskLight = new Light(new Task(new TaskManager::TaskItem(this, task), new TaskManager::GroupManager(this)), m_applet, this);
     taskLight->setSize(m_size);
 
     m_layout->insertItem(1, taskLight);

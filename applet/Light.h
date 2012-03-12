@@ -43,7 +43,7 @@ class Light : public QGraphicsWidget
     Q_OBJECT
 
     public:
-        Light(WId window, Applet *applet, Icon *icon);
+        Light(Task *task, Applet *applet, Icon *icon);
 
     public slots:
         void toolTipAboutToShow();

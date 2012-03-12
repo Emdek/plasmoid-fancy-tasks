@@ -31,11 +31,10 @@
 namespace FancyTasks
 {
 
-Light::Light(WId window, Applet *applet, Icon *icon) : QGraphicsWidget(icon),
+Light::Light(Task *task, Applet *applet, Icon *icon) : QGraphicsWidget(icon),
     m_applet(applet),
     m_icon(icon),
-    m_task(NULL),
-    m_window(window),
+    m_task(task),
     m_dragTimer(0),
     m_highlightTimer(0)
 {
@@ -46,15 +45,6 @@ Light::Light(WId window, Applet *applet, Icon *icon) : QGraphicsWidget(icon),
     setFlag(QGraphicsItem::ItemIsFocusable);
 
     Plasma::ToolTipManager::self()->registerWidget(this);
-
-    TaskManager::Task *task = TaskManager::TaskManager::self()->findTask(m_window);
-
-    if (!task)
-    {
-        deleteLater();
-    }
-
-    m_task = new Task(new TaskManager::TaskItem(this, task), new TaskManager::GroupManager(this));
 }
 
 void Light::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -72,16 +62,12 @@ void Light::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
 
-    QList<WId> windows;
-    windows.append(m_window);
-
     Plasma::ToolTipContent data;
     data.setMainText(m_task->title());
     data.setSubText(m_task->description());
     data.setImage(m_task->icon());
     data.setClickable(true);
-
-    data.setWindowsToPreview(windows);
+    data.setWindowsToPreview(m_task->windows());
 
     Plasma::ToolTipManager::self()->setContent(this, data);
 
