@@ -2,6 +2,7 @@
 - add per launcher task connecting rules;
 - use command name for default launcher matching rules;
 - show icon tool tip instantly;
+- window context menus for entries of Entries menu also for not grouped tasks;
 - some other fixes and changes.
 
 1.0.99 (05.03.2012):

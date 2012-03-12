@@ -1539,13 +1539,13 @@ void Icon::performAction(IconAction action, Task *task)
             }
         break;
         case ShowWindowsAction:
-            if (m_itemType == GroupType && task && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::PresentWindowsGroup))
+            if (task && m_itemType == GroupType && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::PresentWindowsGroup))
             {
                 Plasma::WindowEffects::presentWindows(m_applet->window(), task->windows());
             }
         break;
         case CloseTaskAction:
-            if ((m_itemType == TaskType || m_itemType == GroupType) && task)
+            if (task && (m_itemType == TaskType || m_itemType == GroupType))
             {
                 task->close();
             }

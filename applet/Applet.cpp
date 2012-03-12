@@ -60,9 +60,6 @@
 #include <X11/extensions/shape.h>
 #endif
 
-
-#include <QDebug>
-
 K_EXPORT_PLASMA_APPLET(fancytasks, FancyTasks::Applet)
 
 namespace FancyTasks
@@ -586,7 +583,7 @@ void Applet::updateConfiguration()
 
                 m_layout->removeItem(m_layout->itemAt(i));
 
-                delete object;
+                object->deleteLater();
 
                 --i;
             }
@@ -827,7 +824,7 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
 
     m_layout->removeItem(icon);
 
-    delete icon;
+    icon->deleteLater();
 }
 
 void Applet::changeTaskPosition(AbstractGroupableItem *abstractItem)
@@ -947,14 +944,13 @@ void Applet::removeLauncher(Launcher *launcher)
 
 void Applet::changeLauncher(Launcher *launcher, const KUrl &oldUrl, bool force)
 {
-qDebug() << "changeLauncher:" << oldUrl;
     if (!launcher || (!m_arrangement.contains(oldUrl.pathOrUrl()) && !force))
     {
         return;
     }
 
     config().group("Launchers").deleteGroup(oldUrl.pathOrUrl());
-qDebug() << launcher->launcherUrl();
+
     if (launcher->launcherUrl() != oldUrl)
     {
         m_arrangement.replace(m_arrangement.indexOf(oldUrl.pathOrUrl()), launcher->launcherUrl().pathOrUrl());
@@ -980,7 +976,7 @@ qDebug() << launcher->launcherUrl();
         {
             continue;
         }
-qDebug() << ruleKeys[iterator.key()] + "Expression:" << iterator.value().expression;
+
         configuration.writeEntry((ruleKeys[iterator.key()] + "Expression"), iterator.value().expression);
         configuration.writeEntry((ruleKeys[iterator.key()] + "Match"), static_cast<int>(iterator.value().match));
         configuration.writeEntry((ruleKeys[iterator.key()] + "Required"), iterator.value().required);
@@ -1354,7 +1350,7 @@ void Applet::showMenu()
         menu->exec(QCursor::pos());
     }
 
-    delete menu;
+    menu->deleteLater();
 }
 
 void Applet::showDropZone(int index)
@@ -1655,7 +1651,7 @@ void Applet::requestFocus()
 
 KMenu* Applet::contextMenu()
 {
-    KMenu *menu = new KMenu;
+    Menu *menu = new Menu(NULL, this);
 
     if (m_lastAttentionDemand.isValid() && m_lastAttentionDemand.secsTo(QDateTime::currentDateTime()) < 1)
     {
@@ -1686,7 +1682,17 @@ KMenu* Applet::contextMenu()
             continue;
         }
 
-        QAction *action = menu->addAction(icon->icon(), icon->title());
+        QAction *action = NULL;
+
+        if (icon->task() && icon->task()->taskType() == TaskType && !icon->task()->windows().isEmpty())
+        {
+            action = menu->addAction(icon->icon(), icon->title(), icon->task()->windows().first());
+        }
+        else
+        {
+            action = menu->addAction(icon->icon(), icon->title());
+        }
+
         QFont font = QFont(action->font());
 
         if (icon->itemType() == LauncherType)

@@ -38,9 +38,6 @@
 #include <taskmanager/taskmanager.h>
 #include <taskmanager/groupmanager.h>
 
-
-#include <QDebug>
-
 namespace FancyTasks
 {
 
@@ -285,10 +282,9 @@ void Configuration::accepted()
 
             const KUrl url(item->toolTip());
             Launcher *launcher = new Launcher(url, m_applet);
-qDebug() << url;
+
             if (m_rules.contains(item->toolTip()) && !launcher->isMenu())
             {
-qDebug() << "has rules";
                 launcher->setRules(m_rules[item->toolTip()].first);
                 launcher->setExcluded(m_rules[item->toolTip()].second);
             }
