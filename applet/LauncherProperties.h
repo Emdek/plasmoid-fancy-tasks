@@ -18,25 +18,44 @@
 *
 ***********************************************************************************/
 
-#ifndef FANCYTASKSACTIONDELEGATE_HEADER
-#define FANCYTASKSACTIONDELEGATE_HEADER
+#ifndef FANCYTASKSLAUNCHERPROPERTIES_HEADER
+#define FANCYTASKSLAUNCHERPROPERTIES_HEADER
 
-#include <QtGui/QStyledItemDelegate>
+#include "Applet.h"
+
+#include <KPropertiesDialog>
+
+#include "ui_launcherRules.h"
 
 namespace FancyTasks
 {
 
-class ActionDelegate : public QStyledItemDelegate
+class Launcher;
+
+class LauncherProperties : public KPropertiesDialog
 {
     Q_OBJECT
 
     public:
-        ActionDelegate(QObject *parent = NULL);
+        LauncherProperties(Launcher *launcher);
 
-        void setEditorData(QWidget *editor, const QModelIndex &index) const;
-        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-        QString displayText(const QVariant &value, const QLocale &locale) const;
-        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        bool eventFilter(QObject *object, QEvent *event);
+
+    protected:
+        void setRules(const QMap<ConnectionRule, LauncherRule> &rules);
+
+    protected slots:
+        void accepted();
+        void detectWindowProperties();
+        void ruleClicked(const QModelIndex &index);
+
+    private:
+        Launcher *m_launcher;
+        QDialog *m_selector;
+        Ui::launcherRules m_launcherRulesUi;
+
+    signals:
+        void launcherChanged(Launcher *launcher, KUrl oldUrl);
 };
 
 }

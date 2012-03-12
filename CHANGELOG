@@ -1,5 +1,25 @@
-1.0.97 (01.02.2012):
+1.1.0 (15.03.2012):
+- add per launcher task connecting rules;
+- use command name for default launcher matching rules;
+- show icon tool tip instantly;
+- some other fixes and changes.
+
+1.0.99 (05.03.2012):
+- show title label by default;
+- change default animation to glow;
+- make thumbnails work with raster graphics system;
+- hide option to use thumbnails if it is not available;
+- add Settings entry to icon context menu;
+- fix triggering actions with keyboard modifiers;
+- remove custom implementation of task activation.
+
+1.0.98 (26.02.2012):
+- hide standard (and not working) launcher actions;
+- do not allow to drop icon on itself;
 - code cleanup.
+
+1.0.97 (27.01.2012):
+- adapted to changes in KDE 4.8.
 
 1.0.96 (01.12.2011):
 - removed group colors (upstream change in libtaskmanager);

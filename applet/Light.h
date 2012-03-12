@@ -31,12 +31,6 @@
 
 #include <Plasma/Svg>
 
-#include <taskmanager/task.h>
-#include <taskmanager/taskitem.h>
-#include <taskmanager/taskactions.h>
-#include <taskmanager/taskmanager.h>
-#include <taskmanager/groupmanager.h>
-
 namespace FancyTasks
 {
 

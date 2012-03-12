@@ -56,7 +56,7 @@
 namespace FancyTasks
 {
 
-Icon::Icon(TaskManager::AbstractGroupableItem *abstractItem, Launcher *launcher, Job *job, Applet *parent) : QGraphicsWidget(parent),
+Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *parent) : QGraphicsWidget(parent),
     m_applet(parent),
     m_task(NULL),
     m_launcher(NULL),
@@ -64,7 +64,7 @@ Icon::Icon(TaskManager::AbstractGroupableItem *abstractItem, Launcher *launcher,
     m_layout(new QGraphicsLinearLayout(this)),
     m_animationTimeLine(new QTimeLine(1000, this)),
     m_jobAnimationTimeLine(NULL),
-    m_itemType(TypeOther),
+    m_itemType(OtherType),
     m_factor(parent->initialFactor()),
     m_animationProgress(-1),
     m_jobsProgress(0),
@@ -96,9 +96,9 @@ Icon::Icon(TaskManager::AbstractGroupableItem *abstractItem, Launcher *launcher,
     m_layout->addStretch();
     m_layout->addStretch();
 
-    if (abstractItem)
+    if (task)
     {
-        setTask(abstractItem);
+        setTask(task);
     }
     else if (launcher)
     {
@@ -185,7 +185,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         QPainter pixmapPainter(&visualizationPixmap);
         pixmapPainter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-        if (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && m_itemType != TypeGroup)
+        if (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && m_itemType != GroupType)
         {
             QPixmap thumbnail = ((m_thumbnailPixmap.width() > m_thumbnailPixmap.height())?m_thumbnailPixmap.scaledToWidth(m_size, Qt::SmoothTransformation):m_thumbnailPixmap.scaledToHeight(m_size, Qt::SmoothTransformation));
             qreal iconSize = (m_size * 0.3);
@@ -378,7 +378,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         targetPainter.restore();
     }
 
-    if (m_applet->titleLabelMode() != NoLabel && !title().isEmpty() && (m_applet->titleLabelMode() == AlwaysShowLabel || (m_task && m_task->isActive() && m_applet->titleLabelMode() == LabelForActiveIcon) || (isUnderMouse() && m_applet->titleLabelMode() == LabelOnMouseOver)))
+    if (m_applet->titleLabelMode() != NoLabel && !title().isEmpty() && (m_applet->titleLabelMode() == AlwaysShowLabel || (m_task && m_task->isActive() && m_applet->titleLabelMode() == ActiveIconLabel) || (isUnderMouse() && m_applet->titleLabelMode() == MouseOverLabel)))
     {
         QFont font = targetPainter.font();
         font.setPixelSize(visualizationSize * 0.2);
@@ -544,14 +544,14 @@ void Icon::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
     killTimer(m_dragTimer);
 
-    if (m_itemType == TypeTask || m_itemType == TypeGroup)
+    if (m_itemType == TaskType || m_itemType == GroupType)
     {
         update();
 
         m_dragTimer = startTimer(300);
     }
 
-    if (m_itemType != TypeLauncher)
+    if (m_itemType != LauncherType)
     {
         event->ignore();
     }
@@ -566,7 +566,7 @@ void Icon::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
     QTimer::singleShot(500, m_applet, SLOT(hideDropZone()));
 
-    if (m_itemType != TypeLauncher)
+    if (m_itemType != LauncherType)
     {
         event->ignore();
     }
@@ -580,12 +580,12 @@ void Icon::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     m_applet->hideDropZone();
 
-    if (m_applet->groupManager()->groupingStrategy() == TaskManager::GroupManager::ManualGrouping && (event->mimeData()->hasFormat("windowsystem/winid") || event->mimeData()->hasFormat("windowsystem/multiple-winids")) && (m_itemType == TypeTask || m_itemType == TypeGroup))
+    if (m_applet->groupManager()->groupingStrategy() == TaskManager::GroupManager::ManualGrouping && (event->mimeData()->hasFormat("windowsystem/winid") || event->mimeData()->hasFormat("windowsystem/multiple-winids")) && (m_itemType == TaskType || m_itemType == GroupType))
     {
         TaskManager::ItemList items;
         Icon *droppedIcon = m_applet->iconForMimeData(event->mimeData());
 
-        if (droppedIcon)
+        if (droppedIcon && droppedIcon != this)
         {
             if (event->mimeData()->hasFormat("windowsystem/winid"))
             {
@@ -603,7 +603,7 @@ void Icon::dropEvent(QGraphicsSceneDragDropEvent *event)
             return;
         }
     }
-    else if (m_itemType == TypeLauncher && KUrl::List::canDecode(event->mimeData()))
+    else if (m_itemType == LauncherType && KUrl::List::canDecode(event->mimeData()))
     {
         m_launcher->dropUrls(KUrl::List::fromMimeData(event->mimeData()), event->modifiers());
 
@@ -617,8 +617,6 @@ void Icon::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 void Icon::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    Applet::setActiveWindow(KWindowSystem::activeWindow());
-
     m_isPressed = true;
 
     update();
@@ -630,7 +628,7 @@ void Icon::mousePressEvent(QGraphicsSceneMouseEvent *event)
         m_demandsAttention = false;
     }
 
-    if (m_itemType == TypeTask)
+    if (m_itemType == TaskType)
     {
         publishGeometry(m_task->task());
     }
@@ -640,7 +638,7 @@ void Icon::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Icon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (QPoint(event->screenPos() - event->buttonDownScreenPos(Qt::LeftButton)).manhattanLength() < QApplication::startDragDistance() || m_itemType == TypeStartup || (m_itemType == TypeLauncher && m_applet->immutability() != Plasma::Mutable))
+    if (QPoint(event->screenPos() - event->buttonDownScreenPos(Qt::LeftButton)).manhattanLength() < QApplication::startDragDistance() || m_itemType == StartupType || (m_itemType == LauncherType && m_applet->immutability() != Plasma::Mutable))
     {
         return;
     }
@@ -652,11 +650,11 @@ void Icon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         m_launcher->launcherUrl().populateMimeData(mimeData);
     }
 
-    if (m_itemType == TypeTask || m_itemType == TypeGroup)
+    if (m_itemType == TaskType || m_itemType == GroupType)
     {
         m_task->abstractItem()->addMimeData(mimeData);
     }
-    else if (m_itemType != TypeLauncher)
+    else if (m_itemType != LauncherType)
     {
         return;
     }
@@ -689,7 +687,7 @@ void Icon::keyPressEvent(QKeyEvent *event)
     }
     else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
-        performAction(ActivateItem);
+        performAction(ActivateItemAction);
     }
     else
     {
@@ -699,7 +697,7 @@ void Icon::keyPressEvent(QKeyEvent *event)
 
 void Icon::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    performAction(ShowMenu);
+    performAction(ShowMenuAction);
 
     event->accept();
 }
@@ -708,16 +706,16 @@ void Icon::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == m_dragTimer && isUnderMouse())
     {
-        if (m_itemType == TypeTask)
+        if (m_itemType == TaskType)
         {
-            m_task->activateWindow();
+            m_task->activate();
         }
-        else if (m_itemType == TypeGroup)
+        else if (m_itemType == GroupType)
         {
-            performAction(ShowChildrenList);
+            performAction(ShowChildrenListAction);
         }
     }
-    else if (event->timerId() == m_highlightTimer && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::HighlightWindows) && (m_itemType == TypeTask || m_itemType == TypeGroup))
+    else if (event->timerId() == m_highlightTimer && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::HighlightWindows) && (m_itemType == TaskType || m_itemType == GroupType))
     {
         Plasma::WindowEffects::highlightWindows(m_applet->window(), m_task->windows());
     }
@@ -729,7 +727,7 @@ void Icon::show()
 {
     m_isVisible = true;
 
-    if (m_itemType == TypeOther)
+    if (m_itemType == OtherType)
     {
         return;
     }
@@ -763,14 +761,14 @@ void Icon::activate()
 
     switch (m_itemType)
     {
-        case TypeLauncher:
-            performAction(ActivateLauncher);
+        case LauncherType:
+            performAction(ActivateLauncherAction);
         break;
-        case TypeTask:
-            performAction(ActivateTask);
+        case TaskType:
+            performAction(ActivateTaskAction);
         break;
-        case TypeGroup:
-            performAction(ShowChildrenList);
+        case GroupType:
+            performAction(ShowChildrenListAction);
         break;
         default:
         break;
@@ -877,12 +875,12 @@ void Icon::setThumbnail(const KFileItem &item, const QPixmap thumbnail)
 {
     Q_UNUSED(item)
 
-    if (!m_applet->useThumbnails() || (m_itemType != TypeTask && (m_itemType != TypeLauncher || thumbnail.isNull())))
+    if (!m_applet->useThumbnails() || (m_itemType != TaskType && (m_itemType != LauncherType || thumbnail.isNull())))
     {
         return;
     }
 
-    if (m_itemType == TypeTask && m_task->windows().count() > 0)
+    if (m_itemType == TaskType && m_task->windows().count() > 0)
     {
         m_thumbnailPixmap = Applet::windowPreview(m_task->windows().at(0), ((200 > m_size)?200:m_size));
     }
@@ -1003,24 +1001,24 @@ void Icon::taskChanged(ItemChanges changes)
 
     if (changes & OtherChanges)
     {
-        if (m_itemType == TypeStartup && m_task->taskType() != Task::TypeStartup)
+        if (m_itemType == StartupType && m_task->taskType() != StartupType)
         {
             stopAnimation();
         }
 
-        if (m_task->taskType() == Task::TypeStartup)
+        if (m_task->taskType() == StartupType)
         {
-            m_itemType = TypeStartup;
+            m_itemType = StartupType;
         }
-        else if (m_task->taskType() == Task::TypeTask)
+        else if (m_task->taskType() == TaskType)
         {
-            m_itemType = TypeTask;
+            m_itemType = TaskType;
 
-            setLauncher(m_applet->launcherForTask(m_task->task()));
+            setLauncher(m_applet->launcherForTask(m_task));
         }
-        else if (m_task->taskType() == Task::TypeGroup)
+        else if (m_task->taskType() == GroupType)
         {
-            m_itemType = TypeGroup;
+            m_itemType = GroupType;
         }
     }
 
@@ -1053,7 +1051,7 @@ void Icon::taskChanged(ItemChanges changes)
         setFactor(m_task->isActive()?1:m_applet->initialFactor());
     }
 
-    if (changes & WindowsChanged && m_itemType == TypeTask)
+    if (changes & WindowsChanged && m_itemType == TaskType)
     {
         QTimer::singleShot(200, this, SLOT(setThumbnail()));
     }
@@ -1073,12 +1071,12 @@ void Icon::taskChanged(ItemChanges changes)
 
 void Icon::launcherChanged(ItemChanges changes)
 {
-    if (!m_launcher || m_itemType != TypeLauncher)
+    if (!m_launcher || m_itemType != LauncherType)
     {
         return;
     }
 
-    if (!m_launcher->isServiceGroup() && !KDesktopFile::isDesktopFile(m_launcher->targetUrl().toLocalFile()))
+    if (!m_launcher->isMenu() && !KDesktopFile::isDesktopFile(m_launcher->targetUrl().toLocalFile()))
     {
         KFileItemList items;
         items.append(KFileItem(m_launcher->targetUrl(), m_launcher->mimeType()->name(), KFileItem::Unknown));
@@ -1122,7 +1120,7 @@ void Icon::jobChanged(ItemChanges changes)
                 continue;
             }
 
-            if (m_jobs.at(i)->state() != Job::Finished && !m_jobs.at(i)->state() != Job::Error)
+            if (m_jobs.at(i)->state() != FinishedState && !m_jobs.at(i)->state() != ErrorState)
             {
                 ++amount;
 
@@ -1190,7 +1188,7 @@ void Icon::jobDemandsAttention()
 
 void Icon::setLauncher(Launcher *launcher)
 {
-    if (m_launcher && m_itemType != TypeLauncher)
+    if (m_launcher && m_itemType != LauncherType)
     {
         m_launcher->removeItem(this);
     }
@@ -1199,19 +1197,19 @@ void Icon::setLauncher(Launcher *launcher)
 
     if (m_launcher)
     {
-        if (m_itemType == TypeOther)
+        if (m_itemType == OtherType)
         {
-            m_itemType = TypeLauncher;
+            m_itemType = LauncherType;
         }
 
-        if (m_itemType != TypeLauncher)
+        if (m_itemType != LauncherType)
         {
             m_launcher->addItem(this);
         }
 
         launcherChanged(EveythingChanged);
 
-        if (m_itemType == TypeLauncher)
+        if (m_itemType == LauncherType)
         {
             connect(m_launcher, SIGNAL(hide()), this, SLOT(hide()));
             connect(m_launcher, SIGNAL(show()), this, SLOT(show()));
@@ -1233,9 +1231,9 @@ void Icon::addJob(Job *job)
         return;
     }
 
-    if (m_itemType == TypeOther)
+    if (m_itemType == OtherType)
     {
-        m_itemType = TypeJob;
+        m_itemType = JobType;
     }
 
     m_jobs.append(job);
@@ -1251,7 +1249,7 @@ void Icon::removeJob(Job *job)
 {
     m_jobs.removeAll(job);
 
-    if (m_itemType == TypeJob && !m_jobs.count())
+    if (m_itemType == JobType && !m_jobs.count())
     {
         deleteLater();
 
@@ -1298,9 +1296,9 @@ void Icon::removeWindow(WId window)
     }
 }
 
-void Icon::setTask(TaskManager::AbstractGroupableItem *abstractItem)
+void Icon::setTask(Task *task)
 {
-    if (abstractItem && abstractItem->itemType() != TaskManager::GroupItemType && !static_cast<TaskManager::TaskItem*>(abstractItem)->startup().isNull())
+    if (task->taskType() == StartupType)
     {
         if (m_applet->startupAnimation() != NoAnimation)
         {
@@ -1315,23 +1313,23 @@ void Icon::setTask(TaskManager::AbstractGroupableItem *abstractItem)
         }
     }
 
-    if (!abstractItem)
+    if (!task)
     {
         if (m_task)
         {
             if (m_jobs.count())
             {
-                m_itemType = TypeJob;
+                m_itemType = JobType;
             }
             else if (m_launcher)
             {
-                m_itemType = TypeLauncher;
+                m_itemType = LauncherType;
 
                 setLauncher(m_launcher);
             }
             else
             {
-                m_itemType = TypeOther;
+                m_itemType = OtherType;
             }
 
             m_task->deleteLater();
@@ -1351,7 +1349,7 @@ void Icon::setTask(TaskManager::AbstractGroupableItem *abstractItem)
         return;
     }
 
-    m_task = new Task(abstractItem, m_applet->groupManager());
+    m_task = task;
 
     QList<WId> windowList = m_task->windows();
 
@@ -1372,7 +1370,7 @@ void Icon::windowPreviewActivated(WId window, Qt::MouseButtons buttons, Qt::Keyb
 {
     Q_UNUSED(point)
 
-    TaskManager::TaskPtr taskPointer = TaskManager::TaskManager::self()->findTask(window);
+    TaskManager::Task *taskPointer = TaskManager::TaskManager::self()->findTask(window);
 
     Plasma::ToolTipManager::self()->hide(this);
 
@@ -1392,19 +1390,19 @@ void Icon::windowPreviewActivated(WId window, Qt::MouseButtons buttons, Qt::Keyb
 
 void Icon::performAction(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Task *task)
 {
-    QHash<IconAction, QPair<Qt::MouseButton, Qt::Modifier> > iconActions = m_applet->iconActions();
-    QHash<IconAction, QPair<Qt::MouseButton, Qt::Modifier> >::iterator actionsIterator;
+    QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> iconActions = m_applet->iconActions();
+    QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction>::iterator actionsIterator;
 
     for (actionsIterator = iconActions.begin(); actionsIterator != iconActions.end(); ++actionsIterator)
     {
-        if (actionsIterator.value().first == Qt::NoButton)
+        if (actionsIterator.key().first == Qt::NoButton)
         {
             continue;
         }
 
-        if (buttons == actionsIterator.value().first && (actionsIterator.value().second == Qt::UNICODE_ACCEL || modifiers & actionsIterator.value().second))
+        if (buttons == actionsIterator.key().first && ((actionsIterator.key().second == Qt::NoModifier && modifiers == Qt::NoModifier) || (actionsIterator.key().second != Qt::NoModifier && modifiers & actionsIterator.key().second)))
         {
-            performAction(actionsIterator.key(), task);
+            performAction(actionsIterator.value(), task);
 
             break;
         }
@@ -1420,19 +1418,19 @@ void Icon::performAction(IconAction action, Task *task)
 
     switch (action)
     {
-        case ActivateItem:
+        case ActivateItemAction:
             activate();
         break;
-        case ActivateTask:
+        case ActivateTaskAction:
             if (task)
             {
                 task->activate();
             }
         break;
-        case ActivateLauncher:
+        case ActivateLauncherAction:
             if (m_launcher)
             {
-                if (m_launcher->isServiceGroup())
+                if (m_launcher->isMenu())
                 {
                     m_menuVisible = true;
 
@@ -1449,12 +1447,12 @@ void Icon::performAction(IconAction action, Task *task)
                 }
             }
         break;
-        case ShowMenu:
-            if (m_itemType == TypeLauncher || m_itemType == TypeJob || m_itemType == TypeTask || m_itemType == TypeGroup)
+        case ShowMenuAction:
+            if (m_itemType == LauncherType || m_itemType == JobType || m_itemType == TaskType || m_itemType == GroupType)
             {
                 KMenu *menu;
 
-                if ((m_itemType == TypeTask || m_itemType == TypeGroup) && task)
+                if (task && (m_itemType == TaskType || m_itemType == GroupType))
                 {
                     menu = task->contextMenu();
 
@@ -1462,8 +1460,7 @@ void Icon::performAction(IconAction action, Task *task)
                     {
                         KMenu *launcherMenu = m_launcher->contextMenu();
 
-                        menu->addSeparator();
-                        menu->addMenu(launcherMenu);
+                        menu->insertMenu(menu->actions().at(menu->actions().count() - 2), launcherMenu);
 
                         connect(menu, SIGNAL(destroyed()), launcherMenu, SLOT(deleteLater()));
                     }
@@ -1472,7 +1469,7 @@ void Icon::performAction(IconAction action, Task *task)
                 {
                     menu = m_launcher->contextMenu();
                 }
-                else if (m_itemType == TypeJob && m_jobs.count() == 1)
+                else if (m_itemType == JobType && m_jobs.count() == 1)
                 {
                     menu = m_jobs.at(0)->contextMenu();
                 }
@@ -1483,7 +1480,7 @@ void Icon::performAction(IconAction action, Task *task)
 
                 m_menuVisible = true;
 
-                if (m_task == task && m_jobs.count() && (m_itemType != TypeJob || m_jobs.count() > 1))
+                if (m_task == task && m_jobs.count() && (m_itemType != JobType || m_jobs.count() > 1))
                 {
                     if (menu->actions().count())
                     {
@@ -1499,6 +1496,13 @@ void Icon::performAction(IconAction action, Task *task)
 
                 if (menu->actions().count())
                 {
+                    QAction *settingsAction = new QAction(KIcon("configure"), i18n("Settings"), menu);
+
+                    connect(settingsAction, SIGNAL(triggered()), m_applet, SLOT(showConfigurationInterface()));
+
+                    menu->insertSeparator(menu->actions().at(0));
+                    menu->insertAction(menu->actions().at(0), settingsAction);
+
                     if (m_task == task)
                     {
                         menu->addTitle(icon(), title().left(20), menu->actions().at(0));
@@ -1516,12 +1520,10 @@ void Icon::performAction(IconAction action, Task *task)
                 m_menuVisible = false;
             }
         break;
-        case ShowChildrenList:
+        case ShowChildrenListAction:
             if (!m_menuVisible && task)
             {
                 m_menuVisible = true;
-
-                Applet::setActiveWindow(KWindowSystem::activeWindow());
 
                 Menu *groupMenu = new Menu(task->windows());
                 groupMenu->addSeparator();
@@ -1533,14 +1535,14 @@ void Icon::performAction(IconAction action, Task *task)
                 m_menuVisible = false;
             }
         break;
-        case ShowWindows:
-            if (m_itemType == TypeGroup && task && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::PresentWindowsGroup))
+        case ShowWindowsAction:
+            if (m_itemType == GroupType && task && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::PresentWindowsGroup))
             {
                 Plasma::WindowEffects::presentWindows(m_applet->window(), task->windows());
             }
         break;
-        case CloseTask:
-            if ((m_itemType == TypeTask || m_itemType == TypeGroup) && task)
+        case CloseTaskAction:
+            if ((m_itemType == TaskType || m_itemType == GroupType) && task)
             {
                 task->close();
             }
@@ -1564,7 +1566,7 @@ void Icon::toolTipHidden()
 
 void Icon::updateToolTip()
 {
-    if (m_itemType == TypeOther)
+    if (m_itemType == OtherType)
     {
         return;
     }
@@ -1604,8 +1606,9 @@ void Icon::updateToolTip()
     data.setImage(icon());
     data.setClickable(KWindowSystem::compositingActive());
     data.setHighlightWindows(true);
+    data.setInstantPopup(true);
 
-    if (m_itemType == TypeTask || m_itemType == TypeGroup)
+    if (m_itemType == TaskType || m_itemType == GroupType)
     {
         data.setWindowsToPreview(m_task->windows());
     }
@@ -1637,14 +1640,14 @@ QString Icon::title() const
 {
     switch (m_itemType)
     {
-        case TypeStartup:
-        case TypeTask:
-        case TypeGroup:
+        case StartupType:
+        case TaskType:
+        case GroupType:
             return m_task->title();
         break;
-        case TypeLauncher:
+        case LauncherType:
             return m_launcher->title();
-        case TypeJob:
+        case JobType:
             if (m_jobs.count() > 1)
             {
                 return i18np("1 job", "%1 jobs", m_jobs.count());
@@ -1670,14 +1673,14 @@ QString Icon::description() const
 
     switch (m_itemType)
     {
-        case TypeStartup:
-        case TypeTask:
-        case TypeGroup:
+        case StartupType:
+        case TaskType:
+        case GroupType:
             return m_task->description();
         break;
-        case TypeLauncher:
+        case LauncherType:
             return m_launcher->description();
-        case TypeJob:
+        case JobType:
             if (m_jobs.count() > 0)
             {
                 for (int i = 0; i < m_jobs.count(); ++i)
@@ -1737,14 +1740,14 @@ KIcon Icon::icon()
 {
     switch (m_itemType)
     {
-        case TypeStartup:
-        case TypeTask:
-        case TypeGroup:
+        case StartupType:
+        case TaskType:
+        case GroupType:
             return (m_task?m_task->icon():KIcon());
         break;
-        case TypeLauncher:
+        case LauncherType:
             return (m_launcher?m_launcher->icon():KIcon());
-        case TypeJob:
+        case JobType:
             return m_jobs.at(0)->icon();
         break;
         default:

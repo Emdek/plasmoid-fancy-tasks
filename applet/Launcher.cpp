@@ -19,6 +19,7 @@
 ***********************************************************************************/
 
 #include "Launcher.h"
+#include "LauncherProperties.h"
 #include "Icon.h"
 
 #include <QtCore/QDir>
@@ -29,7 +30,6 @@
 #include <KMessageBox>
 #include <KDesktopFile>
 #include <KStandardDirs>
-#include <KPropertiesDialog>
 
 #include <KIO/CopyJob>
 
@@ -43,10 +43,21 @@ Launcher::Launcher(const KUrl &url, Applet *parent) : QObject(parent),
     m_trashLister(NULL),
     m_trashProcess(NULL),
     m_launcherUrl(url),
+    m_isExcluded(false),
     m_isExecutable(false),
-    m_isServiceGroup(false)
+    m_isMenu(false)
 {
     setUrl(url);
+
+    m_isExcluded = !m_isExecutable;
+
+    if (m_isExecutable)
+    {
+        const QString command = m_executable.split(QRegExp("(?!\\\\)\\s"), QString::SkipEmptyParts).first().split(QRegExp("(?!\\\\)\\/"), QString::SkipEmptyParts).last();
+
+        m_rules[TaskCommandRule] = LauncherRule(command, PartialMatch, false);
+        m_rules[WindowClassRule] = LauncherRule(command, PartialMatch, false);
+    }
 }
 
 Launcher::~Launcher()
@@ -58,216 +69,6 @@ Launcher::~Launcher()
         if (icon)
         {
             icon->setLauncher(NULL);
-        }
-    }
-}
-
-void Launcher::setUrl(const KUrl &url)
-{
-    m_targetUrl = m_launcherUrl = url;
-    m_serviceGroup = NULL;
-    m_isServiceGroup = false;
-
-    if (url.scheme() == "menu")
-    {
-        m_serviceGroup = KServiceGroup::group(url.path());
-
-        if (m_serviceGroup && m_serviceGroup->isValid())
-        {
-            m_executable = QString();
-            m_isExecutable = false;
-            m_isServiceGroup = true;
-            m_title = m_serviceGroup->caption();
-            m_description = m_serviceGroup->comment();
-            m_icon = KIcon(m_serviceGroup->icon());
-
-            return;
-        }
-        else
-        {
-            m_serviceGroup = NULL;
-        }
-    }
-
-    m_mimeType = KMimeType::findByUrl(m_launcherUrl);
-
-    if (m_launcherUrl.isLocalFile() && KDesktopFile::isDesktopFile(m_launcherUrl.toLocalFile()))
-    {
-        KDesktopFile desktopFile(m_launcherUrl.toLocalFile());
-        KConfigGroup config = desktopFile.desktopGroup();
-
-        m_executable = config.readPathEntry("Exec", QString());
-        m_title = (desktopFile.readName().isEmpty()?m_launcherUrl.fileName():desktopFile.readName());
-        m_description = (desktopFile.readGenericName().isEmpty()?(desktopFile.readComment().isEmpty()?m_launcherUrl.path():desktopFile.readComment()):desktopFile.readGenericName());
-
-        if (QFile::exists(m_launcherUrl.pathOrUrl()))
-        {
-            m_icon = KIcon(desktopFile.readIcon());
-        }
-        else
-        {
-            m_icon = KIcon("dialog-error");
-        }
-
-        if (m_executable.isEmpty())
-        {
-            QString filePath = desktopFile.readUrl();
-
-            if (filePath.isEmpty())
-            {
-                filePath = desktopFile.readPath();
-            }
-
-            m_targetUrl = KUrl(filePath);
-            m_mimeType = KMimeType::findByUrl(KUrl(m_targetUrl));
-        }
-
-        if (!m_trashLister && m_targetUrl == KUrl("trash:/"))
-        {
-            m_trashLister = new KDirLister(this);
-
-            connect(m_trashLister, SIGNAL(completed()), this, SLOT(updateTrash()));
-            connect(m_trashLister, SIGNAL(clear()), this, SLOT(updateTrash()));
-            connect(m_trashLister, SIGNAL(deleteItem(const KFileItem&)), this, SLOT(updateTrash()));
-
-            m_trashLister->setAutoUpdate(true);
-            m_trashLister->openUrl(m_targetUrl);
-
-            updateTrash();
-        }
-        else if (m_trashLister && m_targetUrl != KUrl("trash:/"))
-        {
-            delete m_trashLister;
-
-            m_trashLister = NULL;
-        }
-    }
-    else
-    {
-        m_title = m_launcherUrl.fileName();
-        m_description = m_launcherUrl.path();
-        m_icon = KIcon(KMimeType::iconNameForUrl(url));
-
-        if (m_title.isEmpty())
-        {
-            if (m_launcherUrl.isLocalFile())
-            {
-                m_title = m_launcherUrl.directory();
-            }
-            else
-            {
-                m_title = m_launcherUrl.protocol();
-            }
-        }
-    }
-
-    m_isExecutable = (m_launcherUrl.isLocalFile() && (m_mimeType->is("application/x-executable") || m_mimeType->is("application/x-shellscript") || KDesktopFile::isDesktopFile(m_launcherUrl.toLocalFile())));
-
-    ItemChanges changes = TextChanged;
-    changes |= IconChanged;
-
-    emit changed(changes);
-}
-
-void Launcher::setBrowseMenu()
-{
-    KMenu *menu = qobject_cast<KMenu*>(sender());
-
-    if (menu->actions().count() > 2)
-    {
-        return;
-    }
-
-    QString url = menu->actions()[0]->data().toString();
-    QDir dir(url);
-    const QStringList entries = dir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::LocaleAware | QDir::DirsFirst);
-
-    foreach (const QString &entry, entries)
-    {
-        QString path = url;
-
-        if (!path.endsWith('/'))
-        {
-            path.append('/');
-        }
-
-        path += entry;
-
-        QString iconName = KMimeType::iconNameForUrl(KUrl(path));
-
-        if (QFileInfo(path).isFile())
-        {
-            QAction *action = menu->addAction(KIcon(iconName), entry);
-            action->setData(path);
-        }
-        else
-        {
-            KMenu *subMenu = new KMenu(menu);
-
-            QAction *action = subMenu->addAction(KIcon("document-open"), i18n("Open"));
-            action->setData(path);
-
-            subMenu->addSeparator();
-
-            action = menu->addAction(KIcon(iconName), entry);
-            action->setMenu(subMenu);
-
-            connect(subMenu, SIGNAL(aboutToShow()), this, SLOT(setBrowseMenu()));
-        }
-    }
-}
-
-void Launcher::setServiceMenu()
-{
-    KMenu *menu = qobject_cast<KMenu*>(sender());
-
-    if (menu->actions().count() > 1)
-    {
-        return;
-    }
-
-    KServiceGroup::Ptr rootGroup = KServiceGroup::group(menu->actions()[0]->data().toString());
-
-    if (!rootGroup || !rootGroup->isValid() || rootGroup->noDisplay())
-    {
-        return;
-    }
-
-    KServiceGroup::List list = rootGroup->entries(true, true, true, true);
-
-    for (int i = 0; i < list.count(); ++i)
-    {
-        if (list.at(i)->isType(KST_KService))
-        {
-            const KService::Ptr service = KService::Ptr::staticCast(list.at(i));
-
-            QAction *action = menu->addAction(KIcon(service->icon()), service->name());
-            action->setData(service->entryPath());
-            action->setToolTip(service->genericName());
-        }
-        else if (list.at(i)->isType(KST_KServiceGroup))
-        {
-            const KServiceGroup::Ptr group = KServiceGroup::Ptr::staticCast(list.at(i));
-
-            if (group->noDisplay() || group->childCount() == 0)
-            {
-                continue;
-            }
-
-            KMenu *subMenu = new KMenu(menu);
-
-            QAction *action = subMenu->addAction(QString());
-            action->setData(group->relPath());
-            action->setVisible(false);
-
-            action = menu->addAction(KIcon(group->icon()), group->caption());
-            action->setMenu(subMenu);
-
-            connect(subMenu, SIGNAL(aboutToShow()), this, SLOT(setServiceMenu()));
-        }
-        else if (list.at(i)->isType(KST_KServiceSeparator))
-        {
-            menu->addSeparator();
         }
     }
 }
@@ -382,7 +183,7 @@ void Launcher::openUrl(QAction *action)
 {
     if (!action->data().isNull())
     {
-       new KRun(KUrl(action->data().toString()), NULL);
+        new KRun(KUrl(action->data().toString()), NULL);
     }
 }
 
@@ -431,12 +232,10 @@ void Launcher::updateTrash()
 
 void Launcher::showPropertiesDialog()
 {
-    KPropertiesDialog *propertiesDialog = new KPropertiesDialog(m_launcherUrl);
-    propertiesDialog->setWindowModality(Qt::NonModal);
-    propertiesDialog->setWindowTitle(i18n("%1 Settings", m_title));
+    LauncherProperties *propertiesDialog = new LauncherProperties(this);
     propertiesDialog->show();
 
-    connect(propertiesDialog, SIGNAL(saveAs(const KUrl&, KUrl&)), m_applet, SLOT(urlChanged(const KUrl&, KUrl&)));
+    connect(propertiesDialog, SIGNAL(launcherChanged(Launcher*,KUrl)), this, SIGNAL(launcherChanged(Launcher*,KUrl)));
 }
 
 void Launcher::addItem(QObject *object)
@@ -464,6 +263,226 @@ void Launcher::removeItem(QObject *object)
     }
 }
 
+void Launcher::setUrl(const KUrl &url)
+{
+    m_targetUrl = m_launcherUrl = url;
+    m_serviceGroup = NULL;
+    m_isMenu = false;
+
+    if (url.scheme() == "menu")
+    {
+        m_serviceGroup = KServiceGroup::group(url.path());
+
+        if (m_serviceGroup && m_serviceGroup->isValid())
+        {
+            m_executable = QString();
+            m_isExecutable = false;
+            m_isMenu = true;
+            m_title = m_serviceGroup->caption();
+            m_description = m_serviceGroup->comment();
+            m_icon = KIcon(m_serviceGroup->icon());
+
+            return;
+        }
+        else
+        {
+            m_serviceGroup = NULL;
+        }
+    }
+
+    m_mimeType = KMimeType::findByUrl(m_launcherUrl);
+
+    if (m_launcherUrl.isLocalFile() && KDesktopFile::isDesktopFile(m_launcherUrl.toLocalFile()))
+    {
+        KDesktopFile desktopFile(m_launcherUrl.toLocalFile());
+        KConfigGroup config = desktopFile.desktopGroup();
+
+        m_executable = config.readPathEntry("Exec", QString());
+        m_title = (desktopFile.readName().isEmpty()?m_launcherUrl.fileName():desktopFile.readName());
+        m_description = (desktopFile.readGenericName().isEmpty()?(desktopFile.readComment().isEmpty()?m_launcherUrl.path():desktopFile.readComment()):desktopFile.readGenericName());
+
+        if (QFile::exists(m_launcherUrl.pathOrUrl()))
+        {
+            m_icon = KIcon(desktopFile.readIcon());
+        }
+        else
+        {
+            m_icon = KIcon("dialog-error");
+        }
+
+        if (m_executable.isEmpty())
+        {
+            QString filePath = desktopFile.readUrl();
+
+            if (filePath.isEmpty())
+            {
+                filePath = desktopFile.readPath();
+            }
+
+            m_targetUrl = KUrl(filePath);
+            m_mimeType = KMimeType::findByUrl(KUrl(m_targetUrl));
+        }
+
+        if (!m_trashLister && m_targetUrl == KUrl("trash:/"))
+        {
+            m_trashLister = new KDirLister(this);
+
+            connect(m_trashLister, SIGNAL(completed()), this, SLOT(updateTrash()));
+            connect(m_trashLister, SIGNAL(clear()), this, SLOT(updateTrash()));
+            connect(m_trashLister, SIGNAL(deleteItem(const KFileItem&)), this, SLOT(updateTrash()));
+
+            m_trashLister->setAutoUpdate(true);
+            m_trashLister->openUrl(m_targetUrl);
+
+            updateTrash();
+        }
+        else if (m_trashLister && m_targetUrl != KUrl("trash:/"))
+        {
+            delete m_trashLister;
+
+            m_trashLister = NULL;
+        }
+    }
+    else
+    {
+        m_title = m_launcherUrl.fileName();
+        m_description = m_launcherUrl.path();
+        m_icon = KIcon(KMimeType::iconNameForUrl(url));
+
+        if (m_title.isEmpty())
+        {
+            if (m_launcherUrl.isLocalFile())
+            {
+                m_title = m_launcherUrl.directory();
+            }
+            else
+            {
+                m_title = m_launcherUrl.protocol();
+            }
+        }
+    }
+
+    m_isExecutable = (m_launcherUrl.isLocalFile() && (m_mimeType->is("application/x-executable") || m_mimeType->is("application/x-shellscript") || KDesktopFile::isDesktopFile(m_launcherUrl.toLocalFile())));
+
+    ItemChanges changes = TextChanged;
+    changes |= IconChanged;
+
+    emit changed(changes);
+}
+
+void Launcher::setExcluded(bool excluded)
+{
+    m_isExcluded = excluded;
+}
+
+void Launcher::setRules(const QMap<ConnectionRule, LauncherRule> &rules)
+{
+    m_rules = rules;
+}
+
+void Launcher::setBrowseMenu()
+{
+    KMenu *menu = qobject_cast<KMenu*>(sender());
+
+    if (menu->actions().count() > 2)
+    {
+        return;
+    }
+
+    QString url = menu->actions()[0]->data().toString();
+    QDir dir(url);
+    const QStringList entries = dir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::LocaleAware | QDir::DirsFirst);
+
+    foreach (const QString &entry, entries)
+    {
+        QString path = url;
+
+        if (!path.endsWith('/'))
+        {
+            path.append('/');
+        }
+
+        path += entry;
+
+        QString iconName = KMimeType::iconNameForUrl(KUrl(path));
+
+        if (QFileInfo(path).isFile())
+        {
+            QAction *action = menu->addAction(KIcon(iconName), entry);
+            action->setData(path);
+        }
+        else
+        {
+            KMenu *subMenu = new KMenu(menu);
+
+            QAction *action = subMenu->addAction(KIcon("document-open"), i18n("Open"));
+            action->setData(path);
+
+            subMenu->addSeparator();
+
+            action = menu->addAction(KIcon(iconName), entry);
+            action->setMenu(subMenu);
+
+            connect(subMenu, SIGNAL(aboutToShow()), this, SLOT(setBrowseMenu()));
+        }
+    }
+}
+
+void Launcher::setServiceMenu()
+{
+    KMenu *menu = qobject_cast<KMenu*>(sender());
+
+    if (menu->actions().count() > 1)
+    {
+        return;
+    }
+
+    KServiceGroup::Ptr rootGroup = KServiceGroup::group(menu->actions()[0]->data().toString());
+
+    if (!rootGroup || !rootGroup->isValid() || rootGroup->noDisplay())
+    {
+        return;
+    }
+
+    KServiceGroup::List list = rootGroup->entries(true, true, true, true);
+
+    for (int i = 0; i < list.count(); ++i)
+    {
+        if (list.at(i)->isType(KST_KService))
+        {
+            const KService::Ptr service = KService::Ptr::staticCast(list.at(i));
+
+            QAction *action = menu->addAction(KIcon(service->icon()), service->name());
+            action->setData(service->entryPath());
+            action->setToolTip(service->genericName());
+        }
+        else if (list.at(i)->isType(KST_KServiceGroup))
+        {
+            const KServiceGroup::Ptr group = KServiceGroup::Ptr::staticCast(list.at(i));
+
+            if (group->noDisplay() || group->childCount() == 0)
+            {
+                continue;
+            }
+
+            KMenu *subMenu = new KMenu(menu);
+
+            QAction *action = subMenu->addAction(QString());
+            action->setData(group->relPath());
+            action->setVisible(false);
+
+            action = menu->addAction(KIcon(group->icon()), group->caption());
+            action->setMenu(subMenu);
+
+            connect(subMenu, SIGNAL(aboutToShow()), this, SLOT(setServiceMenu()));
+        }
+        else if (list.at(i)->isType(KST_KServiceSeparator))
+        {
+            menu->addSeparator();
+        }
+    }
+}
+
 KMimeType::Ptr Launcher::mimeType()
 {
     return m_mimeType;
@@ -473,7 +492,7 @@ KMenu* Launcher::contextMenu()
 {
     KMenu *menu = new KMenu;
 
-    if (m_isServiceGroup)
+    if (m_isMenu)
     {
         if (KService::serviceByStorageId("kde4-kmenuedit.desktop"))
         {
@@ -596,6 +615,11 @@ QString Launcher::executable() const
     return m_executable;
 }
 
+QMap<ConnectionRule, LauncherRule> Launcher::rules() const
+{
+    return m_rules;
+}
+
 int Launcher::itemsAmount() const
 {
     return m_items.count();
@@ -606,9 +630,14 @@ bool Launcher::isExecutable() const
     return m_isExecutable;
 }
 
-bool Launcher::isServiceGroup() const
+bool Launcher::isExcluded() const
 {
-    return m_isServiceGroup;
+    return m_isExcluded;
+}
+
+bool Launcher::isMenu() const
+{
+    return m_isMenu;
 }
 
 }

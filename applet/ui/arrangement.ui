@@ -36,12 +36,29 @@
      <item row="2" column="2">
       <layout class="QVBoxLayout" name="currentActionsLayout">
        <item>
-        <widget class="QListWidget" name="currentActionsListWidget"/>
+        <widget class="QListWidget" name="currentActionsListWidget">
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::InternalMove</enum>
+         </property>
+         <property name="defaultDropAction">
+          <enum>Qt::MoveAction</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="addLauncherButton">
          <property name="text">
-          <string>Add launcher</string>
+          <string>Add</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="editLauncherButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Edit</string>
          </property>
         </widget>
        </item>

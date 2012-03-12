@@ -30,16 +30,12 @@
 
 #include <taskmanager/task.h>
 #include <taskmanager/taskitem.h>
-#include <taskmanager/taskactions.h>
 #include <taskmanager/taskmanager.h>
 #include <taskmanager/groupmanager.h>
 #include <taskmanager/abstractgroupingstrategy.h>
 
 #include "ui_group.h"
 
-using TaskManager::GroupPtr;
-using TaskManager::TaskPtr;
-using TaskManager::StartupPtr;
 using TaskManager::AbstractGroupableItem;
 using TaskManager::GroupManager;
 using TaskManager::TaskItem;
@@ -53,18 +49,10 @@ class Task : public QObject
     Q_OBJECT
 
     public:
-        enum TaskType
-        {
-            TypeInvalid = 0,
-            TypeStartup,
-            TypeTask,
-            TypeGroup
-        };
-
         Task(TaskManager::AbstractGroupableItem *abstractItem, TaskManager::GroupManager *groupManager);
 
         void dropItems(TaskManager::ItemList items);
-        TaskType taskType() const;
+        ItemType taskType() const;
         AbstractGroupableItem* abstractItem();
         TaskItem* task();
         TaskGroup* group();
@@ -72,6 +60,7 @@ class Task : public QObject
         KIcon icon();
         QString title() const;
         QString description() const;
+        QString command() const;
         QList<WId> windows();
         bool isActive() const;
         bool demandsAttention() const;
@@ -81,7 +70,6 @@ class Task : public QObject
         void setTaskPointer();
         void close();
         void activate();
-        void activateWindow();
         void publishIconGeometry();
         void showPropertiesDialog();
         void setProperties();
@@ -94,7 +82,8 @@ class Task : public QObject
         QPointer<TaskManager::TaskItem> m_task;
         QPointer<TaskManager::TaskGroup> m_group;
         TaskManager::GroupManager *m_groupManager;
-        TaskType m_taskType;
+        QString m_command;
+        ItemType m_taskType;
         Ui::group m_groupUi;
 
     signals:

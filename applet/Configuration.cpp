@@ -18,9 +18,10 @@
 *
 ***********************************************************************************/
 
+#include "config-fancytasks.h"
+
 #include "Configuration.h"
 #include "ActionDelegate.h"
-#include "Applet.h"
 #include "Launcher.h"
 
 #include <QtGui/QLabel>
@@ -37,23 +38,27 @@
 #include <taskmanager/taskmanager.h>
 #include <taskmanager/groupmanager.h>
 
+
+#include <QDebug>
+
 namespace FancyTasks
 {
 
 Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(parent),
-    m_applet(applet)
+    m_applet(applet),
+    m_editedLauncher(NULL)
 {
     KConfigGroup configuration = m_applet->config();
-    KMenu* addLauncherMenu = new KMenu(parent);
-    QWidget* generalWidget = new QWidget;
-    QWidget* appearanceWidget = new QWidget;
-    QWidget* arrangementWidget = new QWidget;
-    QWidget* actionsWidget = new QWidget;
-    QWidget* findApplicationWidget = new QWidget;
-    QAction* addLauncherApplicationAction = addLauncherMenu->addAction(KIcon("application-x-executable"), i18n("Add Application..."));
-    QAction* addLauncherFromFileAction = addLauncherMenu->addAction(KIcon("inode-directory"), i18n("Add File or Directory..."));
-    QAction* addMenuLauncher = addLauncherMenu->addAction(KIcon("start-here"), i18n("Add Menu"));
-    KMenu* addMenuLauncherMenu = new KMenu(addLauncherMenu);
+    KMenu *addLauncherMenu = new KMenu(parent);
+    QWidget *generalWidget = new QWidget;
+    QWidget *appearanceWidget = new QWidget;
+    QWidget *arrangementWidget = new QWidget;
+    QWidget *actionsWidget = new QWidget;
+    QWidget *findApplicationWidget = new QWidget;
+    QAction *addLauncherApplicationAction = addLauncherMenu->addAction(KIcon("application-x-executable"), i18n("Add Application..."));
+    QAction *addLauncherFromFileAction = addLauncherMenu->addAction(KIcon("inode-directory"), i18n("Add File or Directory..."));
+    QAction *addMenuLauncher = addLauncherMenu->addAction(KIcon("start-here"), i18n("Add Menu"));
+    KMenu *addMenuLauncherMenu = new KMenu(addLauncherMenu);
 
     addMenuLauncher->setMenu(addMenuLauncherMenu);
 
@@ -121,10 +126,10 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     }
 
     m_appearanceUi.titleLabelMode->addItem(i18n("Never"), QVariant(NoLabel));
-    m_appearanceUi.titleLabelMode->addItem(i18n("On mouse-over"), QVariant(LabelOnMouseOver));
-    m_appearanceUi.titleLabelMode->addItem(i18n("For active icon"), QVariant(LabelForActiveIcon));
+    m_appearanceUi.titleLabelMode->addItem(i18n("On mouse-over"), QVariant(MouseOverLabel));
+    m_appearanceUi.titleLabelMode->addItem(i18n("For active icon"), QVariant(ActiveIconLabel));
     m_appearanceUi.titleLabelMode->addItem(i18n("Always"), QVariant(AlwaysShowLabel));
-    m_appearanceUi.titleLabelMode->setCurrentIndex(m_appearanceUi.titleLabelMode->findData(QVariant(configuration.readEntry("titleLabelMode", static_cast<int>(NoLabel)))));
+    m_appearanceUi.titleLabelMode->setCurrentIndex(m_appearanceUi.titleLabelMode->findData(QVariant(configuration.readEntry("titleLabelMode", static_cast<int>(AlwaysShowLabel)))));
 
     m_appearanceUi.activeIconIndication->addItem(i18n("None"), QVariant(NoIndication));
     m_appearanceUi.activeIconIndication->addItem(i18n("Zoom"), QVariant(ZoomIndication));
@@ -135,8 +140,8 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     m_appearanceUi.useThumbnails->setChecked(configuration.readEntry("useThumbnails", false));
     m_appearanceUi.customBackgroundImage->setUrl(KUrl(configuration.readEntry("customBackgroundImage", QString())));
     m_appearanceUi.customBackgroundImage->setFilter("image/svg+xml image/svg+xml-compressed");
-    m_appearanceUi.moveAnimation->setCurrentIndex(moveAnimationIds.indexOf(static_cast<AnimationType>(configuration.readEntry("moveAnimation", static_cast<int>(ZoomAnimation)))));
-    m_appearanceUi.parabolicMoveAnimation->setChecked(configuration.readEntry("parabolicMoveAnimation", true));
+    m_appearanceUi.moveAnimation->setCurrentIndex(moveAnimationIds.indexOf(static_cast<AnimationType>(configuration.readEntry("moveAnimation", static_cast<int>(GlowAnimation)))));
+    m_appearanceUi.parabolicMoveAnimation->setChecked(configuration.readEntry("parabolicMoveAnimation", false));
     m_appearanceUi.demandsAttentionAnimation->setCurrentIndex(iconAnimationIds.indexOf(static_cast<AnimationType>(configuration.readEntry("demandsAttentionAnimation", static_cast<int>(BlinkAnimation)))));
     m_appearanceUi.startupAnimation->setCurrentIndex(iconAnimationIds.indexOf(static_cast<AnimationType>(configuration.readEntry("startupAnimation", static_cast<int>(BounceAnimation)))));
 
@@ -160,7 +165,7 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
 
     for (int i = 0; i < arrangement.count(); ++i)
     {
-        QListWidgetItem *item;
+        QListWidgetItem *item = NULL;
 
         if (arrangement.at(i) == "tasks")
         {
@@ -185,22 +190,24 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
 
             item = new QListWidgetItem(launcher->icon(), launcher->title(), m_arrangementUi.currentActionsListWidget);
             item->setToolTip(launcher->launcherUrl().pathOrUrl());
+
+            m_rules[launcher->launcherUrl().pathOrUrl()] = qMakePair(launcher->rules(), launcher->isExcluded());
         }
 
         m_arrangementUi.currentActionsListWidget->addItem(item);
     }
 
-    QStringList actionNames;
-    actionNames << i18n("Activate Item") << i18n("Activate Task") << i18n("Activate Launcher") << i18n("Show Item Menu") << i18n("Show Item Children List") << i18n("Show Item Windows") << i18n("Close Task");
-
     QStringList actionOptions;
     actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask";
+
+    QStringList actionNames;
+    actionNames << i18n("Activate Item") << i18n("Activate Task") << i18n("Activate Launcher") << i18n("Show Item Menu") << i18n("Show Item Children List") << i18n("Show Item Windows") << i18n("Close Task");
 
     QStringList actionDefaults;
     actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString('+') << "middle+shift" << "left+shift";
 
-    m_actionsUi.actionsTableWidget->setRowCount(actionNames.count());
-    m_actionsUi.actionsTableWidget->setItemDelegate(new ActionDelegate(this));
+    m_actionsUi.actionsTableWidget->setRowCount(actionOptions.count());
+    m_actionsUi.actionsTableWidget->setItemDelegateForColumn(1, new ActionDelegate(this));
 
     for (int i = 0; i < actionOptions.count(); ++i)
     {
@@ -217,6 +224,15 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
 
     moveAnimationTypeChanged(m_appearanceUi.moveAnimation->currentIndex());
 
+    m_appearanceUi.useThumbnails->hide();
+
+#ifdef FANCYTASKS_HAVE_COMPOSITING
+    if (KWindowSystem::compositingActive())
+    {
+        m_appearanceUi.useThumbnails->show();
+    }
+#endif
+
     parent->addPage(generalWidget, i18n("General"), "go-home");
     parent->addPage(appearanceWidget, i18n("Appearance"), "preferences-desktop-theme");
     parent->addPage(arrangementWidget, i18n("Arrangement"), "format-list-unordered");
@@ -230,13 +246,23 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     connect(m_arrangementUi.addButton, SIGNAL(clicked()), this, SLOT(addItem()));
     connect(m_arrangementUi.moveUpButton, SIGNAL(clicked()), this, SLOT(moveUpItem()));
     connect(m_arrangementUi.moveDownButton, SIGNAL(clicked()), this, SLOT(moveDownItem()));
+    connect(m_arrangementUi.editLauncherButton, SIGNAL(clicked()), this, SLOT(editLauncher()));
+    connect(m_actionsUi.actionsTableWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(actionClicked(QModelIndex)));
     connect(m_findApplicationUi.query, SIGNAL(textChanged(QString)), this, SLOT(findApplication(QString)));
     connect(addLauncherApplicationAction, SIGNAL(triggered()), m_findApplicationDialog, SLOT(show()));
     connect(addLauncherApplicationAction, SIGNAL(triggered()), m_findApplicationUi.query, SLOT(setFocus()));
     connect(addLauncherFromFileAction, SIGNAL(triggered()), this, SLOT(addLauncher()));
-    connect(addMenuLauncherMenu, SIGNAL(aboutToShow()), this, SLOT(setServiceMenu()));
+    connect(addMenuLauncherMenu, SIGNAL(aboutToShow()), this, SLOT(populateMenu()));
     connect(addMenuLauncherMenu, SIGNAL(triggered(QAction*)), this, SLOT(addMenu(QAction*)));
     connect(m_findApplicationDialog, SIGNAL(finished()), this, SLOT(closeFindApplicationDialog()));
+}
+
+Configuration::~Configuration()
+{
+    if (m_editedLauncher)
+    {
+        m_editedLauncher->deleteLater();
+    }
 }
 
 void Configuration::accepted()
@@ -244,17 +270,38 @@ void Configuration::accepted()
     KConfigGroup configuration = m_applet->config();
     QStringList arrangement;
 
+    if (m_actionsUi.actionsTableWidget->currentItem())
+    {
+        m_actionsUi.actionsTableWidget->closePersistentEditor(m_actionsUi.actionsTableWidget->currentItem());
+    }
+
     for (int i = 0; i < m_arrangementUi.currentActionsListWidget->count(); ++i)
     {
-        if (!m_arrangementUi.currentActionsListWidget->item(i)->toolTip().isEmpty())
+        QListWidgetItem *item = m_arrangementUi.currentActionsListWidget->item(i);
+
+        if (!item->toolTip().isEmpty())
         {
-            arrangement.append(m_arrangementUi.currentActionsListWidget->item(i)->toolTip());
+            arrangement.append(item->toolTip());
+
+            const KUrl url(item->toolTip());
+            Launcher *launcher = new Launcher(url, m_applet);
+qDebug() << url;
+            if (m_rules.contains(item->toolTip()) && !launcher->isMenu())
+            {
+qDebug() << "has rules";
+                launcher->setRules(m_rules[item->toolTip()].first);
+                launcher->setExcluded(m_rules[item->toolTip()].second);
+            }
+
+            m_applet->changeLauncher(launcher, url, true);
+
+            launcher->deleteLater();
         }
-        else if (m_arrangementUi.currentActionsListWidget->item(i)->text() == i18n("--- tasks area ---"))
+        else if (item->text() == i18n("--- tasks area ---"))
         {
             arrangement.append("tasks");
         }
-        else if (m_arrangementUi.currentActionsListWidget->item(i)->text() == i18n("--- jobs area ---"))
+        else if (item->text() == i18n("--- jobs area ---"))
         {
             arrangement.append("jobs");
         }
@@ -314,6 +361,7 @@ void Configuration::currentActionsCurrentItemChanged(int row)
     m_arrangementUi.removeButton->setEnabled(row >= 0);
     m_arrangementUi.moveUpButton->setEnabled(row > 0);
     m_arrangementUi.moveDownButton->setEnabled(row >= 0 && row < (m_arrangementUi.currentActionsListWidget->count() - 1));
+    m_arrangementUi.editLauncherButton->setEnabled(row >= 0 && !m_arrangementUi.currentActionsListWidget->currentItem()->toolTip().isEmpty() && m_arrangementUi.currentActionsListWidget->currentItem()->toolTip().left(5) != "menu:");
 
     if (row >= 0)
     {
@@ -335,9 +383,6 @@ void Configuration::removeItem()
         {
             delete currentItem;
         }
-
-        m_arrangementUi.currentActionsListWidget->setCurrentItem(NULL);
-        m_arrangementUi.availableActionsListWidget->setCurrentItem(NULL);
     }
 }
 
@@ -385,27 +430,6 @@ void Configuration::moveDownItem()
     }
 }
 
-void Configuration::addLauncher()
-{
-    KFileDialog dialog(KUrl("~"), "", NULL);
-    dialog.setWindowModality(Qt::NonModal);
-    dialog.setMode(KFile::File | KFile::Directory);
-    dialog.setOperationMode(KFileDialog::Opening);
-    dialog.exec();
-
-    if (!dialog.selectedUrl().isEmpty())
-    {
-        Launcher* launcher = new Launcher(dialog.selectedUrl(), m_applet);
-
-        QListWidgetItem *item = new QListWidgetItem(launcher->icon(), launcher->title(), m_arrangementUi.currentActionsListWidget);
-        item->setToolTip(launcher->launcherUrl().pathOrUrl());
-
-        m_arrangementUi.currentActionsListWidget->insertItem((m_arrangementUi.currentActionsListWidget->currentRow() + 1), item);
-
-        delete launcher;
-    }
-}
-
 void Configuration::addLauncher(const QString &url)
 {
     if (!url.isEmpty())
@@ -420,33 +444,87 @@ void Configuration::addLauncher(const QString &url)
             }
         }
 
-        Launcher* launcher = new Launcher(KUrl(url), m_applet);
+        Launcher launcher(KUrl(url), m_applet);
+        const int row = (m_arrangementUi.currentActionsListWidget->currentIndex().row() + 1);
 
-        QListWidgetItem *item = new QListWidgetItem(launcher->icon(), launcher->title(), m_arrangementUi.currentActionsListWidget);
-        item->setToolTip(launcher->launcherUrl().pathOrUrl());
+        m_arrangementUi.currentActionsListWidget->model()->insertRow(row);
 
-        m_arrangementUi.currentActionsListWidget->insertItem((m_arrangementUi.currentActionsListWidget->currentRow() + 1), item);
+        const QModelIndex index = m_arrangementUi.currentActionsListWidget->model()->index(row, 0);
 
-        delete launcher;
+        m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.title(), Qt::DisplayRole);
+        m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.icon(), Qt::DecorationRole);
+        m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.launcherUrl().pathOrUrl(), Qt::ToolTipRole);
+        m_arrangementUi.currentActionsListWidget->setCurrentRow(row);
     }
+}
+
+void Configuration::addLauncher()
+{
+    KFileDialog dialog(KUrl("~"), "", NULL);
+    dialog.setWindowModality(Qt::NonModal);
+    dialog.setMode(KFile::File | KFile::Directory);
+    dialog.setOperationMode(KFileDialog::Opening);
+    dialog.exec();
+
+    if (!dialog.selectedUrl().isEmpty())
+    {
+        addLauncher(dialog.selectedUrl().pathOrUrl());
+    }
+}
+
+void Configuration::editLauncher()
+{
+    if (m_editedLauncher)
+    {
+        m_editedLauncher->deleteLater();
+        m_editedLauncher = NULL;
+    }
+
+    if (!m_arrangementUi.currentActionsListWidget->currentItem() || m_arrangementUi.currentActionsListWidget->currentItem()->toolTip().isEmpty() || m_arrangementUi.currentActionsListWidget->currentItem()->toolTip().left(5) == "menu:")
+    {
+        return;
+    }
+
+    const QString url = m_arrangementUi.currentActionsListWidget->currentItem()->toolTip();
+
+    m_editedLauncher = new Launcher(KUrl(url), m_applet);
+
+    if (m_rules.contains(url))
+    {
+        m_editedLauncher->setRules(m_rules[url].first);
+        m_editedLauncher->setExcluded(m_rules[url].second);
+    }
+
+    connect(m_editedLauncher, SIGNAL(launcherChanged(Launcher*,KUrl)), this, SLOT(changeLauncher(Launcher*,KUrl)));
+
+    m_editedLauncher->showPropertiesDialog();
+}
+
+void Configuration::changeLauncher(Launcher *launcher, const KUrl &oldUrl)
+{
+    Q_UNUSED(oldUrl)
+
+    if (launcher != m_editedLauncher)
+    {
+        return;
+    }
+
+    const QString url = launcher->launcherUrl().pathOrUrl();
+
+///FIXME check for duplicate
+
+    m_rules[url] = qMakePair(launcher->rules(), launcher->isExcluded());
 }
 
 void Configuration::addMenu(QAction *action)
 {
     if (!action->data().isNull())
     {
-        Launcher* launcher = new Launcher(KUrl("menu:" + action->data().toString()), m_applet);
-
-        QListWidgetItem *item = new QListWidgetItem(launcher->icon(), launcher->title(), m_arrangementUi.currentActionsListWidget);
-        item->setToolTip(launcher->launcherUrl().pathOrUrl());
-
-        m_arrangementUi.currentActionsListWidget->insertItem((m_arrangementUi.currentActionsListWidget->currentRow() + 1), item);
-
-        delete launcher;
+        addLauncher("menu:" + action->data().toString());
     }
 }
 
-void Configuration::setServiceMenu()
+void Configuration::populateMenu()
 {
     KMenu *menu = qobject_cast<KMenu*>(sender());
 
@@ -496,7 +574,7 @@ void Configuration::setServiceMenu()
             action = menu->addAction(KIcon(group->icon()), group->caption());
             action->setMenu(subMenu);
 
-            connect(subMenu, SIGNAL(aboutToShow()), this, SLOT(setServiceMenu()));
+            connect(subMenu, SIGNAL(aboutToShow()), this, SLOT(populateMenu()));
         }
         else if (list.at(i)->isType(KST_KServiceSeparator))
         {
@@ -528,13 +606,12 @@ void Configuration::findApplication(const QString &query)
         {
             if (!service->noDisplay() && service->property("NotShowIn", QVariant::String) != "KDE")
             {
-                Launcher* launcher = new Launcher(KUrl(service->entryPath()), m_applet);
-
+                Launcher launcher(KUrl(service->entryPath()), m_applet);
                 QWidget* entryWidget = new QWidget(static_cast<QWidget*>(parent()));
                 QLabel* iconLabel = new QLabel(entryWidget);
-                QLabel* textLabel = new QLabel(QString("%1<br /><small>%3</small>").arg(launcher->title()).arg(launcher->description()), entryWidget);
+                QLabel* textLabel = new QLabel(QString("%1<br /><small>%3</small>").arg(launcher.title()).arg(launcher.description()), entryWidget);
 
-                iconLabel->setPixmap(launcher->icon().pixmap(32, 32));
+                iconLabel->setPixmap(launcher.icon().pixmap(32, 32));
 
                 textLabel->setFixedSize(240, 40);
 
@@ -543,7 +620,7 @@ void Configuration::findApplication(const QString &query)
                 entryWidgetLayout->addWidget(textLabel);
                 entryWidgetLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-                entryWidget->setToolTip(QString("<b>%1</b><br /><i>%2</i>").arg(launcher->title()).arg(launcher->description()));
+                entryWidget->setToolTip(QString("<b>%1</b><br /><i>%2</i>").arg(launcher.title()).arg(launcher.description()));
                 entryWidget->setLayout(entryWidgetLayout);
                 entryWidget->setFixedSize(300, 40);
                 entryWidget->setObjectName(service->entryPath());
@@ -551,8 +628,6 @@ void Configuration::findApplication(const QString &query)
                 entryWidget->setCursor(QCursor(Qt::PointingHandCursor));
 
                 m_findApplicationUi.resultsLayout->addWidget(entryWidget);
-
-                delete launcher;
             }
         }
     }
@@ -565,6 +640,11 @@ void Configuration::closeFindApplicationDialog()
     findApplication(QString());
 
     m_findApplicationUi.query->setText(QString());
+}
+
+void Configuration::actionClicked(const QModelIndex &index)
+{
+    m_actionsUi.actionsTableWidget->edit(m_actionsUi.actionsTableWidget->model()->index(index.row(), 1));
 }
 
 bool Configuration::eventFilter(QObject *object, QEvent *event)

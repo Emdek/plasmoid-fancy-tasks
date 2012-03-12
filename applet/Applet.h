@@ -47,9 +47,6 @@
 #include <Plasma/DataEngine>
 #include <Plasma/Containment>
 
-using TaskManager::GroupPtr;
-using TaskManager::TaskPtr;
-using TaskManager::StartupPtr;
 using TaskManager::AbstractGroupableItem;
 using TaskManager::GroupManager;
 using TaskManager::TaskItem;
@@ -58,11 +55,28 @@ using TaskManager::TaskGroup;
 namespace FancyTasks
 {
 
+enum RuleMatch
+{
+    NoMatch = 0,
+    RegExpMatch,
+    PartialMatch,
+    ExactMatch
+};
+
+enum ConnectionRule
+{
+    NoRule = 0,
+    TaskCommandRule,
+    TaskTitleRule,
+    WindowClassRule,
+    WindowRoleRule
+};
+
 enum TitleLabelMode
 {
     NoLabel = 0,
-    LabelOnMouseOver,
-    LabelForActiveIcon,
+    MouseOverLabel,
+    ActiveIconLabel,
     AlwaysShowLabel
 };
 
@@ -75,13 +89,14 @@ enum CloseJobMode
 
 enum IconAction
 {
-    ActivateItem,
-    ActivateTask,
-    ActivateLauncher,
-    ShowMenu,
-    ShowChildrenList,
-    ShowWindows,
-    CloseTask
+    NoAction = 0,
+    ActivateItemAction,
+    ActivateTaskAction,
+    ActivateLauncherAction,
+    ShowMenuAction,
+    ShowChildrenListAction,
+    ShowWindowsAction,
+    CloseTaskAction
 };
 
 enum AnimationType
@@ -118,17 +133,28 @@ enum ItemChange
 
 enum ItemType
 {
-    TypeOther = 0,
-    TypeLauncher,
-    TypeJob,
-    TypeStartup,
-    TypeTask,
-    TypeGroup
+    OtherType = 0,
+    LauncherType,
+    JobType,
+    StartupType,
+    TaskType,
+    GroupType
 };
 
 Q_DECLARE_FLAGS(ItemChanges, ItemChange)
 
+struct LauncherRule
+{
+    QString expression;
+    RuleMatch match;
+    bool required;
+
+    LauncherRule();
+    LauncherRule(QString expressionI, RuleMatch matchI = ExactMatch, bool requiredI = false);
+};
+
 class Icon;
+class Task;
 class Job;
 class Launcher;
 class DropZone;
@@ -146,7 +172,7 @@ class Applet : public Plasma::Applet
         void itemDragged(Icon *icon, const QPointF &position, const QMimeData *mimeData);
         KMenu* contextMenu();
         Launcher* launcherForUrl(KUrl url);
-        Launcher* launcherForTask(TaskManager::TaskItem *task);
+        Launcher* launcherForTask(Task *task);
         Icon* iconForMimeData(const QMimeData *mimeData);
         TaskManager::GroupManager* groupManager();
         Plasma::Svg* theme();
@@ -156,7 +182,7 @@ class Applet : public Plasma::Applet
         AnimationType moveAnimation() const;
         AnimationType demandsAttentionAnimation() const;
         AnimationType startupAnimation() const;
-        QHash<IconAction, QPair<Qt::MouseButton, Qt::Modifier> > iconActions() const;
+        QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> iconActions() const;
         QList<QAction*> contextualActions();
         QPixmap lightPixmap();
         WId window() const;
@@ -165,9 +191,8 @@ class Applet : public Plasma::Applet
         bool parabolicMoveAnimation() const;
         bool useThumbnails() const;
         bool paintReflections() const;
-        static void setActiveWindow(WId window);
-        static WId activeWindow();
         static QPixmap windowPreview(WId window, int size);
+        static bool matchRule(const QString &expression, const QString &value, RuleMatch match);
 
     public slots:
         void configChanged();
@@ -178,6 +203,8 @@ class Applet : public Plasma::Applet
         void changeTaskPosition(AbstractGroupableItem *abstractItem);
         void addLauncher(Launcher *launcher, int index);
         void removeLauncher(Launcher *launcher);
+        void changeLauncher(Launcher *launcher, const KUrl &oldUrl, bool force = false);
+        void updateLauncher(Launcher *launcher);
         void addJob(const QString &source);
         void removeJob(const QString &source, bool force = false);
         void showJob();
@@ -191,7 +218,6 @@ class Applet : public Plasma::Applet
         void showDropZone(int index);
         void hideDropZone();
         void updateSize();
-        void urlChanged(const KUrl &oldUrl, KUrl &newUrl);
         void requestFocus();
 
     protected:
@@ -214,13 +240,13 @@ class Applet : public Plasma::Applet
         QQueue<QPointer<Job> > m_jobsQueue;
         QList<QGraphicsWidget*> m_visibleItems;
         QList<QPointer<Launcher> > m_launchers;
-        QHash<QString, QPointer<Job> > m_jobs;
-        QHash<Launcher*, QPointer<Icon> > m_launcherIcons;
-        QHash<Job*, QPointer<Icon> > m_jobIcons;
-        QHash<AbstractGroupableItem*, QPointer<Icon> > m_taskIcons;
-        QHash<AbstractGroupableItem*, QPointer<Icon> > m_launcherTaskIcons;
-        QHash<Icon*, QDateTime> m_removedStartups;
-        QHash<IconAction, QPair<Qt::MouseButton, Qt::Modifier> > m_iconActions;
+        QMap<QString, QPointer<Job> > m_jobs;
+        QMap<Launcher*, QPointer<Icon> > m_launcherIcons;
+        QMap<Job*, QPointer<Icon> > m_jobIcons;
+        QMap<AbstractGroupableItem*, QPointer<Icon> > m_taskIcons;
+        QMap<AbstractGroupableItem*, QPointer<Icon> > m_launcherTaskIcons;
+        QMap<Icon*, QDateTime> m_removedStartups;
+        QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> m_iconActions;
         QDateTime m_lastAttentionDemand;
         QPixmap m_lightPixmap;
         QSize m_size;
@@ -245,6 +271,7 @@ class Applet : public Plasma::Applet
         qreal m_itemSize;
         int m_activeItem;
         int m_focusedItem;
+        bool m_initialized;
         bool m_useThumbnails;
         bool m_parabolicMoveAnimation;
         bool m_showOnlyCurrentDesktop;
@@ -254,7 +281,6 @@ class Applet : public Plasma::Applet
         bool m_connectJobsWithTasks;
         bool m_groupJobs;
         bool m_paintReflections;
-        static WId m_activeWindow;
 
     signals:
         void sizeChanged(qreal size);

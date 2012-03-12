@@ -57,12 +57,16 @@ class Launcher : public QObject
         QString title() const;
         QString description() const;
         QString executable() const;
+        QMap<ConnectionRule, LauncherRule> rules() const;
         int itemsAmount() const;
+        bool isExcluded() const;
         bool isExecutable() const;
-        bool isServiceGroup() const;
+        bool isMenu() const;
 
     public slots:
         void setUrl(const KUrl &url);
+        void setExcluded(bool excluded);
+        void setRules(const QMap<ConnectionRule, LauncherRule> &rules);
         void setBrowseMenu();
         void setServiceMenu();
         void activate();
@@ -85,12 +89,15 @@ class Launcher : public QObject
         QString m_title;
         QString m_description;
         QString m_executable;
+        QMap<ConnectionRule, LauncherRule> m_rules;
         QList<QObject*> m_items;
+        bool m_isExcluded;
         bool m_isExecutable;
-        bool m_isServiceGroup;
+        bool m_isMenu;
 
     signals:
         void changed(ItemChanges changes);
+        void launcherChanged(Launcher *launcher, KUrl oldUrl);
         void hide();
         void show();
 };

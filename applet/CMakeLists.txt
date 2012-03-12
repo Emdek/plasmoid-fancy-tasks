@@ -14,17 +14,18 @@ if(X11_Xcomposite_FOUND AND X11_Xrender_FOUND AND X11_Xfixes_FOUND)
     set(FANCYTASKS_HAVE_COMPOSITING 1)
 endif(X11_Xcomposite_FOUND AND X11_Xrender_FOUND AND X11_Xfixes_FOUND)
 
-set(fancytasks_SRCS Applet.cpp Icon.cpp Light.cpp Separator.cpp DropZone.cpp Manager.cpp Task.cpp Launcher.cpp Job.cpp Menu.cpp Configuration.cpp ActionDelegate.cpp)
+set(fancytasks_SRCS Applet.cpp Icon.cpp Light.cpp Separator.cpp DropZone.cpp Task.cpp Launcher.cpp LauncherProperties.cpp RuleDelegate.cpp Job.cpp Menu.cpp Configuration.cpp ActionDelegate.cpp)
 
 add_subdirectory(locale)
 
-kde4_add_ui_files(fancytasks_SRCS ui/general.ui ui/appearance.ui ui/arrangement.ui ui/actions.ui ui/findApplication.ui ui/group.ui)
+kde4_add_ui_files(fancytasks_SRCS ui/general.ui ui/appearance.ui ui/arrangement.ui ui/actions.ui ui/findApplication.ui ui/launcherRules.ui ui/group.ui)
 kde4_add_plugin(plasma_applet_fancytasks ${fancytasks_SRCS})
 target_link_libraries(plasma_applet_fancytasks
                       ${KDE4_PLASMA_LIBS}
                       ${KDE4_KDEUI_LIBS}
                       ${KDE4_KUTILS_LIBS}
                       ${KDE4_KIO_LIBS}
+                      processcore
                       taskmanager
                       )
 

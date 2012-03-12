@@ -18,20 +18,20 @@
 *
 ***********************************************************************************/
 
-#ifndef FANCYTASKSACTIONDELEGATE_HEADER
-#define FANCYTASKSACTIONDELEGATE_HEADER
+#ifndef FANCYTASKSRULEDELEGATE_HEADER
+#define FANCYTASKSRULEDELEGATE_HEADER
 
 #include <QtGui/QStyledItemDelegate>
 
 namespace FancyTasks
 {
 
-class ActionDelegate : public QStyledItemDelegate
+class RuleDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
     public:
-        ActionDelegate(QObject *parent = NULL);
+        RuleDelegate(QObject *parent = NULL);
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;

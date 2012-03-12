@@ -21,7 +21,7 @@
 #ifndef FANCYTASKSCONFIGURATION_HEADER
 #define FANCYTASKSCONFIGURATION_HEADER
 
-#include <QtCore/QPointer>
+#include "Applet.h"
 
 #include <KConfigDialog>
 
@@ -35,6 +35,7 @@ namespace FancyTasks
 {
 
 class Applet;
+class Launcher;
 
 class Configuration : public QObject
 {
@@ -42,10 +43,11 @@ class Configuration : public QObject
 
     public:
         Configuration(Applet *applet, KConfigDialog *parent);
+        ~Configuration();
 
         bool eventFilter(QObject *object, QEvent *event);
 
-    public slots:
+    protected slots:
         void accepted();
         void moveAnimationTypeChanged(int option);
         void availableActionsCurrentItemChanged(int row);
@@ -54,16 +56,21 @@ class Configuration : public QObject
         void addItem();
         void moveUpItem();
         void moveDownItem();
-        void addLauncher();
         void addLauncher(const QString &url);
+        void addLauncher();
+        void editLauncher();
+        void changeLauncher(Launcher *launcher, const KUrl &oldUrl);
         void addMenu(QAction *action);
-        void setServiceMenu();
+        void populateMenu();
         void findApplication(const QString &query);
         void closeFindApplicationDialog();
+        void actionClicked(const QModelIndex &index);
 
     private:
         QPointer<Applet> m_applet;
         KDialog *m_findApplicationDialog;
+        Launcher *m_editedLauncher;
+        QMap<QString, QPair<QMap<ConnectionRule, LauncherRule>, bool> > m_rules;
         Ui::general m_generalUi;
         Ui::appearance m_appearanceUi;
         Ui::arrangement m_arrangementUi;

@@ -1,7 +1,7 @@
 Plasmoid providing a fancy representation of your tasks and launchers for those who need full power of task manager and fresh look.
 
 Requirements:
-KDE4 >= 4.7
+KDE4 >= 4.8
 
 Warning!
 This applet uses standard libtaskmanager like other task managers in KDE, so before you report bug check if it also happens in other applets (for example Tasks).

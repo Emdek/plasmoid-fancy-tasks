@@ -37,23 +37,8 @@
 #include <KIcon>
 #include <KFileItem>
 
-#include <taskmanager/task.h>
-#include <taskmanager/taskitem.h>
-#include <taskmanager/taskactions.h>
-#include <taskmanager/taskmanager.h>
-#include <taskmanager/groupmanager.h>
-#include <taskmanager/abstractgroupingstrategy.h>
-
 namespace FancyTasks
 {
-
-using TaskManager::GroupPtr;
-using TaskManager::TaskPtr;
-using TaskManager::StartupPtr;
-using TaskManager::AbstractGroupableItem;
-using TaskManager::GroupManager;
-using TaskManager::TaskItem;
-using TaskManager::TaskGroup;
 
 class Applet;
 class Task;
@@ -66,7 +51,7 @@ class Icon : public QGraphicsWidget
     Q_OBJECT
 
     public:
-        Icon(AbstractGroupableItem *abstractItem, Launcher *launcher,Job *job, Applet *parent);
+        Icon(Task *task, Launcher *launcher,Job *job, Applet *parent);
         ~Icon();
 
         ItemType itemType() const;
@@ -99,7 +84,7 @@ class Icon : public QGraphicsWidget
         void launcherChanged(ItemChanges changes);
         void jobChanged(ItemChanges changes);
         void jobDemandsAttention();
-        void setTask(AbstractGroupableItem *abstractItem);
+        void setTask(Task *task);
         void setLauncher(Launcher *launcher);
         void addJob(Job *job);
         void removeJob(Job *job);
@@ -136,7 +121,7 @@ class Icon : public QGraphicsWidget
         QPointer<Launcher> m_launcher;
         QPointer<QGraphicsDropShadowEffect> m_glowEffect;
         QList<QPointer<Job> > m_jobs;
-        QHash<WId, QPointer<Light> > m_windowLights;
+        QMap<WId, QPointer<Light> > m_windowLights;
         QGraphicsLinearLayout *m_layout;
         QTimeLine *m_animationTimeLine;
         QTimeLine *m_jobAnimationTimeLine;

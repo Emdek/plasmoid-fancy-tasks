@@ -24,7 +24,6 @@
 
 #include "Applet.h"
 #include "Icon.h"
-#include "Manager.h"
 #include "Task.h"
 #include "Launcher.h"
 #include "Job.h"
@@ -61,12 +60,24 @@
 #include <X11/extensions/shape.h>
 #endif
 
+
+#include <QDebug>
+
 K_EXPORT_PLASMA_APPLET(fancytasks, FancyTasks::Applet)
 
 namespace FancyTasks
 {
 
-WId Applet::m_activeWindow = 0;
+LauncherRule::LauncherRule() : match(NoMatch),
+    required(false)
+{
+}
+
+LauncherRule::LauncherRule(QString expressionI, RuleMatch matchI, bool requiredI) : expression(expressionI),
+    match(matchI),
+    required(requiredI)
+{
+}
 
 Applet::Applet(QObject *parent, const QVariantList &args) : Plasma::Applet(parent, args),
     m_groupManager(new TaskManager::GroupManager(this)),
@@ -75,7 +86,8 @@ Applet::Applet(QObject *parent, const QVariantList &args) : Plasma::Applet(paren
     m_animationTimeLine(new QTimeLine(100, this)),
     m_appletMaximumHeight(100),
     m_initialFactor(0),
-    m_focusedItem(-1)
+    m_focusedItem(-1),
+    m_initialized(false)
 {
     setObjectName("FancyTasksApplet");
 
@@ -114,43 +126,6 @@ Applet::~Applet()
 
 void Applet::init()
 {
-    KConfigGroup configuration = config();
-
-    configChanged();
-
-    if (!configuration.hasKey("arrangement"))
-    {
-        KConfig kickoffConfiguration("kickoffrc", KConfig::NoGlobals);
-        KConfigGroup favoritesGroup(&kickoffConfiguration, "Favorites");
-
-        m_arrangement = favoritesGroup.readEntry("FavoriteURLs", QStringList());
-
-        if (m_arrangement.count())
-        {
-            m_arrangement.append("separator");
-        }
-
-        m_arrangement.append("tasks");
-
-        configuration.writeEntry("arrangement", m_arrangement);
-
-        emit configNeedsSaving();
-    }
-
-    if (!m_customBackgroundImage.isEmpty() && KUrl(m_customBackgroundImage).isValid())
-    {
-        m_background = new Plasma::FrameSvg(this);
-        m_background->setImagePath(m_customBackgroundImage);
-        m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
-    }
-
-    connect(this, SIGNAL(activate()), this, SLOT(showMenu()));
-    connect(m_groupManager->rootGroup(), SIGNAL(itemAdded(AbstractGroupableItem*)), this, SLOT(addTask(AbstractGroupableItem*)));
-    connect(m_groupManager->rootGroup(), SIGNAL(itemRemoved(AbstractGroupableItem*)), this, SLOT(removeTask(AbstractGroupableItem*)));
-    connect(m_groupManager->rootGroup(), SIGNAL(itemPositionChanged(AbstractGroupableItem*)), this, SLOT(changeTaskPosition(AbstractGroupableItem*)));
-
-    m_groupManager->reconnect();
-
     QGraphicsWidget *leftMargin = new QGraphicsWidget(this);
     leftMargin->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 
@@ -161,52 +136,9 @@ void Applet::init()
     m_layout->addItem(rightMargin);
     m_layout->addItem(m_dropZone);
 
-    int index = 1;
-
-    for (int i = 0; i < m_arrangement.count(); ++i)
-    {
-        if (m_arrangement.at(i) == "separator")
-        {
-            if (i > 0 && !m_arrangement.at(i - 1).isEmpty())
-            {
-                Separator *separator = new Separator(m_theme, this);
-                separator->setSize(m_itemSize);
-
-                insertItem(index, separator);
-
-                ++index;
-            }
-        }
-        else if (m_arrangement.at(i) != "tasks" && m_arrangement.at(i) != "jobs")
-        {
-            addLauncher(launcherForUrl(m_arrangement.at(i)), index);
-
-            ++index;
-        }
-    }
-
-    if (m_arrangement.contains("tasks") || m_showOnlyTasksWithLaunchers)
-    {
-        foreach (TaskManager::AbstractGroupableItem* abstractItem, m_groupManager->rootGroup()->members())
-        {
-            addTask(abstractItem);
-        }
-    }
-
-    if (m_arrangement.contains("jobs"))
-    {
-        const QStringList jobs = dataEngine("applicationjobs")->sources();
-
-        for (int i = 0; i < jobs.count(); ++i)
-        {
-            addJob(jobs.at(i));
-        }
-
-        connect(dataEngine("applicationjobs"), SIGNAL(sourceAdded(const QString)), this, SLOT(addJob(const QString)));
-        connect(dataEngine("applicationjobs"), SIGNAL(sourceRemoved(const QString)), this, SLOT(removeJob(const QString)));
-    }
-
     constraintsEvent(Plasma::LocationConstraint);
+
+    QTimer::singleShot(100, this, SLOT(configChanged()));
 
     connect(m_animationTimeLine, SIGNAL(frameChanged(int)), this, SLOT(moveAnimation(int)));
 }
@@ -400,7 +332,7 @@ void Applet::configChanged()
     m_iconActions.clear();
 
     QList<IconAction> actionIds;
-    actionIds << ActivateItem << ActivateTask << ActivateLauncher << ShowMenu << ShowChildrenList << ShowWindows << CloseTask;
+    actionIds << ActivateItemAction << ActivateTaskAction << ActivateLauncherAction << ShowMenuAction << ShowChildrenListAction << ShowWindowsAction << CloseTaskAction;
 
     QStringList actionOptions;
     actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask";
@@ -411,10 +343,10 @@ void Applet::configChanged()
     for (int i = 0; i < actionOptions.count(); ++i)
     {
         QStringList action = configuration.readEntry((actionOptions.at(i) + "Action"), actionDefaults.at(i)).split('+', QString::KeepEmptyParts);
-        QPair<Qt::MouseButton, Qt::Modifier> actionPair;
+        QPair<Qt::MouseButton, Qt::KeyboardModifier> actionPair;
 
         actionPair.first = Qt::NoButton;
-        actionPair.second = Qt::UNICODE_ACCEL;
+        actionPair.second = Qt::NoModifier;
 
         if (action.count() > 0 && !action.at(0).isEmpty())
         {
@@ -435,30 +367,30 @@ void Applet::configChanged()
             {
                 if (action.at(1) == "ctrl")
                 {
-                    actionPair.second = Qt::CTRL;
+                    actionPair.second = Qt::ControlModifier;
                 }
                 else if (action.at(1) == "shift")
                 {
-                    actionPair.second = Qt::SHIFT;
+                    actionPair.second = Qt::ShiftModifier;
                 }
                 else if (action.at(1) == "alt")
                 {
-                    actionPair.second = Qt::ALT;
+                    actionPair.second = Qt::AltModifier;
                 }
             }
         }
 
-        m_iconActions[actionIds.at(i)] = actionPair;
+        m_iconActions[actionPair] = actionIds.at(i);
     }
 
     m_jobCloseMode = static_cast<CloseJobMode>(configuration.readEntry("jobCloseMode", static_cast<int>(DelayedClose)));
     m_activeIconIndication = static_cast<ActiveIconIndication>(configuration.readEntry("activeIconIndication", static_cast<int>(FadeIndication)));
-    m_moveAnimation = static_cast<AnimationType>(configuration.readEntry("moveAnimation", static_cast<int>(ZoomAnimation)));
-    m_parabolicMoveAnimation = configuration.readEntry("parabolicMoveAnimation", true);
+    m_moveAnimation = static_cast<AnimationType>(configuration.readEntry("moveAnimation", static_cast<int>(GlowAnimation)));
+    m_parabolicMoveAnimation = configuration.readEntry("parabolicMoveAnimation", false);
     m_demandsAttentionAnimation = static_cast<AnimationType>(configuration.readEntry("demandsAttentionAnimation", static_cast<int>(BlinkAnimation)));
     m_startupAnimation = static_cast<AnimationType>(configuration.readEntry("startupAnimation", static_cast<int>(BounceAnimation)));
     m_useThumbnails = configuration.readEntry("useThumbnails", false);
-    m_titleLabelMode = static_cast<TitleLabelMode>(configuration.readEntry("titleLabelMode", static_cast<int>(NoLabel)));
+    m_titleLabelMode = static_cast<TitleLabelMode>(configuration.readEntry("titleLabelMode", static_cast<int>(AlwaysShowLabel)));
     m_customBackgroundImage = configuration.readEntry("customBackgroundImage", QString());
     m_showOnlyCurrentDesktop = configuration.readEntry("showOnlyCurrentDesktop", false);
     m_showOnlyCurrentScreen = configuration.readEntry("showOnlyCurrentScreen", false);
@@ -481,6 +413,87 @@ void Applet::configChanged()
     if (containment())
     {
         m_groupManager->setScreen(containment()->screen());
+    }
+
+    if (!m_initialized)
+    {
+        m_initialized = true;
+
+        if (!configuration.hasKey("arrangement"))
+        {
+            KConfig kickoffConfiguration("kickoffrc", KConfig::NoGlobals);
+            KConfigGroup favoritesGroup(&kickoffConfiguration, "Favorites");
+
+            m_arrangement = favoritesGroup.readEntry("FavoriteURLs", QStringList());
+
+            if (m_arrangement.count())
+            {
+                m_arrangement.append("separator");
+            }
+
+            m_arrangement.append("tasks");
+
+            configuration.writeEntry("arrangement", m_arrangement);
+
+            emit configNeedsSaving();
+        }
+
+        if (!m_customBackgroundImage.isEmpty() && KUrl(m_customBackgroundImage).isValid())
+        {
+            m_background = new Plasma::FrameSvg(this);
+            m_background->setImagePath(m_customBackgroundImage);
+            m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
+        }
+
+        connect(this, SIGNAL(activate()), this, SLOT(showMenu()));
+        connect(m_groupManager->rootGroup(), SIGNAL(itemAdded(AbstractGroupableItem*)), this, SLOT(addTask(AbstractGroupableItem*)));
+        connect(m_groupManager->rootGroup(), SIGNAL(itemRemoved(AbstractGroupableItem*)), this, SLOT(removeTask(AbstractGroupableItem*)));
+        connect(m_groupManager->rootGroup(), SIGNAL(itemPositionChanged(AbstractGroupableItem*)), this, SLOT(changeTaskPosition(AbstractGroupableItem*)));
+
+        int index = 1;
+
+        for (int i = 0; i < m_arrangement.count(); ++i)
+        {
+            if (m_arrangement.at(i) == "separator")
+            {
+                if (i > 0 && !m_arrangement.at(i - 1).isEmpty())
+                {
+                    Separator *separator = new Separator(m_theme, this);
+                    separator->setSize(m_itemSize);
+
+                    insertItem(index, separator);
+
+                    ++index;
+                }
+            }
+            else if (m_arrangement.at(i) != "tasks" && m_arrangement.at(i) != "jobs")
+            {
+                addLauncher(launcherForUrl(m_arrangement.at(i)), index);
+
+                ++index;
+            }
+        }
+
+        if (m_arrangement.contains("tasks") || m_showOnlyTasksWithLaunchers)
+        {
+            foreach (TaskManager::AbstractGroupableItem* abstractItem, m_groupManager->rootGroup()->members())
+            {
+                addTask(abstractItem);
+            }
+        }
+
+        if (m_arrangement.contains("jobs"))
+        {
+            const QStringList jobs = dataEngine("applicationjobs")->sources();
+
+            for (int i = 0; i < jobs.count(); ++i)
+            {
+                addJob(jobs.at(i));
+            }
+
+            connect(dataEngine("applicationjobs"), SIGNAL(sourceAdded(const QString)), this, SLOT(addJob(const QString)));
+            connect(dataEngine("applicationjobs"), SIGNAL(sourceRemoved(const QString)), this, SLOT(removeJob(const QString)));
+        }
     }
 
     m_groupManager->reconnect();
@@ -520,7 +533,7 @@ void Applet::updateConfiguration()
     {
         if ((m_arrangement.contains("tasks") && !arrangement.contains("tasks")) || showOnlyTasksWithLaunchers)
         {
-            QHash<TaskManager::AbstractGroupableItem*, QPointer<Icon> >::iterator tasksIterator;
+            QMap<TaskManager::AbstractGroupableItem*, QPointer<Icon> >::iterator tasksIterator;
 
             for (tasksIterator = m_taskIcons.begin(); tasksIterator != m_taskIcons.end(); ++tasksIterator)
             {
@@ -531,7 +544,7 @@ void Applet::updateConfiguration()
 
             m_taskIcons.clear();
 
-            QHash<AbstractGroupableItem*, QPointer<Icon> >::iterator launcherTaskIconsIterator;
+            QMap<AbstractGroupableItem*, QPointer<Icon> >::iterator launcherTaskIconsIterator;
 
             for (launcherTaskIconsIterator = m_launcherTaskIcons.begin(); launcherTaskIconsIterator != m_launcherTaskIcons.end(); ++launcherTaskIconsIterator)
             {
@@ -562,7 +575,7 @@ void Applet::updateConfiguration()
                 {
                     QPointer<Icon> icon = dynamic_cast<Icon*>(m_layout->itemAt(i)->graphicsItem());
 
-                    if (icon && icon->itemType() != TypeLauncher)
+                    if (icon && icon->itemType() != LauncherType)
                     {
                         continue;
                     }
@@ -621,6 +634,11 @@ void Applet::updateConfiguration()
         }
     }
 
+    for (int i = 0; i < m_launchers.count(); ++i)
+    {
+        updateLauncher(m_launchers.at(i));
+    }
+
     configChanged();
 
     if (disconnectlauncherTaskIcons)
@@ -663,47 +681,27 @@ void Applet::insertItem(int index, QGraphicsLayoutItem *item)
 
 void Applet::addTask(AbstractGroupableItem *abstractItem)
 {
-    if ((!m_arrangement.contains("tasks") && !m_showOnlyTasksWithLaunchers) || !abstractItem || m_groupManager->rootGroup()->members().indexOf(abstractItem) < 0)
+    if (!abstractItem || (!m_arrangement.contains("tasks") && !m_showOnlyTasksWithLaunchers) || m_groupManager->rootGroup()->members().indexOf(abstractItem) < 0)
     {
         return;
     }
 
-    QPointer<Icon> icon = NULL;
-    TaskManager::TaskItem *task = NULL;
-    TaskManager::TaskGroup *group = NULL;
-
-    if (abstractItem->itemType() == TaskManager::GroupItemType && m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
-    {
-        group = static_cast<TaskManager::TaskGroup*>(abstractItem);
-
-        if (group->name().isEmpty() && group->members().count())
-        {
-            TaskManager::TaskItem *firstTask = static_cast<TaskManager::TaskItem*>(group->members().first());
-
-            if (firstTask && firstTask->task())
-            {
-                group->setName(firstTask->task()->visibleName());
-            }
-        }
-    }
-    else if (abstractItem->itemType() != TaskManager::GroupItemType)
-    {
-        task = static_cast<TaskManager::TaskItem*>(abstractItem);
-    }
-
-    QString title = (task?(task->task()?task->task()->visibleName():task->startup()->text()):(group?group->name():abstractItem->name()));
+    Icon *icon = NULL;
+    Task *task = new Task(abstractItem, m_groupManager);
+    const QString title = task->title();
+    const QString command = task->command();
 
     if (m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || m_showOnlyTasksWithLaunchers)
     {
-        if (m_groupManager->groupingStrategy() == TaskManager::GroupManager::ProgramGrouping && task && task->task())
+        if (m_groupManager->groupingStrategy() == TaskManager::GroupManager::ProgramGrouping)
         {
-            QHash<AbstractGroupableItem*, QPointer<Icon> >::iterator launcherTaskIconsIterator;
+            QMap<AbstractGroupableItem*, QPointer<Icon> >::iterator launcherTaskIconsIterator;
 
             for (launcherTaskIconsIterator = m_launcherTaskIcons.begin(); launcherTaskIconsIterator != m_launcherTaskIcons.end(); ++launcherTaskIconsIterator)
             {
                 if (launcherTaskIconsIterator.value()->task() && launcherTaskIconsIterator.value()->task()->group() && launcherTaskIconsIterator.value()->task()->group()->members().indexOf(abstractItem))
                 {
-                    launcherTaskIconsIterator.value()->setTask(abstractItem);
+                    launcherTaskIconsIterator.value()->setTask(task);
 
                     m_launcherTaskIcons[abstractItem] = launcherTaskIconsIterator.value();
                     m_launcherTaskIcons.remove(launcherTaskIconsIterator.key());
@@ -713,57 +711,53 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
             }
         }
 
-        QString className;
-        WId window = ((!task || !task->task())?0:task->task()->window());
+        Launcher *launcher = launcherForTask(task);
 
-        if (window)
+        if (launcher && m_launcherIcons.contains(launcher))
         {
-            className = KWindowSystem::windowInfo(window, 0, NET::WM2WindowClass).windowClassName();
-        }
+            icon = m_launcherIcons[launcher];
 
-        QHash<Launcher*, QPointer<Icon> >::iterator launcherIconsIterator;
-
-        for (launcherIconsIterator = m_launcherIcons.begin(); launcherIconsIterator != m_launcherIcons.end(); ++launcherIconsIterator)
-        {
-            if (!launcherIconsIterator.key()->isExecutable() || m_launcherTaskIcons.key(launcherIconsIterator.value(), NULL) || (launcherIconsIterator.value()->task() && m_groupManager->groupingStrategy() == TaskManager::GroupManager::NoGrouping))
+            if (task->taskType() == GroupType && icon->task())
             {
-                continue;
+                m_launcherTaskIcons.remove(icon->task()->abstractItem());
+
+                m_launcherTaskIcons[abstractItem] = icon;
+            }
+            else if (task->taskType() == TaskType && !icon->task())
+            {
+                m_launcherTaskIcons[abstractItem] = icon;
             }
 
-            if ((!className.isEmpty() && (launcherIconsIterator.key()->title().contains(className, Qt::CaseInsensitive) || launcherIconsIterator.key()->executable().contains(className, Qt::CaseInsensitive))) || title.contains(launcherIconsIterator.key()->title(), Qt::CaseInsensitive) || launcherIconsIterator.key()->executable().contains(title, Qt::CaseInsensitive))
-            {
-                if (group && launcherIconsIterator.value()->task())
-                {
-                    m_launcherTaskIcons.remove(launcherIconsIterator.value()->task()->abstractItem());
-                    m_launcherTaskIcons[abstractItem] = launcherIconsIterator.value();
-                }
-                else if (task && !launcherIconsIterator.value()->task())
-                {
-                    m_launcherTaskIcons[abstractItem] = launcherIconsIterator.value();
-                }
+            icon->setTask(task);
 
-                launcherIconsIterator.value()->setTask(abstractItem);
-
-                return;
-            }
+            return;
         }
 
         if (m_showOnlyTasksWithLaunchers)
         {
+            task->deleteLater();
+
             return;
         }
     }
 
-    if (!abstractItem->name().isEmpty())
+    if ((task->taskType() == TaskType || task->taskType() == TaskType) && (!title.isEmpty() || !command.isEmpty()))
     {
-        QHash<Icon*, QDateTime>::iterator removedStartupsIterator;
+        QMap<Icon*, QDateTime>::iterator removedStartupsIterator;
 
         for (removedStartupsIterator = m_removedStartups.begin(); removedStartupsIterator != m_removedStartups.end(); ++removedStartupsIterator)
         {
-            if (title.contains(removedStartupsIterator.key()->title(), Qt::CaseInsensitive) && removedStartupsIterator.key()->itemType() == TypeStartup)
+            if (!removedStartupsIterator.key()->task())
+            {
+                m_removedStartups.erase(removedStartupsIterator);
+
+                continue;
+            }
+
+            if (((!title.isEmpty() && title.contains(removedStartupsIterator.key()->task()->title(), Qt::CaseInsensitive)) || (command.isEmpty() && command.contains(removedStartupsIterator.key()->task()->command(), Qt::CaseInsensitive))) && removedStartupsIterator.key()->itemType() == StartupType)
             {
                 icon = removedStartupsIterator.key();
-                icon->setTask(abstractItem);
+                icon->setTask(task);
 
                 m_removedStartups.erase(removedStartupsIterator);
 
@@ -776,7 +770,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
     {
         int index = (((m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting)?m_taskIcons.count():m_groupManager->rootGroup()->members().indexOf(abstractItem)) + m_arrangement.indexOf("tasks") + 1);
 
-        icon = new Icon(abstractItem, launcherForTask(task), NULL, this);
+        icon = new Icon(task, launcherForTask(task), NULL, this);
         icon->setSize(m_itemSize);
         icon->setFactor(m_initialFactor);
 
@@ -814,7 +808,7 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
 
     QPointer<Icon> icon = m_taskIcons[abstractItem];
 
-    if (icon && icon->itemType() == TypeStartup)
+    if (icon && icon->itemType() == StartupType)
     {
         m_removedStartups[icon] = QDateTime::currentDateTime();
 
@@ -858,10 +852,12 @@ void Applet::changeTaskPosition(AbstractGroupableItem *abstractItem)
 
 void Applet::addLauncher(Launcher *launcher, int index)
 {
-    if (!launcher || m_launcherIcons.contains(launcher))
+    if (!launcher)
     {
         return;
     }
+
+    const QString url = launcher->launcherUrl().pathOrUrl();
 
     if (m_arrangement.contains("tasks") && index >= m_arrangement.indexOf("tasks"))
     {
@@ -873,15 +869,53 @@ void Applet::addLauncher(Launcher *launcher, int index)
         index += m_jobs.count();
     }
 
-    Icon *icon = new Icon(NULL, launcher, NULL, this);
-    icon->setSize(m_itemSize);
-    icon->setFactor(m_initialFactor);
+    if (m_launcherIcons.contains(launcher))
+    {
+        int currentIndex = m_arrangement.indexOf(url);
 
-    m_launcherIcons[launcher] = icon;
+        if (m_arrangement.contains("tasks") && currentIndex >= m_arrangement.indexOf("tasks"))
+        {
+            currentIndex += m_taskIcons.count();
+        }
 
-    insertItem(index, icon);
+        if (m_arrangement.contains("jobs") && currentIndex >= m_arrangement.indexOf("jobs"))
+        {
+            currentIndex += m_jobs.count();
+        }
 
-    updateSize();
+        if (currentIndex == index)
+        {
+            return;
+        }
+        else if (currentIndex < index)
+        {
+            --index;
+        }
+
+        m_layout->removeItem(m_launcherIcons[launcher]);
+
+        insertItem(index, m_launcherIcons[launcher]);
+
+        m_arrangement.removeAll(url);
+    }
+    else
+    {
+        Icon *icon = new Icon(NULL, launcher, NULL, this);
+        icon->setSize(m_itemSize);
+        icon->setFactor(m_initialFactor);
+
+        m_launcherIcons[launcher] = icon;
+
+        insertItem(index, icon);
+
+        updateSize();
+    }
+
+    m_arrangement.insert(index, url);
+
+    config().writeEntry("arrangement", m_arrangement);
+
+    emit configNeedsSaving();
 }
 
 void Applet::removeLauncher(Launcher *launcher)
@@ -902,12 +936,86 @@ void Applet::removeLauncher(Launcher *launcher)
 
     if (!icon)
     {
-       return;
+        return;
     }
 
     m_layout->removeItem(icon);
 
     icon->deleteLater();
+}
+
+void Applet::changeLauncher(Launcher *launcher, const KUrl &oldUrl, bool force)
+{
+qDebug() << "changeLauncher:" << oldUrl;
+    if (!launcher || (!m_arrangement.contains(oldUrl.pathOrUrl()) && !force))
+    {
+        return;
+    }
+
+    config().group("Launchers").deleteGroup(oldUrl.pathOrUrl());
+qDebug() << launcher->launcherUrl();
+    if (launcher->launcherUrl() != oldUrl)
+    {
+        m_arrangement.replace(m_arrangement.indexOf(oldUrl.pathOrUrl()), launcher->launcherUrl().pathOrUrl());
+
+        config().writeEntry("arrangement", m_arrangement);
+    }
+
+    KConfigGroup configuration = config().group("Launchers").group(launcher->launcherUrl().pathOrUrl());
+    configuration.writeEntry("exclude", launcher->isExcluded());
+
+    QMap<ConnectionRule, QString> ruleKeys;
+    ruleKeys[TaskCommandRule] = "taskCommand";
+    ruleKeys[TaskTitleRule] = "taskTitle";
+    ruleKeys[WindowClassRule] = "windowClass";
+    ruleKeys[WindowRoleRule] = "windowRole";
+
+    QMap<ConnectionRule, LauncherRule> rules = launcher->rules();
+    QMap<ConnectionRule, LauncherRule>::iterator iterator;
+
+    for (iterator = rules.begin(); iterator != rules.end(); ++iterator)
+    {
+        if (!ruleKeys.contains(iterator.key()))
+        {
+            continue;
+        }
+qDebug() << ruleKeys[iterator.key()] + "Expression:" << iterator.value().expression;
+        configuration.writeEntry((ruleKeys[iterator.key()] + "Expression"), iterator.value().expression);
+        configuration.writeEntry((ruleKeys[iterator.key()] + "Match"), static_cast<int>(iterator.value().match));
+        configuration.writeEntry((ruleKeys[iterator.key()] + "Required"), iterator.value().required);
+    }
+
+    emit configNeedsSaving();
+}
+
+void Applet::updateLauncher(Launcher *launcher)
+{
+    if (!launcher)
+    {
+        return;
+    }
+
+    KConfigGroup configuration = config().group("Launchers").group(launcher->launcherUrl().pathOrUrl());
+
+    if (!configuration.exists())
+    {
+        return;
+    }
+
+    QMap<ConnectionRule, LauncherRule> rules;
+    QList<QPair<QString, ConnectionRule> > ruleKeys;
+    ruleKeys << qMakePair(QString("taskCommand"), TaskCommandRule) << qMakePair(QString("taskTitle"), TaskTitleRule) << qMakePair(QString("windowClass"), WindowClassRule) << qMakePair(QString("windowRole"), WindowRoleRule);
+
+    for (int i = 0; i < ruleKeys.count(); ++i)
+    {
+        if (configuration.hasKey(ruleKeys.at(i).first + "Expression"))
+        {
+            rules[ruleKeys.at(i).second] = LauncherRule(configuration.readEntry((ruleKeys.at(i).first + "Expression"), QString()), static_cast<RuleMatch>(configuration.readEntry((ruleKeys.at(i).first + "Match"), static_cast<int>(NoMatch))), configuration.readEntry((ruleKeys.at(i).first + "Required"), false));
+        }
+    }
+
+    launcher->setRules(rules);
+    launcher->setExcluded(configuration.readEntry("exclude", false));
 }
 
 void Applet::addJob(const QString &source)
@@ -948,7 +1056,7 @@ void Applet::removeJob(const QString &source, bool force)
         {
             QTimer::singleShot(5000, job, SLOT(close()));
         }
-        else if (job->state() != Job::Error)
+        else if (job->state() != ErrorState)
         {
             force = true;
         }
@@ -979,7 +1087,7 @@ void Applet::showJob()
         return;
     }
 
-    if (job->state() == Job::Finished)
+    if (job->state() == FinishedState)
     {
         job->close();
 
@@ -995,7 +1103,7 @@ void Applet::showJob()
 
     if (m_connectJobsWithTasks)
     {
-        QHash<TaskManager::AbstractGroupableItem*, QPointer<Icon> >::iterator tasksIterator;
+        QMap<TaskManager::AbstractGroupableItem*, QPointer<Icon> >::iterator tasksIterator;
 
         for (tasksIterator = m_taskIcons.begin(); tasksIterator != m_taskIcons.end(); ++tasksIterator)
         {
@@ -1034,7 +1142,7 @@ void Applet::showJob()
 
     if (m_groupJobs)
     {
-        QHash<Job*, QPointer<Icon> >::iterator jobsIterator;
+        QMap<Job*, QPointer<Icon> >::iterator jobsIterator;
 
         for (jobsIterator = m_jobIcons.begin(); jobsIterator != m_jobIcons.end(); ++jobsIterator)
         {
@@ -1073,13 +1181,13 @@ void Applet::showJob()
 
 void Applet::cleanupRemovedStartups()
 {
-    QMutableHashIterator<Icon*, QDateTime> iterator(m_removedStartups);
+    QMutableMapIterator<Icon*, QDateTime> iterator(m_removedStartups);
 
     while (iterator.hasNext())
     {
         iterator.next();
 
-        if (iterator.value().secsTo(QDateTime::currentDateTime()) > 1 && iterator.key()->itemType() == TypeStartup)
+        if (iterator.value().secsTo(QDateTime::currentDateTime()) > 1 && iterator.key()->itemType() == StartupType)
         {
             iterator.key()->deleteLater();
 
@@ -1231,7 +1339,7 @@ void Applet::focusIcon(bool next, bool activateWindow)
 
         if (activateWindow && currentIcon->task())
         {
-            currentIcon->task()->activateWindow();
+            currentIcon->task()->activate();
         }
     }
 }
@@ -1428,48 +1536,6 @@ void Applet::updateSize()
     emit sizeChanged(m_itemSize);
 }
 
-void Applet::urlChanged(const KUrl &oldUrl, KUrl &newUrl)
-{
-    KConfigGroup configuration = config();
-
-    if (newUrl.url().isEmpty())
-    {
-        if (m_arrangement.contains(oldUrl.url()))
-        {
-            m_arrangement.removeAll(oldUrl.url());
-
-            removeLauncher(launcherForUrl(oldUrl));
-        }
-    }
-    else if (oldUrl.url().isEmpty())
-    {
-        if (!m_arrangement.contains(newUrl.url()))
-        {
-            m_arrangement.append(newUrl.url());
-
-            addLauncher(launcherForUrl(newUrl), 0);
-        }
-    }
-    else if (m_arrangement.contains(oldUrl.url()))
-    {
-        m_arrangement.replace(m_arrangement.indexOf(oldUrl.url()), newUrl.url());
-
-        for (int i = 0; i < m_launchers.count(); ++i)
-        {
-            if (m_launchers.at(i)->launcherUrl() == oldUrl)
-            {
-                m_launchers.at(i)->setUrl(newUrl);
-
-                break;
-            }
-        }
-    }
-
-    configuration.writeEntry("arrangement", m_arrangement);
-
-    emit configNeedsSaving();
-}
-
 void Applet::itemDropped(Icon *icon, int index)
 {
     if (!icon)
@@ -1477,7 +1543,7 @@ void Applet::itemDropped(Icon *icon, int index)
         return;
     }
 
-    if ((icon->itemType() == TypeTask || icon->itemType() == TypeGroup) && icon->task() && icon->task()->abstractItem())
+    if ((icon->itemType() == TaskType || icon->itemType() == GroupType) && icon->task() && icon->task()->abstractItem())
     {
         index -= (m_arrangement.indexOf("tasks") + 1);
 
@@ -1516,7 +1582,7 @@ void Applet::itemDropped(Icon *icon, int index)
         {
             Icon *icon = static_cast<Icon*>(m_layout->itemAt(i)->graphicsItem());
 
-            if (icon && icon->itemType() == TypeLauncher)
+            if (icon && icon->itemType() == LauncherType)
             {
                 arrangement.append(icon->launcher()->launcherUrl().pathOrUrl());
             }
@@ -1622,7 +1688,7 @@ KMenu* Applet::contextMenu()
         QAction *action = menu->addAction(icon->icon(), icon->title());
         QFont font = QFont(action->font());
 
-        if (icon->itemType() == TypeLauncher)
+        if (icon->itemType() == LauncherType)
         {
             font.setItalic(true);
         }
@@ -1631,7 +1697,7 @@ KMenu* Applet::contextMenu()
             font.setBold(true);
         }
 
-        if (icon->itemType() == TypeGroup)
+        if (icon->itemType() == GroupType)
         {
             Menu *groupMenu = new Menu(icon->task()->windows());
 
@@ -1639,7 +1705,7 @@ KMenu* Applet::contextMenu()
 
             connect(menu, SIGNAL(destroyed()), groupMenu, SLOT(deleteLater()));
         }
-        else if (icon->itemType() == TypeLauncher && icon->launcher()->isServiceGroup())
+        else if (icon->itemType() == LauncherType && icon->launcher()->isMenu())
         {
             KMenu *launcherMenu = icon->launcher()->serviceMenu();
 
@@ -1647,7 +1713,7 @@ KMenu* Applet::contextMenu()
 
             connect(menu, SIGNAL(destroyed()), launcherMenu, SLOT(deleteLater()));
         }
-        else if (icon->itemType() == TypeJob)
+        else if (icon->itemType() == JobType)
         {
             KMenu *jobMenu = icon->jobs().at(0)->contextMenu();
 
@@ -1689,41 +1755,72 @@ Launcher* Applet::launcherForUrl(KUrl url)
     {
         launcher = new Launcher(url, this);
 
+        updateLauncher(launcher);
+
+        connect(launcher, SIGNAL(launcherChanged(Launcher*,KUrl)), this, SLOT(changeLauncher(Launcher*,KUrl)));
+
         m_launchers.append(launcher);
     }
 
     return launcher;
 }
 
-Launcher* Applet::launcherForTask(TaskManager::TaskItem *task)
+Launcher* Applet::launcherForTask(Task *task)
 {
-    if (!task || !task->task())
+    if (!task)
     {
-        return (NULL);
+        return NULL;
     }
 
-    QString className;
-    WId window = task->task()->window();
+    QMap<ConnectionRule, QString> values;
+    values[TaskCommandRule] = task->command();
+    values[TaskTitleRule] = task->title();
 
-    if (window)
+    if (task->windows().count() > 0)
     {
-        className = KWindowSystem::windowInfo(window, 0, NET::WM2WindowClass).windowClassName();
+        const WId window = task->windows().first();
+
+        values[WindowClassRule] = KWindowSystem::windowInfo(window, 0, NET::WM2WindowClass).windowClassName();
+        values[WindowRoleRule] = KWindowSystem::windowInfo(window, 0, NET::WM2WindowClass).windowClassClass();
+    }
+    else
+    {
+        values[WindowClassRule] = QString();
+        values[WindowRoleRule] = QString();
     }
 
     for (int i = 0; i < m_launchers.count(); ++i)
     {
-        if (!m_launchers.at(i)->isExecutable())
+        if (m_launchers.at(i)->isMenu() || m_launchers.at(i)->isExcluded() || m_launchers.at(i)->rules().isEmpty())
         {
             continue;
         }
 
-        if ((!className.isEmpty() && (m_launchers.at(i)->title().contains(className, Qt::CaseInsensitive) || m_launchers.at(i)->executable().contains(className, Qt::CaseInsensitive))) || task->name().contains(m_launchers.at(i)->title(), Qt::CaseInsensitive))
+        QMap<ConnectionRule, LauncherRule> rules = m_launchers.at(i)->rules();
+        QMap<ConnectionRule, LauncherRule>::iterator iterator;
+        int matched = 0;
+
+        for (iterator = rules.begin(); iterator != rules.end(); ++iterator)
         {
-            return (m_launchers.at(i));
+            if (matchRule(iterator.value().expression, values[iterator.key()], iterator.value().match))
+            {
+                ++matched;
+            }
+            else if (iterator.value().required)
+            {
+                matched = 0;
+
+                break;
+            }
+        }
+
+        if (matched > 0)
+        {
+            return m_launchers.at(i);
         }
     }
 
-    return (NULL);
+    return NULL;
 }
 
 Icon* Applet::iconForMimeData(const QMimeData *mimeData)
@@ -1780,11 +1877,11 @@ Icon* Applet::iconForMimeData(const QMimeData *mimeData)
 
     qSort(sourceWindows);
 
-    QHash<TaskManager::AbstractGroupableItem*, QPointer<Icon> >::iterator iterator;
+    QMap<TaskManager::AbstractGroupableItem*, QPointer<Icon> >::iterator iterator;
 
     for (iterator = m_taskIcons.begin(); iterator != m_taskIcons.end(); ++iterator)
     {
-        if (!iterator.value() || (iterator.value()->itemType() != TypeTask && iterator.value()->itemType() != TypeGroup))
+        if (!iterator.value() || (iterator.value()->itemType() != TaskType && iterator.value()->itemType() != GroupType))
         {
             continue;
         }
@@ -1842,7 +1939,7 @@ AnimationType Applet::startupAnimation() const
     return m_startupAnimation;
 }
 
-QHash<IconAction, QPair<Qt::MouseButton, Qt::Modifier> > Applet::iconActions() const
+QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> Applet::iconActions() const
 {
     return m_iconActions;
 }
@@ -1933,76 +2030,66 @@ bool Applet::paintReflections() const
     return m_paintReflections;
 }
 
-void Applet::setActiveWindow(WId window)
-{
-    m_activeWindow = window;
-}
-
-WId Applet::activeWindow()
-{
-    return m_activeWindow;
-}
-
 QPixmap Applet::windowPreview(WId window, int size)
 {
     QPixmap thumbnail;
 
 #ifdef FANCYTASKS_HAVE_COMPOSITING
-    if (KWindowSystem::compositingActive())
+    if (!KWindowSystem::compositingActive())
     {
-        Display *display = QX11Info::display();
-        XWindowAttributes attributes;
+        return thumbnail;
+    }
 
-        XCompositeRedirectWindow(display, window, CompositeRedirectAutomatic);
-        XGetWindowAttributes(display, window, &attributes);
+    Display *display = QX11Info::display();
+    XWindowAttributes attributes;
 
-        XRenderPictFormat *format = XRenderFindVisualFormat(display, attributes.visual);
+    XCompositeRedirectWindow(display, window, CompositeRedirectAutomatic);
+    XGetWindowAttributes(display, window, &attributes);
 
-        if (format)
-        {
-            bool hasAlpha  = (format->type == PictTypeDirect && format->direct.alphaMask);
-            int x = attributes.x;
-            int y = attributes.y;
-            int width = attributes.width;
-            int height = attributes.height;
+    const int x = attributes.x;
+    const int y = attributes.y;
+    const int width = attributes.width;
+    const int height = attributes.height;
 
-            XRenderPictureAttributes pictureAttributes;
-            pictureAttributes.subwindow_mode = IncludeInferiors;
+    XImage *image = XGetImage(display, window, x, y, width, height, AllPlanes, ZPixmap);
 
-            Picture picture = XRenderCreatePicture(display, window, format, CPSubwindowMode, &pictureAttributes);
-            XserverRegion region = XFixesCreateRegionFromWindow(display, window, WindowRegionBounding);
+    if (!image)
+    {
+        return thumbnail;
+    }
 
-            XFixesTranslateRegion(display, region, -x, -y);
-            XFixesSetPictureClipRegion(display, picture, 0, 0, region);
-            XFixesDestroyRegion(display, region);
-            XShapeSelectInput(display, window, ShapeNotifyMask);
+    thumbnail = QPixmap::fromImage(QImage((const uchar*) image->data, width, height, image->bytes_per_line, QImage::Format_ARGB32));
 
-            thumbnail = QPixmap(width, height);
-            thumbnail.fill(Qt::transparent);
+    XDestroyImage(image);
 
-            XRenderComposite(display, (hasAlpha?PictOpOver:PictOpSrc), picture, None, thumbnail.x11PictureHandle(), 0, 0, 0, 0, 0, 0, width, height);
-        }
+    if (thumbnail.width() > thumbnail.height())
+    {
+        thumbnail = thumbnail.scaledToWidth(size, Qt::SmoothTransformation);
+    }
+    else
+    {
+        thumbnail = thumbnail.scaledToHeight(size, Qt::SmoothTransformation);
     }
 #endif
 
-    if (thumbnail.isNull() && KWindowSystem::windowInfo(window, NET::XAWMState).mappingState() == NET::Visible)
-    {
-        thumbnail = QPixmap::grabWindow(QApplication::desktop()->winId()).copy(KWindowSystem::windowInfo(window, NET::WMGeometry | NET::WMFrameExtents).frameGeometry());
-    }
-
-    if (!thumbnail.isNull())
-    {
-        if (thumbnail.width() > thumbnail.height())
-        {
-            thumbnail = thumbnail.scaledToWidth(size, Qt::SmoothTransformation);
-        }
-        else
-        {
-            thumbnail = thumbnail.scaledToHeight(size, Qt::SmoothTransformation);
-        }
-    }
-
     return thumbnail;
+}
+
+bool Applet::matchRule(const QString &expression, const QString &value, RuleMatch match)
+{
+    switch (match)
+    {
+        case ExactMatch:
+            return (expression == value);
+        case PartialMatch:
+            return value.contains(expression);
+        case RegExpMatch:
+            return QRegExp(expression, Qt::CaseInsensitive).exactMatch(value);
+        default:
+            return false;
+    }
+
+    return false;
 }
 
 }

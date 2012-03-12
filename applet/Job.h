@@ -32,6 +32,15 @@
 namespace FancyTasks
 {
 
+enum JobState
+{
+    UnknownState = 0,
+    RunningState,
+    SuspendedState,
+    FinishedState,
+    ErrorState
+};
+
 class Applet;
 
 class Job : public QObject
@@ -39,15 +48,6 @@ class Job : public QObject
     Q_OBJECT
 
     public:
-        enum JobState
-        {
-            Unknown = 0,
-            Running,
-            Suspended,
-            Finished,
-            Error
-        };
-
         Job(const QString &job, Applet *applet);
 
         JobState state() const;

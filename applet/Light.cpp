@@ -24,8 +24,6 @@
 #include "Task.h"
 
 #include <KMenu>
-#include <KIconLoader>
-#include <KIconEffect>
 
 #include <Plasma/WindowEffects>
 #include <Plasma/ToolTipManager>
@@ -49,7 +47,7 @@ Light::Light(WId window, Applet *applet, Icon *icon) : QGraphicsWidget(icon),
 
     Plasma::ToolTipManager::self()->registerWidget(this);
 
-    TaskManager::TaskPtr task = TaskManager::TaskManager::self()->findTask(m_window);
+    TaskManager::Task *task = TaskManager::TaskManager::self()->findTask(m_window);
 
     if (!task)
     {
@@ -64,8 +62,10 @@ void Light::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
+    QPixmap pixmap = m_applet->lightPixmap();
+
     painter->setRenderHints(QPainter::SmoothPixmapTransform);
-    painter->drawPixmap(boundingRect().toRect(), m_applet->lightPixmap());
+    painter->drawPixmap(boundingRect().toRect(), pixmap);
 }
 
 void Light::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -139,7 +139,7 @@ void Light::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     if (m_icon && m_task)
     {
-        m_icon->performAction(ShowMenu);
+        m_icon->performAction(ShowMenuAction);
     }
 
     event->accept();
@@ -149,7 +149,7 @@ void Light::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == m_dragTimer && isUnderMouse())
     {
-        m_task->activateWindow();
+        m_task->activate();
     }
     else if (event->timerId() == m_highlightTimer && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::HighlightWindows))
     {

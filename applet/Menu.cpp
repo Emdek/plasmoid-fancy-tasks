@@ -1,6 +1,6 @@
 /***********************************************************************************
-* Fancy Tasks: Plasmoid providing fancy visualization of tasks, launchers and jobs.
-* Copyright (C) 2009-2012 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
+* Fancy Tasks: Plasmoid providing a fancy representation of your tasks and launchers.
+* Copyright (C) 2009-2011 Michal Dutkiewicz aka Emdek <emdeck@gmail.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -54,13 +54,13 @@ void Menu::dragMoveEvent(QDragMoveEvent *event)
     {
         m_currentAction = action;
 
-        TaskManager::TaskPtr taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
+        TaskManager::Task *taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
 
         if (taskPointer)
         {
             TaskManager::GroupManager *groupManager = new TaskManager::GroupManager(this);
             Task *task = new Task(new TaskManager::TaskItem(groupManager, taskPointer), groupManager);
-            task->activateWindow();
+            task->activate();
 
             delete task;
             delete groupManager;
@@ -121,7 +121,7 @@ void Menu::mouseReleaseEvent(QMouseEvent *event)
 
     if (action && action->data().type() == QVariant::ULongLong)
     {
-        TaskManager::TaskPtr taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
+        TaskManager::Task *taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
 
         if (taskPointer)
         {
@@ -151,7 +151,7 @@ void Menu::contextMenuEvent(QContextMenuEvent *event)
 
     if (action && action->data().type() == QVariant::ULongLong)
     {
-        TaskManager::TaskPtr taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
+        TaskManager::Task *taskPointer = TaskManager::TaskManager::self()->findTask(action->data().toULongLong());
 
         if (taskPointer)
         {

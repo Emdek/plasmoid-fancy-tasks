@@ -34,13 +34,6 @@ ActionDelegate::ActionDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
 }
 
-void ActionDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    Q_UNUSED(index)
-
-    editor->setGeometry(option.rect);
-}
-
 void ActionDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
     QStringList action = index.data(Qt::EditRole).toString().split('+', QString::KeepEmptyParts);
@@ -112,35 +105,6 @@ void ActionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, co
     }
 }
 
-QWidget* ActionDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    Q_UNUSED(option)
-
-    QWidget *editor = new QWidget(parent);
-
-    KComboBox *buttonComboBox = new KComboBox(editor);
-    buttonComboBox->setToolTip(i18n("Mouse Button"));
-    buttonComboBox->addItem(i18n("Disabled"));
-    buttonComboBox->addItem(i18n("Left"));
-    buttonComboBox->addItem(i18n("Middle"));
-    buttonComboBox->addItem(i18n("Right"));
-
-    KComboBox *modifierComboBox = new KComboBox(editor);
-    modifierComboBox->setToolTip(i18n("Modifier Key"));
-    modifierComboBox->addItem(i18n("None"));
-    modifierComboBox->addItem("Ctrl");
-    modifierComboBox->addItem("Shift");
-    modifierComboBox->addItem("Alt");
-
-    QHBoxLayout *layout = new QHBoxLayout(editor);
-    layout->addWidget(buttonComboBox);
-    layout->addWidget(modifierComboBox);
-
-    setEditorData(editor, index);
-
-    return editor;
-}
-
 QString ActionDelegate::displayText(const QVariant &value, const QLocale &locale) const
 {
     Q_UNUSED(locale)
@@ -188,6 +152,35 @@ QString ActionDelegate::displayText(const QVariant &value, const QLocale &locale
     }
 
     return text;
+}
+
+QWidget* ActionDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    Q_UNUSED(option)
+
+    QWidget *editor = new QWidget(parent);
+    KComboBox *buttonComboBox = new KComboBox(editor);
+    buttonComboBox->setToolTip(i18n("Mouse Button"));
+    buttonComboBox->addItem(i18n("Disabled"));
+    buttonComboBox->addItem(i18n("Left"));
+    buttonComboBox->addItem(i18n("Middle"));
+    buttonComboBox->addItem(i18n("Right"));
+
+    KComboBox *modifierComboBox = new KComboBox(editor);
+    modifierComboBox->setToolTip(i18n("Modifier Key"));
+    modifierComboBox->addItem(i18n("None"));
+    modifierComboBox->addItem("Ctrl");
+    modifierComboBox->addItem("Shift");
+    modifierComboBox->addItem("Alt");
+
+    QHBoxLayout *layout = new QHBoxLayout(editor);
+    layout->addWidget(buttonComboBox);
+    layout->addWidget(modifierComboBox);
+    layout->setMargin(0);
+
+    setEditorData(editor, index);
+
+    return editor;
 }
 
 }

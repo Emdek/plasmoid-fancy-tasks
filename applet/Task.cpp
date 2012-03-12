@@ -27,13 +27,16 @@
 #include <NETRootInfo>
 #include <KWindowSystem>
 
+#include <ksysguard/process.h>
+#include <ksysguard/processes.h>
+
 namespace FancyTasks
 {
 
 Task::Task(TaskManager::AbstractGroupableItem *abstractItem, TaskManager::GroupManager *groupManager) : QObject(groupManager),
     m_abstractItem(NULL),
     m_groupManager(groupManager),
-    m_taskType(TypeInvalid)
+    m_taskType(OtherType)
 {
     setTask(abstractItem);
 }
@@ -41,11 +44,22 @@ Task::Task(TaskManager::AbstractGroupableItem *abstractItem, TaskManager::GroupM
 void Task::setTask(TaskManager::AbstractGroupableItem *abstractItem)
 {
     m_abstractItem = abstractItem;
+    m_command = QString();
 
     if (m_abstractItem->itemType() == TaskManager::GroupItemType)
     {
         m_group = static_cast<TaskManager::TaskGroup*>(abstractItem);
-        m_taskType = TypeGroup;
+        m_taskType = GroupType;
+
+        if (m_group->name().isEmpty() && m_group->members().count() && m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
+        {
+            TaskManager::TaskItem *task = static_cast<TaskManager::TaskItem*>(m_group->members().first());
+
+            if (task && task->task())
+            {
+                m_group->setName(task->task()->visibleName());
+            }
+        }
 
         QList<WId> windowList = windows();
 
@@ -62,17 +76,31 @@ void Task::setTask(TaskManager::AbstractGroupableItem *abstractItem)
     else
     {
         m_task = static_cast<TaskManager::TaskItem*>(abstractItem);
-        m_taskType = (m_task->task()?TypeTask:TypeStartup);
+        m_taskType = (m_task->task()?TaskType:StartupType);
 
-        if (m_taskType == TypeTask)
+        if (m_taskType == TaskType)
         {
+            KSysGuard::Processes processes;
+            processes.updateAllProcesses();
+
+            KSysGuard::Process *process = processes.getProcess(m_task->task()->pid());
+
+            if (process)
+            {
+                m_command = process->command;
+            }
+
             emit windowAdded(windows().at(0));
+        }
+        else
+        {
+            m_command = m_task->startup()->bin();
         }
 
         connect(m_task, SIGNAL(changed(::TaskManager::TaskChanges)), this, SLOT(taskChanged(::TaskManager::TaskChanges)));
     }
 
-    if (m_taskType == TypeStartup)
+    if (m_taskType == StartupType)
     {
         connect(m_task, SIGNAL(gotTaskPointer()), this, SLOT(setTaskPointer()));
     }
@@ -96,28 +124,7 @@ void Task::close()
 
 void Task::activate()
 {
-    if (m_taskType == TypeTask && m_task->task())
-    {
-        const bool isActive = (Applet::activeWindow() == m_task->task()->window());
-
-        if (!isActive || m_task->task()->isIconified())
-        {
-            m_task->task()->activate();
-        }
-        else if (!isActive && !m_task->task()->isOnTop())
-        {
-            m_task->task()->raise();
-        }
-        else
-        {
-            m_task->task()->setIconified(true);
-        }
-    }
-}
-
-void Task::activateWindow()
-{
-    if (m_taskType == TypeTask && m_task->task())
+    if (m_taskType == TaskType && m_task->task())
     {
         m_task->task()->activateRaiseOrIconify();
     }
@@ -125,7 +132,7 @@ void Task::activateWindow()
 
 void Task::publishIconGeometry()
 {
-    if (m_taskType == TypeTask)
+    if (m_taskType == TaskType)
     {
         emit publishGeometry(m_task);
     }
@@ -133,12 +140,12 @@ void Task::publishIconGeometry()
 
 void Task::dropItems(TaskManager::ItemList items)
 {
-    if (m_taskType == TypeStartup || m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
+    if (m_taskType == StartupType || m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
     {
         return;
     }
 
-    if (m_taskType == TypeTask)
+    if (m_taskType == TaskType)
     {
         items.append(m_abstractItem);
     }
@@ -152,7 +159,7 @@ void Task::dropItems(TaskManager::ItemList items)
 
 void Task::showPropertiesDialog()
 {
-    if (m_taskType == TypeGroup && m_groupManager->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name)
+    if (m_taskType == GroupType && m_groupManager->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name)
     {
         QWidget *groupWidget = new QWidget;
 
@@ -230,6 +237,7 @@ void Task::removeItem(AbstractGroupableItem *abstractItem)
             emit windowRemoved(task->task()->window());
         }
     }
+
     emit changed(WindowsChanged);
 }
 
@@ -237,25 +245,43 @@ KMenu* Task::contextMenu()
 {
     KMenu *menu = new KMenu;
     TaskManager::BasicMenu *taskMenu;
-    QList<QAction*> actions;
 
-    if (m_taskType == TypeGroup)
+    if (m_taskType == GroupType)
     {
-        taskMenu = new TaskManager::BasicMenu(NULL, m_group, m_groupManager, actions);
+        taskMenu = new TaskManager::BasicMenu(menu, m_group, m_groupManager);
+
+        for (int i = 0; i < taskMenu->actions().count(); ++i)
+        {
+            if (!taskMenu->actions().at(i)->menu())
+            {
+                break;
+            }
+
+            taskMenu->actions().at(i)->menu()->actions().at(taskMenu->actions().at(i)->menu()->actions().count() - 4)->setVisible(false);
+
+            if (taskMenu->actions().at(i)->menu()->actions().count() > 7)
+            {
+                taskMenu->actions().at(i)->menu()->actions().at(taskMenu->actions().at(i)->menu()->actions().count() - 5)->setVisible(false);
+            }
+        }
     }
     else
     {
-        taskMenu = new TaskManager::BasicMenu(NULL, m_task, m_groupManager, actions);
+        taskMenu = new TaskManager::BasicMenu(menu, m_task, m_groupManager);
+        taskMenu->actions().at(taskMenu->actions().count() - 4)->setVisible(false);
+
+        if (taskMenu->actions().count() > 7)
+        {
+            taskMenu->actions().at(taskMenu->actions().count() - 5)->setVisible(false);
+        }
     }
 
     menu->addActions(taskMenu->actions());
 
-    connect(menu, SIGNAL(destroyed()), taskMenu, SLOT(deleteLater()));
-
     return menu;
 }
 
-Task::TaskType Task::taskType() const
+ItemType Task::taskType() const
 {
     return m_taskType;
 }
@@ -279,13 +305,13 @@ KIcon Task::icon()
 {
     switch (m_taskType)
     {
-        case TypeStartup:
+        case StartupType:
             return ((m_task && m_task->startup())?KIcon(m_task->startup()->icon()):KIcon());
         break;
-        case TypeTask:
+        case TaskType:
             return ((m_task && m_task->task())?KIcon(m_task->task()->icon()):KIcon());
         break;
-        case TypeGroup:
+        case GroupType:
             return (m_group?KIcon(m_group->icon()):KIcon());
         break;
         default:
@@ -296,11 +322,11 @@ KIcon Task::icon()
 
 QString Task::title() const
 {
-    QString title = ((m_taskType == TypeGroup && m_group)?m_group->name():((m_taskType == TypeTask && m_task->task())?m_task->task()->visibleName():(m_task->startup()?m_task->startup()->text():QString())));
+    QString title = ((m_taskType == GroupType && m_group)?m_group->name():(m_abstractItem?m_abstractItem->name():QString()));
 
     if (title.isEmpty())
     {
-        if (m_taskType == TypeGroup)
+        if (m_taskType == GroupType)
         {
             title = static_cast<TaskManager::TaskItem*>(m_group->members().at(0))->task()->visibleName();
 
@@ -317,43 +343,27 @@ QString Task::title() const
 
 QString Task::description() const
 {
-    return ((m_taskType == TypeStartup)?i18n("Starting application..."):(m_abstractItem->isOnAllDesktops()?i18n("On all desktops"):i18nc("Which virtual desktop a window is currently on", "On %1", KWindowSystem::desktopName(m_abstractItem->desktop()))));
+    return ((m_taskType == StartupType)?i18n("Starting application..."):(m_abstractItem->isOnAllDesktops()?i18n("On all desktops"):i18nc("Which virtual desktop a window is currently on", "On %1", KWindowSystem::desktopName(m_abstractItem->desktop()))));
+}
+
+QString Task::command() const
+{
+    return m_command;
 }
 
 QList<WId> Task::windows()
 {
-    QList<WId> windows;
-
-    if (m_taskType == TypeTask && m_task->task())
-    {
-        windows.append(m_task->task()->window());
-    }
-    else if (m_taskType == TypeGroup && m_group)
-    {
-        TaskManager::ItemList tasks = m_group->members();
-
-        for (int i = 0; i < tasks.count(); ++i)
-        {
-            TaskManager::TaskItem *item = static_cast<TaskManager::TaskItem*>(tasks.at(i));
-
-            if (item && item->task())
-            {
-                windows.append(item->task()->window());
-            }
-        }
-    }
-
-    return windows;
+    return (m_abstractItem?m_abstractItem->winIds().toList():QList<WId>());
 }
 
 bool Task::isActive() const
 {
-    return m_abstractItem->isActive();
+    return (m_abstractItem?m_abstractItem->isActive():false);
 }
 
 bool Task::demandsAttention() const
 {
-    return m_abstractItem->demandsAttention();
+    return (m_abstractItem?m_abstractItem->demandsAttention():false);
 }
 
 }

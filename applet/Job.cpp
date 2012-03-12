@@ -26,7 +26,7 @@ namespace FancyTasks
 Job::Job(const QString &job, Applet *applet) : QObject(applet),
     m_applet(applet),
     m_job(job),
-    m_state(Unknown),
+    m_state(UnknownState),
     m_percentage(-1),
     m_closeOnFinish(false)
 {
@@ -61,31 +61,31 @@ void Job::dataUpdated(const QString &source, const Plasma::DataEngine::Data &dat
     {
         m_title = data["error"].toString();
 
-        if (m_state != Error)
+        if (m_state != ErrorState)
         {
             emit demandsAttention();
         }
 
-        m_state = Error;
+        m_state = ErrorState;
     }
     else if (state == "running" && m_percentage > 0)
     {
-        m_state = Running;
+        m_state = RunningState;
     }
     else if (state == "suspended")
     {
-        m_state = Suspended;
+        m_state = SuspendedState;
     }
     else if (state == "stopped")
     {
-        m_state = Finished;
+        m_state = FinishedState;
     }
 
     QString description;
 
-    if (m_state == Running || m_state == Suspended || m_state == Unknown)
+    if (m_state == RunningState || m_state == SuspendedState || m_state == UnknownState)
     {
-        m_title = ((m_state == Suspended)?i18n("%1 [Paused]", m_title):m_title);
+        m_title = ((m_state == SuspendedState)?i18n("%1 [Paused]", m_title):m_title);
 
         if (data["eta"].toUInt() > 0)
         {
@@ -126,7 +126,7 @@ void Job::setFinished(bool finished)
     {
         m_title = i18n("%1 [Finished]", m_title);
         m_information = QString("<b>%1</b>").arg(m_title);
-        m_state = Finished;
+        m_state = FinishedState;
     }
 
     emit demandsAttention();
@@ -171,15 +171,15 @@ KMenu* Job::contextMenu()
 {
     KMenu *menu = new KMenu;
 
-    if (m_state == Finished || m_state == Error)
+    if (m_state == FinishedState || m_state == ErrorState)
     {
         menu->addAction(KIcon("window-close"), i18n("Close Job"), this, SLOT(close()));
     }
     else
     {
-        if (m_suspendable && m_state != Unknown)
+        if (m_suspendable && m_state != UnknownState)
         {
-            if (m_state == Running)
+            if (m_state == RunningState)
             {
                 menu->addAction(KIcon("media-playback-pause"), i18n("Pause Job"), this, SLOT(suspend()));
             }
@@ -191,12 +191,12 @@ KMenu* Job::contextMenu()
 
         if (m_killable)
         {
-            if (m_state != Unknown)
+            if (m_state != UnknownState)
             {
                 menu->addSeparator();
             }
 
-            menu->addAction(KIcon("media-playback-stop"), i18n("Cancel Job"), this, SLOT(stop()))->setEnabled(m_state != Finished && m_state != Error);
+            menu->addAction(KIcon("media-playback-stop"), i18n("Cancel Job"), this, SLOT(stop()))->setEnabled(m_state != FinishedState && m_state != ErrorState);
         }
     }
 
@@ -204,15 +204,15 @@ KMenu* Job::contextMenu()
 
     QAction *closeOnFinishAction = menu->addAction(i18n("Close on Finish"));
     closeOnFinishAction->setCheckable(true);
-    closeOnFinishAction->setChecked(m_closeOnFinish && m_state != Error);
-    closeOnFinishAction->setEnabled(m_state != Finished && m_state != Error);
+    closeOnFinishAction->setChecked(m_closeOnFinish && m_state != ErrorState);
+    closeOnFinishAction->setEnabled(m_state != FinishedState && m_state != ErrorState);
 
     connect(closeOnFinishAction, SIGNAL(toggled(bool)), this, SLOT(setCloseOnFinish(bool)));
 
     return menu;
 }
 
-Job::JobState Job::state() const
+JobState Job::state() const
 {
     return m_state;
 }

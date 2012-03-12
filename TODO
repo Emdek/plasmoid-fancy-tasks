@@ -1,3 +1,4 @@
 - replace taskmanager by own dock management library (using tasks data engine);
+- try to add support for multiple rows of entries;
 - show notifications connected with tasks (?);
 - add new animations: zoom fade, squish and spin jump (?).

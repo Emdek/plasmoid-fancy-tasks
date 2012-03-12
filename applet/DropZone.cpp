@@ -85,9 +85,9 @@ void DropZone::dropEvent(QGraphicsSceneDragDropEvent *event)
     {
         KUrl::List droppedUrls = KUrl::List::fromMimeData(event->mimeData());
 
-        for (int i = 0; i < droppedUrls.count(); ++i)
+        for (int i = (droppedUrls.count() - 1); i >= 0; --i)
         {
-            m_applet->urlChanged(KUrl(), droppedUrls[i]);
+            m_applet->addLauncher(m_applet->launcherForUrl(droppedUrls[i]), m_index);
         }
 
          event->accept();

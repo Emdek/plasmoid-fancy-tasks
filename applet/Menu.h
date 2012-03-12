@@ -21,8 +21,6 @@
 #ifndef FANCYTASKSMENU_HEADER
 #define FANCYTASKSMENU_HEADER
 
-#include "Applet.h"
-
 #include <KMenu>
 
 namespace FancyTasks
