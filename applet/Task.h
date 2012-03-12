@@ -40,6 +40,7 @@ using TaskManager::AbstractGroupableItem;
 using TaskManager::GroupManager;
 using TaskManager::TaskItem;
 using TaskManager::TaskGroup;
+using TaskManager::BasicMenu;
 
 namespace FancyTasks
 {
@@ -49,13 +50,12 @@ class Task : public QObject
     Q_OBJECT
 
     public:
-        Task(TaskManager::AbstractGroupableItem *abstractItem, TaskManager::GroupManager *groupManager);
+        Task(AbstractGroupableItem *abstractItem, GroupManager *groupManager);
 
         void dropTask(Task *task);
         void addMimeData(QMimeData *mimeData);
         void publishIconGeometry(const QRect &geometry);
         ItemType taskType() const;
-        TaskGroup* group();
         KMenu* contextMenu();
         KIcon icon();
         QString title() const;
@@ -66,7 +66,7 @@ class Task : public QObject
         bool demandsAttention() const;
 
     public slots:
-        void setTask(TaskManager::AbstractGroupableItem *abstractItem);
+        void setTask(AbstractGroupableItem *abstractItem);
         void setTaskPointer();
         void close();
         void activate();
@@ -78,12 +78,13 @@ class Task : public QObject
 
     protected:
         AbstractGroupableItem* abstractItem();
+        QList<AbstractGroupableItem*> members();
 
     private:
-        QPointer<TaskManager::AbstractGroupableItem> m_abstractItem;
-        QPointer<TaskManager::TaskItem> m_task;
-        QPointer<TaskManager::TaskGroup> m_group;
-        TaskManager::GroupManager *m_groupManager;
+        QPointer<AbstractGroupableItem> m_abstractItem;
+        QPointer<TaskItem> m_task;
+        QPointer<TaskGroup> m_group;
+        QPointer<GroupManager> m_groupManager;
         QString m_command;
         ItemType m_taskType;
         Ui::group m_groupUi;

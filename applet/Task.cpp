@@ -30,7 +30,7 @@
 namespace FancyTasks
 {
 
-Task::Task(TaskManager::AbstractGroupableItem *abstractItem, TaskManager::GroupManager *groupManager) : QObject(groupManager),
+Task::Task(AbstractGroupableItem *abstractItem, GroupManager *groupManager) : QObject(groupManager),
     m_abstractItem(NULL),
     m_groupManager(groupManager),
     m_taskType(OtherType)
@@ -38,19 +38,19 @@ Task::Task(TaskManager::AbstractGroupableItem *abstractItem, TaskManager::GroupM
     setTask(abstractItem);
 }
 
-void Task::setTask(TaskManager::AbstractGroupableItem *abstractItem)
+void Task::setTask(AbstractGroupableItem *abstractItem)
 {
     m_abstractItem = abstractItem;
     m_command = QString();
 
     if (m_abstractItem->itemType() == TaskManager::GroupItemType)
     {
-        m_group = static_cast<TaskManager::TaskGroup*>(abstractItem);
+        m_group = static_cast<TaskGroup*>(abstractItem);
         m_taskType = GroupType;
 
         if (m_group->name().isEmpty() && m_group->members().count() && m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
         {
-            TaskManager::TaskItem *task = static_cast<TaskManager::TaskItem*>(m_group->members().first());
+            TaskItem *task = static_cast<TaskItem*>(m_group->members().first());
 
             if (task && task->task())
             {
@@ -72,7 +72,7 @@ void Task::setTask(TaskManager::AbstractGroupableItem *abstractItem)
     }
     else
     {
-        m_task = static_cast<TaskManager::TaskItem*>(abstractItem);
+        m_task = static_cast<TaskItem*>(abstractItem);
         m_taskType = (m_task->task()?TaskType:StartupType);
 
         if (m_taskType == TaskType)
@@ -131,7 +131,7 @@ void Task::publishIconGeometry(const QRect &geometry)
     }
     else if (m_group)
     {
-        TaskManager::ItemList items = m_group->members();
+        QList<AbstractGroupableItem*> items = m_group->members();
 
         for (int i = 0; i < items.count(); ++i)
         {
@@ -151,7 +151,7 @@ void Task::dropTask(Task *task)
         return;
     }
 
-    TaskManager::ItemList items;
+    QList<AbstractGroupableItem*> items;
 
     if (task->taskType() == TaskType)
     {
@@ -159,7 +159,7 @@ void Task::dropTask(Task *task)
     }
     else
     {
-        items.append(task->group()->members());
+        items.append(task->members());
     }
 
     if (m_taskType == TaskType)
@@ -240,7 +240,7 @@ void Task::addItem(AbstractGroupableItem *abstractItem)
 {
     if (abstractItem->itemType() != TaskManager::GroupItemType)
     {
-        TaskManager::TaskItem *task = static_cast<TaskManager::TaskItem*>(abstractItem);
+        TaskItem *task = static_cast<TaskItem*>(abstractItem);
 
         if (task->task())
         {
@@ -255,7 +255,7 @@ void Task::removeItem(AbstractGroupableItem *abstractItem)
 {
     if (abstractItem->itemType() == TaskManager::GroupItemType)
     {
-        TaskManager::TaskItem *task = static_cast<TaskManager::TaskItem*>(abstractItem);
+        TaskItem *task = static_cast<TaskItem*>(abstractItem);
 
         if (task->task())
         {
@@ -269,11 +269,11 @@ void Task::removeItem(AbstractGroupableItem *abstractItem)
 KMenu* Task::contextMenu()
 {
     KMenu *menu = new KMenu;
-    TaskManager::BasicMenu *taskMenu;
+    BasicMenu *taskMenu;
 
     if (m_taskType == GroupType)
     {
-        taskMenu = new TaskManager::BasicMenu(menu, m_group, m_groupManager);
+        taskMenu = new BasicMenu(menu, m_group, m_groupManager);
 
         for (int i = 0; i < taskMenu->actions().count(); ++i)
         {
@@ -292,7 +292,7 @@ KMenu* Task::contextMenu()
     }
     else
     {
-        taskMenu = new TaskManager::BasicMenu(menu, m_task, m_groupManager);
+        taskMenu = new BasicMenu(menu, m_task, m_groupManager);
         taskMenu->actions().at(taskMenu->actions().count() - 4)->setVisible(false);
 
         if (taskMenu->actions().count() > 7)
@@ -316,9 +316,20 @@ AbstractGroupableItem* Task::abstractItem()
     return m_abstractItem;
 }
 
-TaskGroup* Task::group()
+QList<AbstractGroupableItem*> Task::members()
 {
-    return m_group;
+    QList<AbstractGroupableItem*> members;
+
+    if (m_group)
+    {
+        members = m_group->members();
+    }
+    else if (m_abstractItem)
+    {
+        members.append(m_abstractItem);
+    }
+
+    return members;
 }
 
 KIcon Task::icon()
@@ -348,7 +359,7 @@ QString Task::title() const
     {
         if (m_taskType == GroupType)
         {
-            title = static_cast<TaskManager::TaskItem*>(m_group->members().at(0))->task()->visibleName();
+            title = static_cast<TaskItem*>(m_group->members().at(0))->task()->visibleName();
 
             m_group->setName(title);
         }
