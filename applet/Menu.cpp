@@ -31,16 +31,18 @@ namespace FancyTasks
 
 Menu::Menu(Task *task, Applet *applet) : KMenu(),
     m_applet(applet),
-    m_task(task),
     m_currentAction(NULL)
 {
-    QList<WId> windows = m_task->windows();
-
     setAcceptDrops(true);
 
-    for (int i = 0; i < windows.count(); ++i)
+    if (task)
     {
-        addAction(windows.at(i));
+        QList<WId> windows = m_task->windows();
+
+        for (int i = 0; i < windows.count(); ++i)
+        {
+            addAction(windows.at(i));
+        }
     }
 }
 
@@ -119,7 +121,7 @@ void Menu::mouseReleaseEvent(QMouseEvent *event)
 {
     QAction *action = actionAt(event->pos());
 
-    if (action && action->data().type() == QVariant::ULongLong)
+    if (action && action->data().type() == QVariant::ULongLong && event->button() == Qt::RightButton)
     {
         Task *task = m_applet->taskForWindow(action->data().toULongLong());
 

@@ -53,7 +53,6 @@ class Menu : public KMenu
 
     private:
         QPointer<Applet> m_applet;
-        QPointer<Task> m_task;
         QAction *m_currentAction;
         QPoint m_dragStartPosition;
 };
