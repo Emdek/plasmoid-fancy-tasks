@@ -1699,7 +1699,7 @@ KMenu* Applet::contextMenu()
 
         if (icon->itemType() == GroupType)
         {
-            Menu *groupMenu = new Menu(icon->task()->windows());
+            Menu *groupMenu = new Menu(icon->task());
 
             action->setMenu(groupMenu);
 

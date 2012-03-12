@@ -1525,7 +1525,7 @@ void Icon::performAction(IconAction action, Task *task)
             {
                 m_menuVisible = true;
 
-                Menu *groupMenu = new Menu(task->windows());
+                Menu *groupMenu = new Menu(task);
                 groupMenu->addSeparator();
                 groupMenu->addAction(KIcon("process-stop"), i18nc("@action:inmenu", "Cancel"));
                 groupMenu->exec(m_applet->containment()->corona()->popupPosition(this, groupMenu->sizeHint(), Qt::AlignCenter));

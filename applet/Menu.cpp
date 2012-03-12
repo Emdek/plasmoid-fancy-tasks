@@ -28,9 +28,11 @@
 namespace FancyTasks
 {
 
-Menu::Menu(QList<WId> windows, QWidget *parent) : KMenu(parent),
+Menu::Menu(Task *parent) : KMenu(),
     m_currentAction(NULL)
 {
+    QList<WId> windows = parent->windows();
+
     setAcceptDrops(true);
 
     for (int i = 0; i < windows.count(); ++i)

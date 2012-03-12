@@ -26,12 +26,14 @@
 namespace FancyTasks
 {
 
+class Task;
+
 class Menu : public KMenu
 {
     Q_OBJECT
 
     public:
-        Menu(QList<WId> windows = QList<WId>(), QWidget *parent = NULL);
+        Menu(Task *parent = NULL);
 
         QAction* addAction(WId window);
         QAction* addAction(const QIcon &icon, const QString &text, WId window = 0);
