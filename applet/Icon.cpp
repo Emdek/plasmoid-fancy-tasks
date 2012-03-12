@@ -618,9 +618,9 @@ void Icon::mousePressEvent(QGraphicsSceneMouseEvent *event)
         m_demandsAttention = false;
     }
 
-    if (m_itemType == TaskType)
+    if (m_itemType == TaskType || m_itemType == GroupType)
     {
-        publishGeometry(m_task->task());
+        publishGeometry(m_task);
     }
 
     event->accept();
@@ -936,9 +936,14 @@ void Icon::changeGlow(bool enabled, qreal radius)
     m_glowEffect->setColor(Plasma::Theme::defaultTheme()->color(Plasma::Theme::HighlightColor));
 }
 
-void Icon::publishGeometry(TaskManager::TaskItem *task)
+void Icon::publishGeometry(Task *task)
 {
-    if (!task || !task->task())
+    if (!task)
+    {
+        task = m_task;
+    }
+
+    if (!task || task->taskType() != TaskType)
     {
         return;
     }
@@ -979,7 +984,7 @@ void Icon::publishGeometry(TaskManager::TaskItem *task)
         }
     }
 
-    task->task()->publishIconGeometry(iconGeometry);
+    task->publishIconGeometry(iconGeometry);
 }
 
 void Icon::taskChanged(ItemChanges changes)
@@ -1288,6 +1293,8 @@ void Icon::removeWindow(WId window)
 
 void Icon::setTask(Task *task)
 {
+    QTimer::singleShot(1000, this, SLOT(publishGeometry()));
+
     if (task->taskType() == StartupType)
     {
         if (m_applet->startupAnimation() != NoAnimation)
@@ -1351,7 +1358,6 @@ void Icon::setTask(Task *task)
     taskChanged(EveythingChanged);
 
     connect(m_task, SIGNAL(changed(ItemChanges)), this, SLOT(taskChanged(ItemChanges)));
-    connect(m_task, SIGNAL(publishGeometry(TaskManager::TaskItem*)), this, SLOT(publishGeometry(TaskManager::TaskItem*)));
     connect(m_task, SIGNAL(windowAdded(WId)), this, SLOT(addWindow(WId)));
     connect(m_task, SIGNAL(windowRemoved(WId)), this, SLOT(removeWindow(WId)));
 }

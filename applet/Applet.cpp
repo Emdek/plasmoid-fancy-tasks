@@ -699,7 +699,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
 
             for (launcherTaskIconsIterator = m_launcherTaskIcons.begin(); launcherTaskIconsIterator != m_launcherTaskIcons.end(); ++launcherTaskIconsIterator)
             {
-                if (launcherTaskIconsIterator.value()->task() && launcherTaskIconsIterator.value()->task()->group() && launcherTaskIconsIterator.value()->task()->group()->members().indexOf(abstractItem))
+                if (launcherTaskIconsIterator.value()->task() && launcherTaskIconsIterator.value()->task()->taskType() == GroupType && launcherTaskIconsIterator.value()->task()->group()->members().indexOf(abstractItem))
                 {
                     launcherTaskIconsIterator.value()->setTask(task);
 

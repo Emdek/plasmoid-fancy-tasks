@@ -53,9 +53,8 @@ class Task : public QObject
 
         void dropTask(Task *task);
         void addMimeData(QMimeData *mimeData);
+        void publishIconGeometry(const QRect &geometry);
         ItemType taskType() const;
-        AbstractGroupableItem* abstractItem();
-        TaskItem* task();
         TaskGroup* group();
         KMenu* contextMenu();
         KIcon icon();
@@ -71,12 +70,14 @@ class Task : public QObject
         void setTaskPointer();
         void close();
         void activate();
-        void publishIconGeometry();
         void showPropertiesDialog();
         void setProperties();
         void taskChanged(::TaskManager::TaskChanges changes);
         void addItem(AbstractGroupableItem *abstractItem);
         void removeItem(AbstractGroupableItem *abstractItem);
+
+    protected:
+        AbstractGroupableItem* abstractItem();
 
     private:
         QPointer<TaskManager::AbstractGroupableItem> m_abstractItem;
@@ -89,9 +90,10 @@ class Task : public QObject
 
     signals:
         void changed(ItemChanges changes);
-        void publishGeometry(TaskManager::TaskItem *task);
         void windowAdded(WId window);
         void windowRemoved(WId window);
+
+    friend class Applet;
 };
 
 }

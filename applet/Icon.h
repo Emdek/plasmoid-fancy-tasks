@@ -79,7 +79,7 @@ class Icon : public QGraphicsWidget
         void stopAnimation();
         void progressAnimation(int progress);
         void changeGlow(bool enable, qreal radius);
-        void publishGeometry(TaskManager::TaskItem *task);
+        void publishGeometry(Task *task = NULL);
         void taskChanged(ItemChanges changes);
         void launcherChanged(ItemChanges changes);
         void jobChanged(ItemChanges changes);

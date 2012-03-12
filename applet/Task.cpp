@@ -104,10 +104,6 @@ void Task::setTask(TaskManager::AbstractGroupableItem *abstractItem)
     {
         connect(m_task, SIGNAL(gotTaskPointer()), this, SLOT(setTaskPointer()));
     }
-    else
-    {
-        QTimer::singleShot(1000, this, SLOT(publishIconGeometry()));
-    }
 
     emit changed(EveythingChanged);
 }
@@ -130,11 +126,11 @@ void Task::activate()
     }
 }
 
-void Task::publishIconGeometry()
+void Task::publishIconGeometry(const QRect &geometry)
 {
-    if (m_taskType == TaskType)
+    if (m_task && m_task->task())
     {
-        emit publishGeometry(m_task);
+        m_task->task()->publishIconGeometry(geometry);
     }
 }
 
@@ -308,11 +304,6 @@ ItemType Task::taskType() const
 AbstractGroupableItem* Task::abstractItem()
 {
     return m_abstractItem;
-}
-
-TaskItem* Task::task()
-{
-    return m_task;
 }
 
 TaskGroup* Task::group()
