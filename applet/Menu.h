@@ -49,8 +49,9 @@ class Menu : public KMenu
         void contextMenuEvent(QContextMenuEvent *event);
 
     private:
-        QPoint m_dragStartPosition;
+        Task *m_task;
         QAction *m_currentAction;
+        QPoint m_dragStartPosition;
 };
 
 }

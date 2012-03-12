@@ -138,11 +138,22 @@ void Task::publishIconGeometry()
     }
 }
 
-void Task::dropItems(TaskManager::ItemList items)
+void Task::dropTask(Task *task)
 {
-    if (m_taskType == StartupType || m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
+    if (!task || task->taskType() == StartupType || m_taskType == StartupType || m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
     {
         return;
+    }
+
+    TaskManager::ItemList items;
+
+    if (task->taskType() == TaskType)
+    {
+        items.append(task->abstractItem());
+    }
+    else
+    {
+        items.append(task->group()->members());
     }
 
     if (m_taskType == TaskType)
@@ -155,6 +166,14 @@ void Task::dropItems(TaskManager::ItemList items)
     }
 
     m_groupManager->manualGroupingRequest(items);
+}
+
+void Task::addMimeData(QMimeData *mimeData)
+{
+    if (m_abstractItem)
+    {
+        m_abstractItem->addMimeData(mimeData);
+    }
 }
 
 void Task::showPropertiesDialog()

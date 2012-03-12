@@ -51,7 +51,8 @@ class Task : public QObject
     public:
         Task(TaskManager::AbstractGroupableItem *abstractItem, TaskManager::GroupManager *groupManager);
 
-        void dropItems(TaskManager::ItemList items);
+        void dropTask(Task *task);
+        void addMimeData(QMimeData *mimeData);
         ItemType taskType() const;
         AbstractGroupableItem* abstractItem();
         TaskItem* task();

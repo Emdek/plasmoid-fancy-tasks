@@ -582,21 +582,11 @@ void Icon::dropEvent(QGraphicsSceneDragDropEvent *event)
 
     if (m_applet->groupManager()->groupingStrategy() == TaskManager::GroupManager::ManualGrouping && (event->mimeData()->hasFormat("windowsystem/winid") || event->mimeData()->hasFormat("windowsystem/multiple-winids")) && (m_itemType == TaskType || m_itemType == GroupType))
     {
-        TaskManager::ItemList items;
         Icon *droppedIcon = m_applet->iconForMimeData(event->mimeData());
 
-        if (droppedIcon && droppedIcon != this)
+        if (droppedIcon && droppedIcon != this && event->mimeData()->hasFormat("windowsystem/winid"))
         {
-            if (event->mimeData()->hasFormat("windowsystem/winid"))
-            {
-                items.append(droppedIcon->task()->abstractItem());
-            }
-            else
-            {
-                items.append(droppedIcon->task()->group()->members());
-            }
-
-            m_task->dropItems(items);
+            m_task->dropTask(droppedIcon->task());
 
             event->accept();
 
@@ -652,7 +642,7 @@ void Icon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     if (m_itemType == TaskType || m_itemType == GroupType)
     {
-        m_task->abstractItem()->addMimeData(mimeData);
+        m_task->addMimeData(mimeData);
     }
     else if (m_itemType != LauncherType)
     {
@@ -1024,7 +1014,7 @@ void Icon::taskChanged(ItemChanges changes)
 
     if (changes & StateChanged)
     {
-        if (m_task->abstractItem()->demandsAttention())
+        if (m_task->demandsAttention())
         {
             if (!m_demandsAttention)
             {
@@ -1038,7 +1028,7 @@ void Icon::taskChanged(ItemChanges changes)
                 m_demandsAttention = true;
             }
         }
-        else if (m_demandsAttention && !m_task->abstractItem()->demandsAttention())
+        else if (m_demandsAttention && !m_task->demandsAttention())
         {
             stopAnimation();
 
