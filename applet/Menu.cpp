@@ -37,7 +37,7 @@ Menu::Menu(Task *task, Applet *applet) : KMenu(),
 
     if (task)
     {
-        QList<WId> windows = m_task->windows();
+        QList<WId> windows = task->windows();
 
         for (int i = 0; i < windows.count(); ++i)
         {

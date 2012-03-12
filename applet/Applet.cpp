@@ -83,6 +83,7 @@ Applet::Applet(QObject *parent, const QVariantList &args) : Plasma::Applet(paren
     m_groupManager(new TaskManager::GroupManager(this)),
     m_size(500, 100),
     m_dropZone(new DropZone(this)),
+    m_entriesAction(NULL),
     m_animationTimeLine(new QTimeLine(100, this)),
     m_appletMaximumHeight(100),
     m_initialFactor(0),
@@ -1966,10 +1967,19 @@ QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> Applet::iconActio
 QList<QAction*> Applet::contextualActions()
 {
     QList<QAction*> actions;
-    QAction *action = new QAction(KIcon("system-run"), i18n("Entries"), this);
-    action->setMenu(contextMenu());
 
-    actions.append(action);
+    if (m_entriesAction)
+    {
+        m_entriesAction->menu()->deleteLater();
+    }
+    else
+    {
+        m_entriesAction = new QAction(KIcon("system-run"), i18n("Entries"), this);
+    }
+
+    m_entriesAction->setMenu(contextMenu());
+
+    actions.append(m_entriesAction);
 
     return actions;
 }

@@ -255,6 +255,7 @@ class Applet : public Plasma::Applet
         Plasma::FrameSvg *m_theme;
         Plasma::FrameSvg *m_background;
         DropZone *m_dropZone;
+        QAction *m_entriesAction;
         TaskManager::GroupManager::TaskGroupingStrategy m_groupingStrategy;
         TaskManager::GroupManager::TaskSortingStrategy m_sortingStrategy;
         QString m_customBackgroundImage;
