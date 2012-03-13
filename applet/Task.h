@@ -66,15 +66,9 @@ class Task : public QObject
         bool isDemandingAttention() const;
 
     public slots:
-        void setTask(AbstractGroupableItem *abstractItem);
-        void setTaskPointer();
         void close();
         void activate();
-        void showPropertiesDialog();
-        void setProperties();
-        void taskChanged(::TaskManager::TaskChanges changes);
-        void addItem(AbstractGroupableItem *abstractItem);
-        void removeItem(AbstractGroupableItem *abstractItem);
+        void setTask(AbstractGroupableItem *abstractItem);
 
     protected:
         void timerEvent(QTimerEvent *event);
@@ -83,6 +77,12 @@ class Task : public QObject
 
     protected slots:
         void validate();
+        void taskChanged(::TaskManager::TaskChanges changes);
+        void addItem(AbstractGroupableItem *abstractItem);
+        void removeItem(AbstractGroupableItem *abstractItem);
+        void showPropertiesDialog();
+        void setProperties();
+        void setTaskPointer();
 
     private:
         QPointer<AbstractGroupableItem> m_abstractItem;

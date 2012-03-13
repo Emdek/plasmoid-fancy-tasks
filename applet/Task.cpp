@@ -57,6 +57,162 @@ void Task::validate()
     }
 }
 
+void Task::close()
+{
+    m_abstractItem->close();
+}
+
+void Task::activate()
+{
+    if (m_taskType == TaskType && m_task->task())
+    {
+        m_task->task()->activateRaiseOrIconify();
+    }
+}
+
+void Task::publishIconGeometry(const QRect &geometry)
+{
+    if (m_task && m_task->task())
+    {
+        m_task->task()->publishIconGeometry(geometry);
+    }
+    else if (m_group)
+    {
+        QList<AbstractGroupableItem*> items = m_group->members();
+
+        for (int i = 0; i < items.count(); ++i)
+        {
+            if (items.at(i)->itemType() == TaskManager::TaskItemType)
+            {
+                TaskItem *task = qobject_cast<TaskItem*>(items.at(i));
+                task->task()->publishIconGeometry(geometry);
+            }
+        }
+    }
+}
+
+void Task::dropTask(Task *task)
+{
+    if (!task || task->taskType() == StartupType || m_taskType == StartupType || m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
+    {
+        return;
+    }
+
+    QList<AbstractGroupableItem*> items;
+
+    if (task->taskType() == TaskType)
+    {
+        items.append(task->abstractItem());
+    }
+    else
+    {
+        items.append(task->members());
+    }
+
+    if (m_taskType == TaskType)
+    {
+        items.append(m_abstractItem);
+    }
+    else
+    {
+        items.append(m_group->members());
+    }
+
+    m_groupManager->manualGroupingRequest(items);
+}
+
+void Task::addMimeData(QMimeData *mimeData)
+{
+    if (m_abstractItem)
+    {
+        m_abstractItem->addMimeData(mimeData);
+    }
+}
+
+void Task::taskChanged(::TaskManager::TaskChanges changes)
+{
+    ItemChanges taskChanges;
+
+    if (changes & TaskManager::NameChanged || changes & TaskManager::DesktopChanged)
+    {
+        taskChanges |= TextChanged;
+    }
+
+    if (changes & TaskManager::IconChanged)
+    {
+        taskChanges |= IconChanged;
+    }
+
+    if (changes & TaskManager::StateChanged)
+    {
+        taskChanges |= StateChanged;
+    }
+
+    if (changes & TaskManager::GeometryChanged || changes & TaskManager::WindowTypeChanged || changes & TaskManager::ActionsChanged || changes & TaskManager::TransientsChanged)
+    {
+        taskChanges |= WindowsChanged;
+    }
+
+    emit changed(taskChanges);
+}
+
+void Task::addItem(AbstractGroupableItem *abstractItem)
+{
+    if (abstractItem->itemType() != TaskManager::GroupItemType)
+    {
+        TaskItem *task = static_cast<TaskItem*>(abstractItem);
+
+        if (task->task())
+        {
+            emit windowAdded(task->task()->window());
+        }
+    }
+
+    emit changed(WindowsChanged);
+}
+
+void Task::removeItem(AbstractGroupableItem *abstractItem)
+{
+    if (abstractItem->itemType() == TaskManager::GroupItemType)
+    {
+        TaskItem *task = static_cast<TaskItem*>(abstractItem);
+
+        if (task->task())
+        {
+            emit windowRemoved(task->task()->window());
+        }
+    }
+
+    emit changed(WindowsChanged);
+}
+
+void Task::showPropertiesDialog()
+{
+    if (m_taskType == GroupType && m_groupManager->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name)
+    {
+        QWidget *groupWidget = new QWidget;
+
+        m_groupUi.setupUi(groupWidget);
+        m_groupUi.icon->setIcon(m_group->icon());
+        m_groupUi.name->setText(m_group->name());
+
+        KDialog *groupDialog = new KDialog;
+        groupDialog->setMainWidget(groupWidget);
+        groupDialog->setButtons(KDialog::Cancel | KDialog::Ok);
+
+        connect(groupDialog, SIGNAL(okClicked()), this, SLOT(setProperties()));
+
+        groupDialog->setWindowTitle(i18n("%1 Settings", m_group->name()));
+        groupDialog->show();
+    }
+}
+
+void Task::setProperties()
+{
+    m_group->setIcon(KIcon(m_groupUi.icon->icon()));
+    m_group->setName(m_groupUi.name->text());
+}
+
 void Task::setTask(AbstractGroupableItem *abstractItem)
 {
     if (m_abstractItem)
@@ -144,162 +300,6 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
 void Task::setTaskPointer()
 {
     setTask(m_abstractItem);
-}
-
-void Task::close()
-{
-    m_abstractItem->close();
-}
-
-void Task::activate()
-{
-    if (m_taskType == TaskType && m_task->task())
-    {
-        m_task->task()->activateRaiseOrIconify();
-    }
-}
-
-void Task::publishIconGeometry(const QRect &geometry)
-{
-    if (m_task && m_task->task())
-    {
-        m_task->task()->publishIconGeometry(geometry);
-    }
-    else if (m_group)
-    {
-        QList<AbstractGroupableItem*> items = m_group->members();
-
-        for (int i = 0; i < items.count(); ++i)
-        {
-            if (items.at(i)->itemType() == TaskManager::TaskItemType)
-            {
-                TaskItem *task = qobject_cast<TaskItem*>(items.at(i));
-                task->task()->publishIconGeometry(geometry);
-            }
-        }
-    }
-}
-
-void Task::dropTask(Task *task)
-{
-    if (!task || task->taskType() == StartupType || m_taskType == StartupType || m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
-    {
-        return;
-    }
-
-    QList<AbstractGroupableItem*> items;
-
-    if (task->taskType() == TaskType)
-    {
-        items.append(task->abstractItem());
-    }
-    else
-    {
-        items.append(task->members());
-    }
-
-    if (m_taskType == TaskType)
-    {
-        items.append(m_abstractItem);
-    }
-    else
-    {
-        items.append(m_group->members());
-    }
-
-    m_groupManager->manualGroupingRequest(items);
-}
-
-void Task::addMimeData(QMimeData *mimeData)
-{
-    if (m_abstractItem)
-    {
-        m_abstractItem->addMimeData(mimeData);
-    }
-}
-
-void Task::showPropertiesDialog()
-{
-    if (m_taskType == GroupType && m_groupManager->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name)
-    {
-        QWidget *groupWidget = new QWidget;
-
-        m_groupUi.setupUi(groupWidget);
-        m_groupUi.icon->setIcon(m_group->icon());
-        m_groupUi.name->setText(m_group->name());
-
-        KDialog *groupDialog = new KDialog;
-        groupDialog->setMainWidget(groupWidget);
-        groupDialog->setButtons(KDialog::Cancel | KDialog::Ok);
-
-        connect(groupDialog, SIGNAL(okClicked()), this, SLOT(setProperties()));
-
-        groupDialog->setWindowTitle(i18n("%1 Settings", m_group->name()));
-        groupDialog->show();
-    }
-}
-
-void Task::setProperties()
-{
-    m_group->setIcon(KIcon(m_groupUi.icon->icon()));
-    m_group->setName(m_groupUi.name->text());
-}
-
-void Task::taskChanged(::TaskManager::TaskChanges changes)
-{
-    ItemChanges taskChanges;
-
-    if (changes & TaskManager::NameChanged || changes & TaskManager::DesktopChanged)
-    {
-        taskChanges |= TextChanged;
-    }
-
-    if (changes & TaskManager::IconChanged)
-    {
-        taskChanges |= IconChanged;
-    }
-
-    if (changes & TaskManager::StateChanged)
-    {
-        taskChanges |= StateChanged;
-    }
-
-    if (changes & TaskManager::GeometryChanged || changes & TaskManager::WindowTypeChanged || changes & TaskManager::ActionsChanged || changes & TaskManager::TransientsChanged)
-    {
-        taskChanges |= WindowsChanged;
-    }
-
-    emit changed(taskChanges);
-}
-
-void Task::addItem(AbstractGroupableItem *abstractItem)
-{
-    if (abstractItem->itemType() != TaskManager::GroupItemType)
-    {
-        TaskItem *task = static_cast<TaskItem*>(abstractItem);
-
-        if (task->task())
-        {
-            emit windowAdded(task->task()->window());
-        }
-    }
-
-    emit changed(WindowsChanged);
-}
-
-void Task::removeItem(AbstractGroupableItem *abstractItem)
-{
-    if (abstractItem->itemType() == TaskManager::GroupItemType)
-    {
-        TaskItem *task = static_cast<TaskItem*>(abstractItem);
-
-        if (task->task())
-        {
-            emit windowRemoved(task->task()->window());
-        }
-    }
-
-    emit changed(WindowsChanged);
 }
 
 KMenu* Task::contextMenu()
