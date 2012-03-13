@@ -2087,7 +2087,6 @@ QPixmap Applet::windowPreview(WId window, int size)
     Display *display = QX11Info::display();
     XWindowAttributes attributes;
 
-    XCompositeRedirectWindow(display, window, CompositeRedirectAutomatic);
     XGetWindowAttributes(display, window, &attributes);
 
     const int x = attributes.x;
