@@ -1410,13 +1410,11 @@ void Icon::windowPreviewActivated(WId window, Qt::MouseButtons buttons, Qt::Keyb
         return;
     }
 
-    TaskManager::GroupManager *groupManager = new TaskManager::GroupManager(this);
-    Task *task = new Task(new TaskManager::TaskItem(groupManager, taskPointer), groupManager);
+    Task *task = new Task(new TaskManager::TaskItem(m_applet->groupManager(), taskPointer), m_applet);
 
     performAction(buttons, modifiers, task);
 
-    delete task;
-    delete groupManager;
+    task->deleteLater();
 }
 
 void Icon::performAction(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Task *task)

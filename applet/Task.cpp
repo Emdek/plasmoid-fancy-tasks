@@ -27,15 +27,12 @@
 #include <ksysguard/process.h>
 #include <ksysguard/processes.h>
 
-
-#include <QDebug>
-
 namespace FancyTasks
 {
 
-Task::Task(AbstractGroupableItem *abstractItem, GroupManager *groupManager) : QObject(groupManager),
+Task::Task(AbstractGroupableItem *abstractItem, Applet *applet) : QObject(applet),
+    m_applet(applet),
     m_abstractItem(NULL),
-    m_groupManager(groupManager),
     m_taskType(OtherType),
     m_validateTimer(0)
 {
@@ -96,7 +93,7 @@ void Task::publishIconGeometry(const QRect &geometry)
 
 void Task::dropTask(Task *task)
 {
-    if (!task || task->taskType() == StartupType || m_taskType == StartupType || m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
+    if (!task || task->taskType() == StartupType || m_taskType == StartupType || m_applet->groupManager()->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
     {
         return;
     }
@@ -121,7 +118,7 @@ void Task::dropTask(Task *task)
         items.append(m_group->members());
     }
 
-    m_groupManager->manualGroupingRequest(items);
+    m_applet->groupManager()->manualGroupingRequest(items);
 }
 
 void Task::addMimeData(QMimeData *mimeData)
@@ -176,7 +173,6 @@ void Task::addItem(AbstractGroupableItem *abstractItem)
 
 void Task::removeItem(AbstractGroupableItem *abstractItem)
 {
-// qDebug() << (m_group != NULL) << m_group->members().count() << m_group->members().contains(abstractItem);
     if (m_group && m_group->members().count() == 1)
     {
         m_taskType = TaskType;
@@ -200,7 +196,7 @@ void Task::removeItem(AbstractGroupableItem *abstractItem)
 
 void Task::showPropertiesDialog()
 {
-    if (m_taskType != GroupType || !(m_groupManager->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name))
+    if (m_taskType != GroupType || !(m_applet->groupManager()->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name))
     {
         return;
     }
@@ -257,7 +253,7 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
         m_group = static_cast<TaskGroup*>(abstractItem);
         m_taskType = GroupType;
 
-        if (m_group->name().isEmpty() && m_group->members().count() && m_groupManager->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
+        if (m_group->name().isEmpty() && m_group->members().count() && m_applet->groupManager()->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
         {
             TaskItem *task = static_cast<TaskItem*>(m_group->members().first());
 
@@ -326,7 +322,7 @@ KMenu* Task::contextMenu()
 
     if (m_taskType == GroupType && m_group)
     {
-        taskMenu = new BasicMenu(menu, m_group, m_groupManager);
+        taskMenu = new BasicMenu(menu, m_group, m_applet->groupManager());
 
         for (int i = 0; i < taskMenu->actions().count(); ++i)
         {
@@ -345,7 +341,7 @@ KMenu* Task::contextMenu()
     }
     else if (m_task)
     {
-        taskMenu = new BasicMenu(menu, m_task, m_groupManager);
+        taskMenu = new BasicMenu(menu, m_task, m_applet->groupManager());
         taskMenu->actions().at(taskMenu->actions().count() - 4)->setVisible(false);
 
         if (taskMenu->actions().count() > 7)

@@ -45,12 +45,14 @@ using TaskManager::BasicMenu;
 namespace FancyTasks
 {
 
+class Applet;
+
 class Task : public QObject
 {
     Q_OBJECT
 
     public:
-        Task(AbstractGroupableItem *abstractItem, GroupManager *groupManager);
+        Task(AbstractGroupableItem *abstractItem, Applet *applet);
 
         void dropTask(Task *task);
         void addMimeData(QMimeData *mimeData);
@@ -85,10 +87,10 @@ class Task : public QObject
         void setTaskPointer();
 
     private:
+        QPointer<Applet> m_applet;
         QPointer<AbstractGroupableItem> m_abstractItem;
         QPointer<TaskItem> m_task;
         QPointer<TaskGroup> m_group;
-        QPointer<GroupManager> m_groupManager;
         QString m_command;
         ItemType m_taskType;
         int m_validateTimer;

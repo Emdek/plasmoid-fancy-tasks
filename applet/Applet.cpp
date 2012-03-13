@@ -685,7 +685,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
     }
 
     Icon *icon = NULL;
-    Task *task = new Task(abstractItem, m_groupManager);
+    Task *task = new Task(abstractItem, this);
     const QString title = task->title();
     const QString command = task->command();
 
@@ -1753,7 +1753,7 @@ Task* Applet::taskForWindow(WId window)
         return NULL;
     }
 
-    m_tasks[window] = new Task(new TaskManager::TaskItem(this, task), new TaskManager::GroupManager(this));
+    m_tasks[window] = new Task(new TaskManager::TaskItem(this, task), this);
 
     return m_tasks[window];
 }
