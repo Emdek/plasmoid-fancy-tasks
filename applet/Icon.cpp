@@ -628,7 +628,7 @@ void Icon::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Icon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (QPoint(event->screenPos() - event->buttonDownScreenPos(Qt::LeftButton)).manhattanLength() < QApplication::startDragDistance() || m_itemType == StartupType || (m_itemType == LauncherType && m_applet->immutability() != Plasma::Mutable))
+    if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton)).length() < QApplication::startDragDistance() || m_itemType == StartupType || (m_itemType == LauncherType && m_applet->immutability() != Plasma::Mutable))
     {
         return;
     }
