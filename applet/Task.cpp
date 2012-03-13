@@ -33,15 +33,51 @@ namespace FancyTasks
 Task::Task(AbstractGroupableItem *abstractItem, GroupManager *groupManager) : QObject(groupManager),
     m_abstractItem(NULL),
     m_groupManager(groupManager),
-    m_taskType(OtherType)
+    m_taskType(OtherType),
+    m_validateTimer(0)
 {
     setTask(abstractItem);
 }
 
+void Task::timerEvent(QTimerEvent *event)
+{
+    killTimer(event->timerId());
+
+    if (event->timerId() == m_validateTimer && !m_abstractItem)
+    {
+        deleteLater();
+    }
+}
+
+void Task::validate()
+{
+    if (!m_abstractItem)
+    {
+        m_validateTimer = startTimer(500);
+    }
+}
+
 void Task::setTask(AbstractGroupableItem *abstractItem)
 {
+    if (m_abstractItem)
+    {
+        disconnect(m_abstractItem, SIGNAL(destroyed()), this, SLOT(validate()));
+    }
+
     m_abstractItem = abstractItem;
     m_command = QString();
+
+    if (m_abstractItem)
+    {
+        if (m_validateTimer > 0)
+        {
+            killTimer(m_validateTimer);
+
+            m_validateTimer = 0;
+        }
+
+        connect(m_abstractItem, SIGNAL(destroyed()), this, SLOT(validate()));
+    }
 
     if (m_abstractItem->itemType() == TaskManager::GroupItemType)
     {

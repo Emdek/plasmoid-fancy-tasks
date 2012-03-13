@@ -77,8 +77,12 @@ class Task : public QObject
         void removeItem(AbstractGroupableItem *abstractItem);
 
     protected:
+        void timerEvent(QTimerEvent *event);
         AbstractGroupableItem* abstractItem();
         QList<AbstractGroupableItem*> members();
+
+    protected slots:
+        void validate();
 
     private:
         QPointer<AbstractGroupableItem> m_abstractItem;
@@ -87,6 +91,7 @@ class Task : public QObject
         QPointer<GroupManager> m_groupManager;
         QString m_command;
         ItemType m_taskType;
+        int m_validateTimer;
         Ui::group m_groupUi;
 
     signals:
