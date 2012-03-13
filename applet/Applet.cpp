@@ -391,7 +391,7 @@ void Applet::configChanged()
     m_titleLabelMode = static_cast<TitleLabelMode>(configuration.readEntry("titleLabelMode", static_cast<int>(AlwaysShowLabel)));
     m_customBackgroundImage = configuration.readEntry("customBackgroundImage", QString());
     m_showOnlyCurrentDesktop = configuration.readEntry("showOnlyCurrentDesktop", false);
-    m_showOnlyCurrentActivity = configuration.readEntry("showOnlyCurrentActivity", false);
+    m_showOnlyCurrentActivity = configuration.readEntry("showOnlyCurrentActivity", true);
     m_showOnlyCurrentScreen = configuration.readEntry("showOnlyCurrentScreen", false);
     m_showOnlyMinimized = configuration.readEntry("showOnlyMinimized", false);
     m_showOnlyTasksWithLaunchers = configuration.readEntry("showOnlyTasksWithLaunchers", false);

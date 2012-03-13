@@ -7,228 +7,220 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plasma_applet_fancytasks\n"
 "Report-Msgid-Bugs-To: emdeck@gmail.com\n"
-"POT-Creation-Date: 2010-04-27 16:49+0200\n"
+"POT-Creation-Date: 2012-03-13 18:05+0100\n"
 "PO-Revision-Date: 2009-10-28 19:45+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: FancyTasksActionDelegate.cpp:122
-msgid "Mouse Button"
-msgstr ""
-
-#: FancyTasksActionDelegate.cpp:123
-msgid "Disabled"
-msgstr ""
-
-#: FancyTasksActionDelegate.cpp:124
-msgid "Left"
-msgstr ""
-
-#: FancyTasksActionDelegate.cpp:125
-msgid "Middle"
-msgstr ""
-
-#: FancyTasksActionDelegate.cpp:126
-msgid "Right"
-msgstr ""
-
-#: FancyTasksActionDelegate.cpp:129
-msgid "Modifier Key"
-msgstr ""
-
-#: FancyTasksActionDelegate.cpp:130 FancyTasksConfiguration.cpp:101
-#: FancyTasksConfiguration.cpp:112
-msgid "None"
-msgstr "Ingen"
-
-#: FancyTasksActionDelegate.cpp:160
+#: ActionDelegate.cpp:124
 msgid "Left mouse button"
 msgstr ""
 
-#: FancyTasksActionDelegate.cpp:164
+#: ActionDelegate.cpp:128
 msgid "Middle mouse button"
 msgstr ""
 
-#: FancyTasksActionDelegate.cpp:168
+#: ActionDelegate.cpp:132
 msgid "Right mouse button"
 msgstr ""
 
-#: FancyTasksActionDelegate.cpp:177
+#: ActionDelegate.cpp:141
 msgid "Ctrl modifier"
 msgstr ""
 
-#: FancyTasksActionDelegate.cpp:181
+#: ActionDelegate.cpp:145
 msgid "Shift modifier"
 msgstr ""
 
-#: FancyTasksActionDelegate.cpp:185
+#: ActionDelegate.cpp:149
 msgid "Alt modifier"
 msgstr ""
 
-#: FancyTasksApplet.cpp:1849
+#: ActionDelegate.cpp:163
+msgid "Mouse Button"
+msgstr ""
+
+#: ActionDelegate.cpp:164
+msgid "Disabled"
+msgstr ""
+
+#: ActionDelegate.cpp:165
+msgid "Left"
+msgstr ""
+
+#: ActionDelegate.cpp:166
+msgid "Middle"
+msgstr ""
+
+#: ActionDelegate.cpp:167
+msgid "Right"
+msgstr ""
+
+#: ActionDelegate.cpp:170
+msgid "Modifier Key"
+msgstr ""
+
+#: ActionDelegate.cpp:171 Configuration.cpp:104 Configuration.cpp:115
+#: Configuration.cpp:132
+msgid "None"
+msgstr "Ingen"
+
+#: Applet.cpp:1992
 msgid "Entries"
 msgstr "Poster"
 
-#: FancyTasksConfiguration.cpp:53
+#: Configuration.cpp:55
 msgid "Add Application..."
 msgstr "Lägg till program..."
 
-#: FancyTasksConfiguration.cpp:54
+#: Configuration.cpp:56
 msgid "Add File or Directory..."
 msgstr "Lägg till fil eller katalog..."
 
-#: FancyTasksConfiguration.cpp:55
+#: Configuration.cpp:57
 msgid "Add Menu"
 msgstr "Lägg till meny"
 
 #. i18n: file: ui/findApplication.ui:26
 #. i18n: ectx: property (windowTitle), widget (QWidget, findApplication)
-#: FancyTasksConfiguration.cpp:71 po/rc.cpp:57 rc.cpp:57
+#: Configuration.cpp:73 locale/rc.cpp:60 rc.cpp:60
 msgid "Find Application"
 msgstr "Sök program"
 
-#: FancyTasksConfiguration.cpp:77
+#: Configuration.cpp:79
 msgid "Do Not Group"
 msgstr "Gruppera inte"
 
-#: FancyTasksConfiguration.cpp:78 FancyTasksConfiguration.cpp:83
-#: FancyTasksConfiguration.cpp:97
+#: Configuration.cpp:80 Configuration.cpp:85 Configuration.cpp:100
 msgid "Manually"
 msgstr "Manuellt"
 
-#: FancyTasksConfiguration.cpp:79
+#: Configuration.cpp:81
 msgid "By Program Name"
 msgstr "Enligt programnamn"
 
-#: FancyTasksConfiguration.cpp:82
+#: Configuration.cpp:84
 msgid "Do Not Sort"
 msgstr "Sortera inte"
 
-#: FancyTasksConfiguration.cpp:84
+#: Configuration.cpp:86
 msgid "Alphabetically"
 msgstr "Alfabetiskt"
 
-#: FancyTasksConfiguration.cpp:85
+#: Configuration.cpp:87
 msgid "By Desktop"
 msgstr "Enligt skrivbord"
 
-#: FancyTasksConfiguration.cpp:95
+#: Configuration.cpp:98
 msgid "Instantly"
 msgstr "Omedelbart"
 
-#: FancyTasksConfiguration.cpp:96
+#: Configuration.cpp:99
 msgid "After delay"
 msgstr "Efter fördröjning"
 
-#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
-#: FancyTasksConfiguration.cpp:130
+#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:133
 msgid "Zoom"
 msgstr "Zooma"
 
-#: FancyTasksConfiguration.cpp:101
+#: Configuration.cpp:104
 msgid "Jump"
 msgstr "Gå till"
 
-#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
+#: Configuration.cpp:104 Configuration.cpp:115
 msgid "Spotlight"
 msgstr "Spotlight"
 
-#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:112
-#: FancyTasksConfiguration.cpp:131
+#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:134
 msgid "Glow"
 msgstr "Glöd"
 
-#: FancyTasksConfiguration.cpp:101 FancyTasksConfiguration.cpp:132
+#: Configuration.cpp:104 Configuration.cpp:135
 msgid "Fade"
 msgstr "Tona"
 
-#: FancyTasksConfiguration.cpp:112
+#: Configuration.cpp:115
 msgid "Bounce"
 msgstr "Studsa"
 
-#: FancyTasksConfiguration.cpp:112
+#: Configuration.cpp:115
 msgid "Blink"
 msgstr "Blinka"
 
-#: FancyTasksConfiguration.cpp:112
+#: Configuration.cpp:115
 msgid "Rotate"
 msgstr "Rotera"
 
-#: FancyTasksConfiguration.cpp:123
+#: Configuration.cpp:126
 msgid "Never"
 msgstr "Aldrig"
 
-#: FancyTasksConfiguration.cpp:124
+#: Configuration.cpp:127
 msgid "On mouse-over"
 msgstr "När musen hålls över"
 
-#: FancyTasksConfiguration.cpp:125
+#: Configuration.cpp:128
 msgid "For active icon"
 msgstr "För aktiv ikon"
 
-#: FancyTasksConfiguration.cpp:126
+#: Configuration.cpp:129
 msgid "Always"
 msgstr "Alltid"
 
-#: FancyTasksConfiguration.cpp:129
-msgid "No indication"
-msgstr "Ingen indikering"
-
-#: FancyTasksConfiguration.cpp:147 FancyTasksConfiguration.cpp:175
-#: FancyTasksConfiguration.cpp:330 FancyTasksConfiguration.cpp:350
+#: Configuration.cpp:150 Configuration.cpp:178 Configuration.cpp:376
+#: Configuration.cpp:393
 msgid "--- separator ---"
 msgstr "--- åtskiljare ---"
 
-#: FancyTasksConfiguration.cpp:153 FancyTasksConfiguration.cpp:167
-#: FancyTasksConfiguration.cpp:253
+#: Configuration.cpp:156 Configuration.cpp:170 Configuration.cpp:297
 msgid "--- tasks area ---"
 msgstr "--- aktivitetsfält ---"
 
-#: FancyTasksConfiguration.cpp:158 FancyTasksConfiguration.cpp:171
-#: FancyTasksConfiguration.cpp:257
+#: Configuration.cpp:161 Configuration.cpp:174 Configuration.cpp:301
 msgid "--- jobs area ---"
 msgstr "--- jobbfält ---"
 
-#: FancyTasksConfiguration.cpp:194
+#: Configuration.cpp:202
 #, fuzzy
 msgid "Activate Item"
 msgstr "Startprogram"
 
-#: FancyTasksConfiguration.cpp:194
+#: Configuration.cpp:202
 #, fuzzy
 msgid "Activate Task"
 msgstr "Startprogram"
 
-#: FancyTasksConfiguration.cpp:194
+#: Configuration.cpp:202
 #, fuzzy
 msgid "Activate Launcher"
 msgstr "Startprogram"
 
-#: FancyTasksConfiguration.cpp:194
+#: Configuration.cpp:202
 msgid "Show Item Menu"
 msgstr ""
 
-#: FancyTasksConfiguration.cpp:194
+#: Configuration.cpp:202
 msgid "Show Item Children List"
 msgstr ""
 
-#: FancyTasksConfiguration.cpp:194
+#: Configuration.cpp:202
 msgid "Show Item Windows"
 msgstr ""
 
-#: FancyTasksConfiguration.cpp:194
+#: Configuration.cpp:202
 #, fuzzy
 msgid "Close Task"
 msgstr "Stäng jobb:"
 
 #. i18n: file: ui/general.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, general)
-#: FancyTasksConfiguration.cpp:220 po/rc.cpp:63 rc.cpp:63
+#: Configuration.cpp:234 locale/rc.cpp:66 rc.cpp:66
 msgid "General"
 msgstr "Allmänt"
 
@@ -240,367 +232,459 @@ msgstr "Allmänt"
 #. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
 #. i18n: file: ui/appearance.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
-#: FancyTasksConfiguration.cpp:221 po/rc.cpp:12 po/rc.cpp:15 rc.cpp:12
-#: rc.cpp:15
+#: Configuration.cpp:235 locale/rc.cpp:12 locale/rc.cpp:15 rc.cpp:12 rc.cpp:15
 msgid "Appearance"
 msgstr "Utseende"
 
 #. i18n: file: ui/arrangement.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, arrangement)
-#: FancyTasksConfiguration.cpp:222 po/rc.cpp:45 rc.cpp:45
+#: Configuration.cpp:236 locale/rc.cpp:45 rc.cpp:45
 msgid "Arrangement"
 msgstr "Arrangemang"
 
 #. i18n: file: ui/actions.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, actions)
-#: FancyTasksConfiguration.cpp:223 po/rc.cpp:3 rc.cpp:3
+#: Configuration.cpp:237 locale/rc.cpp:3 rc.cpp:3
 #, fuzzy
 msgid "Actions"
 msgstr "Animeringar"
 
-#: FancyTasksConfiguration.cpp:417
+#: Configuration.cpp:439
 msgid "Launcher with this URL was already added."
 msgstr ""
 
-#: FancyTasksConfiguration.cpp:467
+#: Configuration.cpp:543
 msgid "Add This Menu"
 msgstr "Lägg till denna meny"
 
-#: FancyTasksIcon.cpp:1545 FancyTasksLauncher.cpp:303
+#: Icon.cpp:1562
+#, fuzzy
+msgid "Settings"
+msgstr "Inställning av %1"
+
+#: Icon.cpp:1593 Launcher.cpp:112
 msgctxt "@action:inmenu"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: FancyTasksIcon.cpp:1666
+#: Icon.cpp:1717
 msgid "1 job"
 msgid_plural "%1 jobs"
 msgstr[0] "1 jobb"
 msgstr[1] "%1 jobb"
 
-#: FancyTasksJob.cpp:88
+#: Job.cpp:88
 msgid "%1 [Paused]"
 msgstr "%1 [Paus]"
 
-#: FancyTasksJob.cpp:92
+#: Job.cpp:92
 msgid "%1 (%2 remaining) "
 msgstr "%1 (%2 återstår) "
 
-#: FancyTasksJob.cpp:127
+#: Job.cpp:127
 msgid "%1 [Finished]"
 msgstr "%1 [Klar]"
 
-#: FancyTasksJob.cpp:176
+#: Job.cpp:176
 msgid "Close Job"
 msgstr "Stäng jobb"
 
-#: FancyTasksJob.cpp:184
+#: Job.cpp:184
 msgid "Pause Job"
 msgstr "Gör paus i jobb"
 
-#: FancyTasksJob.cpp:188
+#: Job.cpp:188
 msgid "Resume Job"
 msgstr "Återuppta jobb"
 
-#: FancyTasksJob.cpp:199
+#: Job.cpp:199
 msgid "Cancel Job"
 msgstr "Avbryt jobb"
 
-#: FancyTasksJob.cpp:205
+#: Job.cpp:205
 msgid "Close on Finish"
 msgstr "Stäng vid avslutning"
 
-#: FancyTasksLauncher.cpp:194 FancyTasksLauncher.cpp:472
-msgid "Open"
-msgstr "Öppna"
-
-#: FancyTasksLauncher.cpp:298
+#: Launcher.cpp:107
 msgctxt "@action:inmenu"
 msgid "&Move Here\t<shortcut>%1</shortcut>"
 msgstr "&Flytta hit\t<shortcut>%1</shortcut>"
 
-#: FancyTasksLauncher.cpp:299
+#: Launcher.cpp:108
 msgctxt "@action:inmenu"
 msgid "&Copy Here\t<shortcut>%1</shortcut>"
 msgstr "&Kopiera hit\t<shortcut>%1</shortcut>"
 
-#: FancyTasksLauncher.cpp:300
+#: Launcher.cpp:109
 msgctxt "@action:inmenu"
 msgid "&Link Here\t<shortcut>%1</shortcut>"
 msgstr "&Länka hit\t<shortcut>%1</shortcut>"
 
-#: FancyTasksLauncher.cpp:390
+#: Launcher.cpp:202
 msgctxt "@info"
 msgid "Do you really want to empty the trash? All items will be deleted."
 msgstr ""
 "Vill du verkligen tömma papperskorgen. Alla objekt kommer att tas bort."
 
-#: FancyTasksLauncher.cpp:390
+#: Launcher.cpp:202
 msgctxt "@action:button"
 msgid "Empty Trash"
 msgstr "Töm papperskorgen"
 
-#: FancyTasksLauncher.cpp:402
+#: Launcher.cpp:220
 msgid "Trash"
 msgstr "Flytta till papperskorgen"
 
-#: FancyTasksLauncher.cpp:403
+#: Launcher.cpp:221
 msgid "One item"
 msgid_plural "%1 items"
 msgstr[0] "Ett objekt"
 msgstr[1] "%1 objekt"
 
-#: FancyTasksLauncher.cpp:403
+#: Launcher.cpp:221
 msgid "Empty"
 msgstr "Tom"
 
-#: FancyTasksLauncher.cpp:416 FancyTasksTask.cpp:172
-msgid "%1 Settings"
-msgstr "Inställning av %1"
+#: Launcher.cpp:421 Launcher.cpp:514
+msgid "Open"
+msgstr "Öppna"
 
-#: FancyTasksLauncher.cpp:460
+#: Launcher.cpp:502
 msgid "Menu Editor"
 msgstr "Menyeditor"
 
-#: FancyTasksLauncher.cpp:461
+#: Launcher.cpp:503
 msgid "Menu"
 msgstr "Meny"
 
-#: FancyTasksLauncher.cpp:466
+#: Launcher.cpp:508
 msgid "Run"
 msgstr "Kör"
 
-#: FancyTasksLauncher.cpp:477
+#: Launcher.cpp:519
 msgid "Browse"
 msgstr "Bläddra"
 
-#: FancyTasksLauncher.cpp:486
+#: Launcher.cpp:528
 msgid "&Empty Trashcan"
 msgstr "&Töm papperskorgen"
 
-#: FancyTasksLauncher.cpp:490
+#. i18n: file: ui/arrangement.ui:61
+#. i18n: ectx: property (text), widget (QPushButton, editLauncherButton)
+#: Launcher.cpp:532 locale/rc.cpp:57 rc.cpp:57
 msgid "Edit"
 msgstr "Redigera"
 
-#: FancyTasksLauncher.cpp:491
+#: Launcher.cpp:533
 msgid "Launcher"
 msgstr "Startprogram"
 
-#: FancyTasksTask.cpp:325
-msgid "Application"
-msgstr "Program"
+#: LauncherProperties.cpp:48 Task.cpp:216
+msgid "%1 Settings"
+msgstr "Inställning av %1"
 
-#: FancyTasksTask.cpp:334
-msgid "Starting application..."
-msgstr "Startar program..."
+#: LauncherProperties.cpp:58
+msgid "Task command"
+msgstr ""
 
-#: FancyTasksTask.cpp:334
-msgid "On all desktops"
-msgstr "På alla skrivbord"
+#: LauncherProperties.cpp:58
+msgid "Task title"
+msgstr ""
 
-#: FancyTasksTask.cpp:334
-msgctxt "Which virtual desktop a window is currently on"
-msgid "On %1"
-msgstr "På %1"
+#: LauncherProperties.cpp:58
+msgid "Window class"
+msgstr ""
 
-#. i18n: file: ui/actions.ui:60
+#: LauncherProperties.cpp:58
+msgid "Window role"
+msgstr ""
+
+#: LauncherProperties.cpp:78
+msgid "Rules"
+msgstr ""
+
+#. i18n: file: ui/actions.ui:48
 #. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
-#: po/rc.cpp:6 rc.cpp:6
+#: locale/rc.cpp:6 rc.cpp:6
 #, fuzzy
 msgid "Action"
 msgstr "Program"
 
-#. i18n: file: ui/actions.ui:65
+#. i18n: file: ui/actions.ui:53
 #. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
-#: po/rc.cpp:9 rc.cpp:9
+#: locale/rc.cpp:9 rc.cpp:9
 #, fuzzy
 msgid "Activation"
 msgstr "Animeringar"
 
 #. i18n: file: ui/appearance.ui:32
 #. i18n: ectx: property (text), widget (QCheckBox, useThumbnails)
-#: po/rc.cpp:18 rc.cpp:18
+#: locale/rc.cpp:18 rc.cpp:18
 msgid "Use thumbnails instead of icons"
 msgstr "Använd miniatyrbilder istället för ikoner"
 
-#. i18n: file: ui/appearance.ui:41
-#. i18n: ectx: property (text), widget (QLabel, titleLabelModeLabel)
-#: po/rc.cpp:21 rc.cpp:21
-msgid "Show title label:"
-msgstr "Visa rubrik:"
-
-#. i18n: file: ui/appearance.ui:54
+#. i18n: file: ui/appearance.ui:44
 #. i18n: ectx: property (text), widget (QLabel, customBackgroundPathLabel)
-#: po/rc.cpp:24 rc.cpp:24
+#: locale/rc.cpp:21 rc.cpp:21
 msgid "Custom background image:"
 msgstr "Egen bakgrundsbild:"
 
-#. i18n: file: ui/appearance.ui:70
+#. i18n: file: ui/appearance.ui:57
+#. i18n: ectx: property (text), widget (QLabel, titleLabelModeLabel)
+#: locale/rc.cpp:24 rc.cpp:24
+msgid "Show title label:"
+msgstr "Visa rubrik:"
+
+#. i18n: file: ui/appearance.ui:67
 #. i18n: ectx: property (text), widget (QLabel, activeIconIndicationLabel)
-#: po/rc.cpp:27 rc.cpp:27
+#: locale/rc.cpp:27 rc.cpp:27
 msgid "Indication for active icon:"
 msgstr "Indikering av aktiv ikon"
 
 #. i18n: file: ui/appearance.ui:85
 #. i18n: ectx: property (title), widget (QGroupBox, animationsGoupBox)
-#: po/rc.cpp:30 rc.cpp:30
+#: locale/rc.cpp:30 rc.cpp:30
 msgid "Animations"
 msgstr "Animeringar"
 
 #. i18n: file: ui/appearance.ui:91
-#. i18n: ectx: property (text), widget (QLabel, moveAnimationLabel)
-#: po/rc.cpp:33 rc.cpp:33
-msgid "Moving between icons:"
-msgstr "Förflyttning mellan ikoner:"
+#. i18n: ectx: property (text), widget (QLabel, startupAnimationLabel)
+#: locale/rc.cpp:33 rc.cpp:33
+msgid "Starting tasks:"
+msgstr "Startar aktiviteter:"
 
-#. i18n: file: ui/appearance.ui:107
+#. i18n: file: ui/appearance.ui:101
 #. i18n: ectx: property (text), widget (QLabel, demandsAttentionAnimationLabel)
-#: po/rc.cpp:36 rc.cpp:36
+#: locale/rc.cpp:36 rc.cpp:36
 msgid "Tasks needing attention:"
 msgstr "Aktiviteter som behöver uppmärksamhet:"
 
 #. i18n: file: ui/appearance.ui:117
 #. i18n: ectx: property (text), widget (QCheckBox, parabolicMoveAnimation)
-#: po/rc.cpp:39 rc.cpp:39
+#: locale/rc.cpp:39 rc.cpp:39
 msgid "Parabolic"
 msgstr "Parabolisk"
 
 #. i18n: file: ui/appearance.ui:124
-#. i18n: ectx: property (text), widget (QLabel, startupAnimationLabel)
-#: po/rc.cpp:42 rc.cpp:42
-msgid "Starting tasks:"
-msgstr "Startar aktiviteter:"
+#. i18n: ectx: property (text), widget (QLabel, moveAnimationLabel)
+#: locale/rc.cpp:42 rc.cpp:42
+msgid "Moving between icons:"
+msgstr "Förflyttning mellan ikoner:"
 
 #. i18n: file: ui/arrangement.ui:22
 #. i18n: ectx: property (text), widget (QLabel, availableActionsLabel)
-#: po/rc.cpp:48 rc.cpp:48
+#: locale/rc.cpp:48 rc.cpp:48
 msgid "Available actions:"
 msgstr "Tillgängliga åtgärder:"
 
 #. i18n: file: ui/arrangement.ui:29
 #. i18n: ectx: property (text), widget (QLabel, currentActionsLabel)
-#: po/rc.cpp:51 rc.cpp:51
+#: locale/rc.cpp:51 rc.cpp:51
 msgid "Current actions:"
 msgstr "Aktuella åtgärder:"
 
-#. i18n: file: ui/arrangement.ui:44
+#. i18n: file: ui/arrangement.ui:51
 #. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
-#: po/rc.cpp:54 rc.cpp:54
-msgid "Add launcher"
-msgstr "Lägg till startprogram"
+#: locale/rc.cpp:54 rc.cpp:54
+msgid "Add"
+msgstr ""
 
 #. i18n: file: ui/findApplication.ui:32
 #. i18n: ectx: property (clickMessage), widget (KLineEdit, query)
-#: po/rc.cpp:60 rc.cpp:60
+#: locale/rc.cpp:63 rc.cpp:63
 msgid "Search..."
 msgstr "Sök..."
 
 #. i18n: file: ui/general.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupingAndSortingGroupBox)
-#: po/rc.cpp:66 rc.cpp:66
+#: locale/rc.cpp:69 rc.cpp:69
 msgid "Grouping and sorting"
 msgstr "Gruppering och sortering"
 
 #. i18n: file: ui/general.ui:32
 #. i18n: ectx: property (text), widget (QLabel, groupingStrategyLabel)
-#: po/rc.cpp:69 rc.cpp:69
+#: locale/rc.cpp:72 rc.cpp:72
 msgid "Grouping:"
 msgstr "Gruppering:"
 
-#. i18n: file: ui/general.ui:48
+#. i18n: file: ui/general.ui:45
 #. i18n: ectx: property (text), widget (QLabel, sortingStrategyLabel)
-#: po/rc.cpp:72 rc.cpp:72
+#: locale/rc.cpp:75 rc.cpp:75
 msgid "Sorting:"
 msgstr "Sortering:"
 
 #. i18n: file: ui/general.ui:61
 #. i18n: ectx: property (title), widget (QGroupBox, filtersGroupBox)
-#: po/rc.cpp:75 rc.cpp:75
+#: locale/rc.cpp:78 rc.cpp:78
 msgid "Filters"
 msgstr "Filter"
 
 #. i18n: file: ui/general.ui:67
 #. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentDesktop)
-#: po/rc.cpp:78 rc.cpp:78
+#: locale/rc.cpp:81 rc.cpp:81
 msgid "Only show tasks from the current desktop"
 msgstr "Visa bara aktiviteter på nuvarande skrivbord"
 
 #. i18n: file: ui/general.ui:74
-#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentScreen)
-#: po/rc.cpp:81 rc.cpp:81
-msgid "Only show tasks from the current screen"
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentActivity)
+#: locale/rc.cpp:84 rc.cpp:84
+#, fuzzy
+msgid "Only show tasks from current activity"
 msgstr "Visa bara aktiviteter från nuvarande skärm"
 
 #. i18n: file: ui/general.ui:81
+#. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentScreen)
+#: locale/rc.cpp:87 rc.cpp:87
+msgid "Only show tasks from the current screen"
+msgstr "Visa bara aktiviteter från nuvarande skärm"
+
+#. i18n: file: ui/general.ui:88
 #. i18n: ectx: property (text), widget (QCheckBox, showOnlyMinimized)
-#: po/rc.cpp:84 rc.cpp:84
+#: locale/rc.cpp:90 rc.cpp:90
 msgid "Only show tasks that are minimized"
 msgstr "Visa bara aktiviteter som är minimerade"
 
-#. i18n: file: ui/general.ui:88
+#. i18n: file: ui/general.ui:95
 #. i18n: ectx: property (text), widget (QCheckBox, showOnlyTasksWithLaunchers)
-#: po/rc.cpp:87 rc.cpp:87
+#: locale/rc.cpp:93 rc.cpp:93
 #, fuzzy
 msgid "Only show tasks that have launchers"
 msgstr "Visa bara aktiviteter som är minimerade"
 
-#. i18n: file: ui/general.ui:98
+#. i18n: file: ui/general.ui:105
 #. i18n: ectx: property (title), widget (QGroupBox, jobsGroupBox)
-#: po/rc.cpp:90 rc.cpp:90
+#: locale/rc.cpp:96 rc.cpp:96
 msgid "Jobs"
 msgstr "Jobb"
 
-#. i18n: file: ui/general.ui:106
+#. i18n: file: ui/general.ui:113
 #. i18n: ectx: property (text), widget (QLabel, jobCloseModeLabel)
-#: po/rc.cpp:93 rc.cpp:93
+#: locale/rc.cpp:99 rc.cpp:99
 msgid "Close jobs:"
 msgstr "Stäng jobb:"
 
-#. i18n: file: ui/general.ui:121
+#. i18n: file: ui/general.ui:128
 #. i18n: ectx: property (text), widget (QCheckBox, connectJobsWithTasks)
-#: po/rc.cpp:96 rc.cpp:96
+#: locale/rc.cpp:102 rc.cpp:102
 msgid "Connect jobs with tasks"
 msgstr "Anslut jobb till aktiviteter"
 
-#. i18n: file: ui/general.ui:128
+#. i18n: file: ui/general.ui:135
 #. i18n: ectx: property (text), widget (QCheckBox, groupJobs)
-#: po/rc.cpp:99 rc.cpp:99
+#: locale/rc.cpp:105 rc.cpp:105
 msgid "Group similar jobs"
 msgstr "Gruppera liknande jobb"
 
 #. i18n: file: ui/group.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, group)
-#: po/rc.cpp:102 rc.cpp:102
+#: locale/rc.cpp:108 rc.cpp:108
 msgid "Group settings"
 msgstr "Gruppinställningar"
 
 #. i18n: file: ui/group.ui:40
 #. i18n: ectx: property (toolTip), widget (KIconButton, icon)
-#: po/rc.cpp:105 rc.cpp:105
+#: locale/rc.cpp:111 rc.cpp:111
 msgid "Group icon"
 msgstr "Gruppikon"
 
-#. i18n: file: ui/group.ui:49
-#. i18n: ectx: property (text), widget (QLabel, colorLabel)
-#: po/rc.cpp:108 rc.cpp:108
-msgid "Group color:"
-msgstr "Gruppfärg:"
-
-#. i18n: file: ui/group.ui:65
+#. i18n: file: ui/group.ui:52
 #. i18n: ectx: property (text), widget (QLabel, nameLabel)
-#: po/rc.cpp:111 rc.cpp:111
+#: locale/rc.cpp:114 rc.cpp:114
 msgid "Group name:"
 msgstr "Gruppnamn:"
 
-#: po/rc.cpp:112 rc.cpp:112
+#. i18n: file: ui/launcherRules.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, launcherRules)
+#: locale/rc.cpp:117 rc.cpp:117
+#, fuzzy
+msgid "Launcher Rules"
+msgstr "Startprogram"
+
+#. i18n: file: ui/launcherRules.ui:20
+#. i18n: ectx: property (text), widget (QCheckBox, connectCheckBox)
+#: locale/rc.cpp:120 rc.cpp:120
+#, fuzzy
+msgid "Connect tasks with this launcher"
+msgstr "Visa bara aktiviteter som är minimerade"
+
+#. i18n: file: ui/launcherRules.ui:52
+#. i18n: ectx: property (text), widget (QTableWidget, rulesTableWidget)
+#: locale/rc.cpp:123 rc.cpp:123
+msgid "Rule"
+msgstr ""
+
+#. i18n: file: ui/launcherRules.ui:57
+#. i18n: ectx: property (text), widget (QTableWidget, rulesTableWidget)
+#: locale/rc.cpp:126 RuleDelegate.cpp:87 rc.cpp:126
+msgid "Expression"
+msgstr ""
+
+#. i18n: file: ui/launcherRules.ui:65
+#. i18n: ectx: property (text), widget (QPushButton, detectPropertiesButton)
+#: locale/rc.cpp:129 rc.cpp:129
+msgid "Detect Window Properties"
+msgstr ""
+
+#: locale/rc.cpp:130 rc.cpp:130
 #, fuzzy
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Gruppnamn:"
 
-#: po/rc.cpp:113 rc.cpp:113
+#: locale/rc.cpp:131 rc.cpp:131
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
+
+#: RuleDelegate.cpp:90
+msgid "Match Mode"
+msgstr ""
+
+#: RuleDelegate.cpp:91
+msgid "Ignore"
+msgstr ""
+
+#: RuleDelegate.cpp:92
+msgid "Regular expression"
+msgstr ""
+
+#: RuleDelegate.cpp:93
+msgid "Partial match"
+msgstr ""
+
+#: RuleDelegate.cpp:94
+msgid "Exact match"
+msgstr ""
+
+#: RuleDelegate.cpp:97
+msgid "Required"
+msgstr ""
+
+#: Task.cpp:418
+msgid "Application"
+msgstr "Program"
+
+#: Task.cpp:429
+msgid "Starting application..."
+msgstr "Startar program..."
+
+#: Task.cpp:433
+msgid "On all desktops"
+msgstr "På alla skrivbord"
+
+#: Task.cpp:433
+msgctxt "Which virtual desktop a window is currently on"
+msgid "On %1"
+msgstr "På %1"
+
+#~ msgid "No indication"
+#~ msgstr "Ingen indikering"
+
+#~ msgid "Add launcher"
+#~ msgstr "Lägg till startprogram"
+
+#~ msgid "Group color:"
+#~ msgstr "Gruppfärg:"
 
 #~ msgid "Use default tool tips"
 #~ msgstr "Använd standardverktygstips"
