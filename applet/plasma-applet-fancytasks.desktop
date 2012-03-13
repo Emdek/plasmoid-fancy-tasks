@@ -37,7 +37,7 @@ Comment[sv]=Plasmoid för snygg representation av uppgifter och startprogram.
 Comment[uk]=Плазмоїд для форматованого представлення ваших завдань і інструментів запуску.
 Comment[x-test]=xxPlasmoid providing a fancy representation of your tasks and launchers.xx
 
-Icon=view-pim-tasks
+Icon=preferences-system-windows
 Type=Service
 ServiceTypes=Plasma/Applet
 
