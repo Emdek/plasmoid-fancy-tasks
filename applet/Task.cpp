@@ -160,7 +160,7 @@ void Task::addItem(AbstractGroupableItem *abstractItem)
 {
     if (abstractItem->itemType() != TaskManager::GroupItemType)
     {
-        TaskItem *task = static_cast<TaskItem*>(abstractItem);
+        TaskItem *task = qobject_cast<TaskItem*>(abstractItem);
 
         if (task->task())
         {
@@ -250,12 +250,12 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
 
     if (m_abstractItem->itemType() == TaskManager::GroupItemType)
     {
-        m_group = static_cast<TaskGroup*>(abstractItem);
+        m_group = qobject_cast<TaskGroup*>(abstractItem);
         m_taskType = GroupType;
 
         if (m_group->name().isEmpty() && m_group->members().count() && m_applet->groupManager()->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
         {
-            TaskItem *task = static_cast<TaskItem*>(m_group->members().first());
+            TaskItem *task = qobject_cast<TaskItem*>(m_group->members().first());
 
             if (task && task->task())
             {
@@ -277,7 +277,7 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
     }
     else
     {
-        m_task = static_cast<TaskItem*>(abstractItem);
+        m_task = qobject_cast<TaskItem*>(abstractItem);
         m_taskType = (m_task->task()?TaskType:StartupType);
 
         if (m_taskType == TaskType)
@@ -411,7 +411,7 @@ QString Task::title() const
     {
         if (m_taskType == GroupType)
         {
-            title = static_cast<TaskItem*>(m_group->members().at(0))->task()->visibleName();
+            title = qobject_cast<TaskItem*>(m_group->members().at(0))->task()->visibleName();
 
             m_group->setName(title);
         }

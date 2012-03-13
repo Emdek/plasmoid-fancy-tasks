@@ -280,6 +280,7 @@ class Applet : public Plasma::Applet
         bool m_showOnlyCurrentDesktop;
         bool m_showOnlyCurrentScreen;
         bool m_showOnlyMinimized;
+        bool m_showOnlyCurrentActivity;
         bool m_showOnlyTasksWithLaunchers;
         bool m_connectJobsWithTasks;
         bool m_groupJobs;

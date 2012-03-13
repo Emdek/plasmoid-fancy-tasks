@@ -391,6 +391,7 @@ void Applet::configChanged()
     m_titleLabelMode = static_cast<TitleLabelMode>(configuration.readEntry("titleLabelMode", static_cast<int>(AlwaysShowLabel)));
     m_customBackgroundImage = configuration.readEntry("customBackgroundImage", QString());
     m_showOnlyCurrentDesktop = configuration.readEntry("showOnlyCurrentDesktop", false);
+    m_showOnlyCurrentActivity = configuration.readEntry("showOnlyCurrentActivity", false);
     m_showOnlyCurrentScreen = configuration.readEntry("showOnlyCurrentScreen", false);
     m_showOnlyMinimized = configuration.readEntry("showOnlyMinimized", false);
     m_showOnlyTasksWithLaunchers = configuration.readEntry("showOnlyTasksWithLaunchers", false);
@@ -405,6 +406,7 @@ void Applet::configChanged()
     m_groupManager->setGroupingStrategy(m_groupingStrategy);
     m_groupManager->setSortingStrategy(m_sortingStrategy);
     m_groupManager->setShowOnlyCurrentDesktop(m_showOnlyCurrentDesktop);
+    m_groupManager->setShowOnlyCurrentActivity(m_showOnlyCurrentActivity);
     m_groupManager->setShowOnlyCurrentScreen(m_showOnlyCurrentScreen);
     m_groupManager->setShowOnlyMinimized(m_showOnlyMinimized);
 

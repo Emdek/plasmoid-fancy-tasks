@@ -88,6 +88,7 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     m_generalUi.sortingStrategy->setCurrentIndex(m_generalUi.sortingStrategy->findData(QVariant(configuration.readEntry("sortingStrategy", static_cast<int>(TaskManager::GroupManager::ManualSorting)))));
 
     m_generalUi.showOnlyCurrentDesktop->setChecked(configuration.readEntry("showOnlyCurrentDesktop", false));
+    m_generalUi.showOnlyCurrentActivity->setChecked(configuration.readEntry("showOnlyCurrentActivity", true));
     m_generalUi.showOnlyCurrentScreen->setChecked(configuration.readEntry("showOnlyCurrentScreen", false));
     m_generalUi.showOnlyMinimized->setChecked(configuration.readEntry("showOnlyMinimized", false));
     m_generalUi.showOnlyTasksWithLaunchers->setChecked(configuration.readEntry("showOnlyTasksWithLaunchers", false));
@@ -324,6 +325,7 @@ void Configuration::accepted()
     configuration.writeEntry("titleLabelMode", m_appearanceUi.titleLabelMode->itemData(m_appearanceUi.titleLabelMode->currentIndex()).toInt());
     configuration.writeEntry("customBackgroundImage", (m_appearanceUi.customBackgroundImage->url().isValid()?m_appearanceUi.customBackgroundImage->url().path():QString()));
     configuration.writeEntry("showOnlyCurrentDesktop", m_generalUi.showOnlyCurrentDesktop->isChecked());
+    configuration.writeEntry("showOnlyCurrentActivity", m_generalUi.showOnlyCurrentActivity->isChecked());
     configuration.writeEntry("showOnlyCurrentScreen", m_generalUi.showOnlyCurrentScreen->isChecked());
     configuration.writeEntry("showOnlyMinimized", m_generalUi.showOnlyMinimized->isChecked());
     configuration.writeEntry("showOnlyTasksWithLaunchers", m_generalUi.showOnlyTasksWithLaunchers->isChecked());
