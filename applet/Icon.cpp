@@ -1283,7 +1283,11 @@ void Icon::removeWindow(WId window)
 {
     if (m_windowLights.contains(window))
     {
-        m_windowLights[window]->deleteLater();
+        if (m_windowLights[window])
+        {
+            m_windowLights[window]->deleteLater();
+        }
+
         m_windowLights.remove(window);
     }
 

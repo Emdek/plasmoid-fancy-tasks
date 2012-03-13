@@ -45,6 +45,8 @@ Light::Light(Task *task, Applet *applet, Icon *icon) : QGraphicsWidget(icon),
     setFlag(QGraphicsItem::ItemIsFocusable);
 
     Plasma::ToolTipManager::self()->registerWidget(this);
+
+    connect(task, SIGNAL(destroyed()), this, SLOT(deleteLater()));
 }
 
 void Light::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
