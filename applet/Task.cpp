@@ -27,6 +27,9 @@
 #include <ksysguard/process.h>
 #include <ksysguard/processes.h>
 
+
+#include <QDebug>
+
 namespace FancyTasks
 {
 
@@ -64,7 +67,7 @@ void Task::close()
 
 void Task::activate()
 {
-    if (m_taskType == TaskType && m_task->task())
+    if (m_taskType == TaskType && m_task && m_task->task())
     {
         m_task->task()->activateRaiseOrIconify();
     }
@@ -173,44 +176,58 @@ void Task::addItem(AbstractGroupableItem *abstractItem)
 
 void Task::removeItem(AbstractGroupableItem *abstractItem)
 {
-    if (abstractItem->itemType() == TaskManager::GroupItemType)
+// qDebug() << (m_group != NULL) << m_group->members().count() << m_group->members().contains(abstractItem);
+    if (m_group && m_group->members().count() == 1)
     {
-        TaskItem *task = static_cast<TaskItem*>(abstractItem);
-
-        if (task->task())
-        {
-            emit windowRemoved(task->task()->window());
-        }
+        m_taskType = TaskType;
+        m_abstractItem = m_group->members().first();
+        m_group = NULL;
+        m_task = qobject_cast<TaskItem*>(m_abstractItem);
     }
 
-    emit changed(WindowsChanged);
+    TaskItem *task = qobject_cast<TaskItem*>(abstractItem);
+
+    if (task && task->task())
+    {
+        emit windowRemoved(task->task()->window());
+        emit changed(WindowsChanged);
+    }
+    else
+    {
+        emit changed(EveythingChanged);
+    }
 }
 
 void Task::showPropertiesDialog()
 {
-    if (m_taskType == GroupType && m_groupManager->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name)
+    if (m_taskType != GroupType || !(m_groupManager->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name))
     {
-        QWidget *groupWidget = new QWidget;
-
-        m_groupUi.setupUi(groupWidget);
-        m_groupUi.icon->setIcon(m_group->icon());
-        m_groupUi.name->setText(m_group->name());
-
-        KDialog *groupDialog = new KDialog;
-        groupDialog->setMainWidget(groupWidget);
-        groupDialog->setButtons(KDialog::Cancel | KDialog::Ok);
-
-        connect(groupDialog, SIGNAL(okClicked()), this, SLOT(setProperties()));
-
-        groupDialog->setWindowTitle(i18n("%1 Settings", m_group->name()));
-        groupDialog->show();
+        return;
     }
+
+    QWidget *groupWidget = new QWidget;
+
+    m_groupUi.setupUi(groupWidget);
+    m_groupUi.icon->setIcon(m_group->icon());
+    m_groupUi.name->setText(m_group->name());
+
+    KDialog *groupDialog = new KDialog;
+    groupDialog->setMainWidget(groupWidget);
+    groupDialog->setButtons(KDialog::Cancel | KDialog::Ok);
+
+    connect(groupDialog, SIGNAL(okClicked()), this, SLOT(setProperties()));
+
+    groupDialog->setWindowTitle(i18n("%1 Settings", m_group->name()));
+    groupDialog->show();
 }
 
 void Task::setProperties()
 {
-    m_group->setIcon(KIcon(m_groupUi.icon->icon()));
-    m_group->setName(m_groupUi.name->text());
+    if (m_group)
+    {
+        m_group->setIcon(KIcon(m_groupUi.icon->icon()));
+        m_group->setName(m_groupUi.name->text());
+    }
 }
 
 void Task::setTask(AbstractGroupableItem *abstractItem)
@@ -305,9 +322,9 @@ void Task::setTaskPointer()
 KMenu* Task::contextMenu()
 {
     KMenu *menu = new KMenu;
-    BasicMenu *taskMenu;
+    BasicMenu *taskMenu = NULL;
 
-    if (m_taskType == GroupType)
+    if (m_taskType == GroupType && m_group)
     {
         taskMenu = new BasicMenu(menu, m_group, m_groupManager);
 
@@ -326,7 +343,7 @@ KMenu* Task::contextMenu()
             }
         }
     }
-    else
+    else if (m_task)
     {
         taskMenu = new BasicMenu(menu, m_task, m_groupManager);
         taskMenu->actions().at(taskMenu->actions().count() - 4)->setVisible(false);
@@ -337,7 +354,10 @@ KMenu* Task::contextMenu()
         }
     }
 
-    menu->addActions(taskMenu->actions());
+    if (taskMenu)
+    {
+        menu->addActions(taskMenu->actions());
+    }
 
     return menu;
 }

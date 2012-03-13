@@ -64,11 +64,19 @@ void Light::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
 
+    if (!m_task)
+    {
+        deleteLater();
+
+        return;
+    }
+
     Plasma::ToolTipContent data;
     data.setMainText(m_task->title());
     data.setSubText(m_task->description());
     data.setImage(m_task->icon());
     data.setClickable(true);
+    data.setInstantPopup(true);
     data.setWindowsToPreview(m_task->windows());
 
     Plasma::ToolTipManager::self()->setContent(this, data);
