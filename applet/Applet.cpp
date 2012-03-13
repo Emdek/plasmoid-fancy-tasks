@@ -687,7 +687,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
     }
 
     Icon *icon = NULL;
-    Task *task = new Task(abstractItem, this);
+    Task *task = ((abstractItem->itemType() == TaskManager::TaskItemType)?taskForWindow(*abstractItem->winIds().begin()):new Task(abstractItem, this));
     const QString title = task->title();
     const QString command = task->command();
 
@@ -1743,9 +1743,16 @@ KMenu* Applet::contextMenu()
 
 Task* Applet::taskForWindow(WId window)
 {
-    if (m_tasks.contains(window) && m_tasks[window])
+    if (m_tasks.contains(window))
     {
-        return m_tasks[window];
+        if (m_tasks[window] && m_tasks[window]->taskType() == TaskType)
+        {
+            return m_tasks[window];
+        }
+        else
+        {
+            m_tasks.remove(window);
+        }
     }
 
     TaskManager::Task *task = TaskManager::TaskManager::self()->findTask(window);
