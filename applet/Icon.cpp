@@ -884,6 +884,38 @@ void Icon::setThumbnail(const KFileItem &item, const QPixmap thumbnail)
     update();
 }
 
+void Icon::validate()
+{
+    if ((m_itemType == JobType && m_jobs.count() > 0) || (m_itemType == LauncherType && m_launcher))
+    {
+        return;
+    }
+
+    if (!m_task && !m_launcher && m_jobs.isEmpty())
+    {
+        m_itemType = OtherType;
+
+        deleteLater();
+
+        return;
+    }
+
+    if (m_jobs.count())
+    {
+        m_itemType = JobType;
+    }
+    else if (m_launcher)
+    {
+        m_itemType = LauncherType;
+
+        setLauncher(m_launcher);
+    }
+    else
+    {
+        deleteLater();
+    }
+}
+
 void Icon::startAnimation(AnimationType animationType, int duration, bool repeat)
 {
     m_animationType = animationType;
@@ -1304,6 +1336,33 @@ void Icon::removeWindow(WId window)
 
 void Icon::setTask(Task *task)
 {
+    if (!task)
+    {
+        if (m_task)
+        {
+            disconnect(m_task, SIGNAL(destroyed()), this, SLOT(validate()));
+
+            m_task->deleteLater();
+            m_task = NULL;
+
+            m_thumbnailPixmap = NULL;
+
+            qDeleteAll(m_windowLights);
+
+            m_windowLights.clear();
+
+            updateToolTip();
+
+            update();
+        }
+
+        m_task = task;
+
+        validate();
+
+        return;
+    }
+
     QTimer::singleShot(1000, this, SLOT(publishGeometry()));
 
     if (task->taskType() == StartupType)
@@ -1321,43 +1380,12 @@ void Icon::setTask(Task *task)
         }
     }
 
-    if (!task)
-    {
-        if (m_task)
-        {
-            if (m_jobs.count())
-            {
-                m_itemType = JobType;
-            }
-            else if (m_launcher)
-            {
-                m_itemType = LauncherType;
-
-                setLauncher(m_launcher);
-            }
-            else
-            {
-                m_itemType = OtherType;
-            }
-
-            m_task->deleteLater();
-            m_task = NULL;
-
-            m_thumbnailPixmap = NULL;
-
-            qDeleteAll(m_windowLights);
-
-            m_windowLights.clear();
-
-            updateToolTip();
-
-            update();
-        }
-
-        return;
-    }
-
     m_task = task;
+
+    connect(m_task, SIGNAL(destroyed()), this, SLOT(validate()));
+    connect(m_task, SIGNAL(changed(ItemChanges)), this, SLOT(taskChanged(ItemChanges)));
+    connect(m_task, SIGNAL(windowAdded(WId)), this, SLOT(addWindow(WId)));
+    connect(m_task, SIGNAL(windowRemoved(WId)), this, SLOT(removeWindow(WId)));
 
     QList<WId> windowList = m_task->windows();
 
@@ -1367,10 +1395,6 @@ void Icon::setTask(Task *task)
     }
 
     taskChanged(EveythingChanged);
-
-    connect(m_task, SIGNAL(changed(ItemChanges)), this, SLOT(taskChanged(ItemChanges)));
-    connect(m_task, SIGNAL(windowAdded(WId)), this, SLOT(addWindow(WId)));
-    connect(m_task, SIGNAL(windowRemoved(WId)), this, SLOT(removeWindow(WId)));
 }
 
 void Icon::windowPreviewActivated(WId window, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, const QPoint &point)
@@ -1650,10 +1674,10 @@ QString Icon::title() const
         case StartupType:
         case TaskType:
         case GroupType:
-            return m_task->title();
+            return (m_task?m_task->title():QString());
         break;
         case LauncherType:
-            return m_launcher->title();
+            return (m_launcher?m_launcher->title():QString());
         case JobType:
             if (m_jobs.count() > 1)
             {

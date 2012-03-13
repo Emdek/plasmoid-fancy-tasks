@@ -745,7 +745,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
 
         for (removedStartupsIterator = m_removedStartups.begin(); removedStartupsIterator != m_removedStartups.end(); ++removedStartupsIterator)
         {
-            if (!removedStartupsIterator.key()->task())
+            if (!removedStartupsIterator.key() || !removedStartupsIterator.key()->task())
             {
                 m_removedStartups.erase(removedStartupsIterator);
 

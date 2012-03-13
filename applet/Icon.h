@@ -74,16 +74,6 @@ class Icon : public QGraphicsWidget
         void updateIcon();
         void setFactor(qreal factor);
         void setSize(qreal size);
-        void setThumbnail(const KFileItem &item = KFileItem(), const QPixmap thumbnail = QPixmap());
-        void startAnimation(AnimationType animationType, int duration, bool repeat);
-        void stopAnimation();
-        void progressAnimation(int progress);
-        void changeGlow(bool enable, qreal radius);
-        void publishGeometry(Task *task = NULL);
-        void taskChanged(ItemChanges changes);
-        void launcherChanged(ItemChanges changes);
-        void jobChanged(ItemChanges changes);
-        void jobDemandsAttention();
         void setTask(Task *task);
         void setLauncher(Launcher *launcher);
         void addJob(Job *job);
@@ -93,9 +83,6 @@ class Icon : public QGraphicsWidget
         void windowPreviewActivated(WId window, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, const QPoint &point);
         void performAction(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Task *task = NULL);
         void performAction(IconAction action, Task *task = NULL);
-        void toolTipAboutToShow();
-        void toolTipHidden();
-        void updateToolTip();
 
     protected:
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -114,6 +101,22 @@ class Icon : public QGraphicsWidget
         void keyPressEvent(QKeyEvent *event);
         void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
         void timerEvent(QTimerEvent *event);
+
+    protected slots:
+        void validate();
+        void startAnimation(AnimationType animationType, int duration, bool repeat);
+        void stopAnimation();
+        void progressAnimation(int progress);
+        void changeGlow(bool enable, qreal radius);
+        void publishGeometry(Task *task = NULL);
+        void taskChanged(ItemChanges changes);
+        void launcherChanged(ItemChanges changes);
+        void jobChanged(ItemChanges changes);
+        void jobDemandsAttention();
+        void toolTipAboutToShow();
+        void toolTipHidden();
+        void updateToolTip();
+        void setThumbnail(const KFileItem &item = KFileItem(), const QPixmap thumbnail = QPixmap());
 
     private:
         QPointer<Applet> m_applet;
