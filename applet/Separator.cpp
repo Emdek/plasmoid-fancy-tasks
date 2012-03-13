@@ -99,16 +99,20 @@ QPainterPath Separator::shape() const
     {
         case Plasma::LeftEdge:
             rectangle = QRectF((boundingRect().width() * 0.2), 0, boundingRect().width(), boundingRect().height());
-        break;
+
+            break;
         case Plasma::RightEdge:
             rectangle = QRectF(0, 0, (boundingRect().width() * 0.8), boundingRect().height());
-        break;
+
+            break;
         case Plasma::TopEdge:
             rectangle = QRectF(0, (boundingRect().height() * 0.2), boundingRect().width(), boundingRect().height());
-        break;
+
+            break;
         default:
             rectangle = QRectF(0, 0, boundingRect().width(), (boundingRect().height() * 0.8));
-        break;
+
+            break;
     }
 
     path.addRect(rectangle);

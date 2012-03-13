@@ -157,16 +157,20 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     {
         case Plasma::LeftEdge:
             xOffset = (m_size / 4);
-        break;
+
+            break;
         case Plasma::RightEdge:
             xOffset = (m_size - visualizationSize);
-        break;
+
+            break;
         case Plasma::TopEdge:
             yOffset = (m_size / 4);
-        break;
+
+            break;
         default:
             yOffset = (m_size - visualizationSize);
-        break;
+
+            break;
     }
 
     if (m_visualizationPixmap.isNull())
@@ -228,7 +232,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 {
                     pixmapPainter.drawPixmap(QRectF(((m_size - size) / 2), ((m_size - size) / 2), size, size), m_visualizationPixmap, QRectF(0, 0, m_size, m_size));
                 }
-            break;
+
+                break;
             case RotateAnimation:
                 size = (m_size * (0.5 + (((m_animationProgress < 0.5)?m_animationProgress:(1 - m_animationProgress)) * 0.2)));
 
@@ -238,7 +243,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                     pixmapPainter.rotate(360 * m_animationProgress);
                     pixmapPainter.drawPixmap(QRectF(-(size / 2), -(size / 2), size, size), m_visualizationPixmap, QRectF(0, 0, m_size, m_size));
                 }
-            break;
+
+                break;
             case BounceAnimation:
                 width = (m_size * ((m_animationProgress < 0.5)?((m_animationProgress * 0.5) + 0.5):(1 - (m_animationProgress / 2))));
                 height = (m_size * ((m_animationProgress < 0.5)?(1 - (m_animationProgress / 2)):((m_animationProgress * 0.5) + 0.5)));
@@ -247,7 +253,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 {
                     pixmapPainter.drawPixmap(QRectF(((m_size - width) / 2), ((m_size - height) / 2), width, height), m_visualizationPixmap, QRectF(0, 0, m_size, m_size));
                 }
-            break;
+
+                break;
             case JumpAnimation:
                 pixmapPainter.drawPixmap(QRectF(0, 0, m_size, m_size), m_visualizationPixmap, QRectF(0, 0, m_size, m_size));
 
@@ -264,25 +271,32 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 {
                     case Plasma::LeftEdge:
                         xOffset += (size * (m_size / 4));
-                    break;
+
+                        break;
                     case Plasma::RightEdge:
                         xOffset *= size;
-                    break;
+
+                        break;
                     case Plasma::TopEdge:
                         yOffset += (size * (m_size / 4));
-                    break;
+
+                        break;
                     default:
                         yOffset *= size;
-                    break;
+
+                        break;
                 }
-            break;
+
+                break;
             case BlinkAnimation:
                 pixmapPainter.setOpacity(0.2 + ((cos(2 * PI * m_animationProgress) + 0.5) / 4));
                 pixmapPainter.drawPixmap(QRectF(0, 0, m_size, m_size), m_visualizationPixmap, QRectF(0, 0, m_size, m_size));
-            break;
+
+                break;
             case GlowAnimation:
                 changeGlow(true, m_animationProgress);
-            break;
+
+                break;
             case SpotlightAnimation:
                 spotlightPixmap = m_applet->theme()->pixmap("spotlight").scaled(m_size, m_size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
@@ -290,10 +304,12 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 pixmapPainter.drawPixmap(0, 0, spotlightPixmap);
                 pixmapPainter.setOpacity(0.5);
                 pixmapPainter.drawPixmap(0, 0, m_visualizationPixmap);
-            break;
+
+                break;
             default:
                 pixmapPainter.drawPixmap(QRectF(0, 0, m_size, m_size), m_visualizationPixmap, QRectF(0, 0, m_size, m_size));
-            break;
+
+                break;
         }
 
         pixmapPainter.end();
@@ -324,7 +340,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             {
                 visualizationPixmap = KIconLoader::global()->iconEffect()->apply(visualizationPixmap, KIconLoader::Desktop, KIconLoader::ActiveState);
             }
-        break;
+
+            break;
         case GlowAnimation:
             changeGlow(true, m_factor);
 
@@ -332,7 +349,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             {
                 visualizationPixmap = KIconLoader::global()->iconEffect()->apply(visualizationPixmap, KIconLoader::Desktop, KIconLoader::ActiveState);
             }
-        break;
+
+            break;
         case SpotlightAnimation:
             if (m_factor > 0)
             {
@@ -342,12 +360,14 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 targetPainter.drawPixmap(0, 0, spotlightPixmap);
                 targetPainter.setOpacity(0.85);
             }
-        break;
+
+            break;
         case FadeAnimation:
             targetPainter.setOpacity(m_factor + 0.25);
-        break;
+
+            break;
         default:
-        break;
+            break;
     }
 
     if (m_task && m_task->isActive() && m_applet->activeIconIndication() == FadeIndication)
@@ -440,7 +460,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 reflectionPixmap = reflectionPixmap.transformed(QTransform(-1, 0, 0, 0, 1, 0, 0, 0, 1), Qt::SmoothTransformation);
 
                 reflectionGradient = QLinearGradient(QPointF(reflectionPixmap.width(), 0), QPointF(0, 0));
-            break;
+
+                break;
             case Plasma::RightEdge:
                 reflectionPoint = QPointF((target.width() * 0.7), 0);
 
@@ -448,7 +469,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 reflectionPixmap = reflectionPixmap.transformed(QTransform(-1, 0, 0, 0, 1, 0, 0, 0, 1), Qt::SmoothTransformation);
 
                 reflectionGradient = QLinearGradient(QPointF(0, 0), QPointF(reflectionPixmap.width(), 0));
-            break;
+
+                break;
             case Plasma::TopEdge:
                 reflectionPoint = QPointF(0, 0);
 
@@ -456,7 +478,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 reflectionPixmap = reflectionPixmap.transformed(QTransform(1, 0, 0, 0, -1, 0, 0, 0, 1), Qt::SmoothTransformation);
 
                 reflectionGradient = QLinearGradient(QPointF(0, reflectionPixmap.height()), QPointF(0, 0));
-            break;
+
+                break;
             default:
                 reflectionPoint = QPointF(0, (target.height() * 0.7));
 
@@ -464,7 +487,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                 reflectionPixmap = reflectionPixmap.transformed(QTransform(1, 0, 0, 0, -1, 0, 0, 0, 1), Qt::SmoothTransformation);
 
                 reflectionGradient = QLinearGradient(QPointF(0, 0), QPointF(0, reflectionPixmap.height()));
-            break;
+
+                break;
         }
 
         reflectionGradient.setColorAt(0, QColor(0, 0, 0, 200));
@@ -753,15 +777,18 @@ void Icon::activate()
     {
         case LauncherType:
             performAction(ActivateLauncherAction);
-        break;
+
+            break;
         case TaskType:
             performAction(ActivateTaskAction);
-        break;
+
+            break;
         case GroupType:
             performAction(ShowChildrenListAction);
-        break;
+
+            break;
         default:
-        break;
+            break;
     }
 }
 
@@ -840,16 +867,20 @@ void Icon::setSize(qreal size)
     {
         case Plasma::LeftEdge:
             m_layout->setContentsMargins(0, 0, m_size, 0);
-        break;
+
+            break;
         case Plasma::RightEdge:
             m_layout->setContentsMargins(m_size, 0, 0, 0);
-        break;
+
+            break;
         case Plasma::TopEdge:
             m_layout->setContentsMargins(0, 0, 0, m_size);
-        break;
+
+            break;
         default:
             m_layout->setContentsMargins(0, m_size, 0, 0);
-        break;
+
+            break;
     }
 
     setThumbnail();
@@ -1449,13 +1480,15 @@ void Icon::performAction(IconAction action, Task *task)
     {
         case ActivateItemAction:
             activate();
-        break;
+
+            break;
         case ActivateTaskAction:
             if (task)
             {
                 task->activate();
             }
-        break;
+
+            break;
         case ActivateLauncherAction:
             if (m_launcher)
             {
@@ -1466,7 +1499,7 @@ void Icon::performAction(IconAction action, Task *task)
                     KMenu* menu = m_launcher->serviceMenu();
                     menu->exec(m_applet->containment()->corona()->popupPosition(this, menu->sizeHint(), Qt::AlignCenter));
 
-                    delete menu;
+                    menu->deleteLater();
 
                     m_menuVisible = false;
                 }
@@ -1475,7 +1508,8 @@ void Icon::performAction(IconAction action, Task *task)
                     m_launcher->activate();
                 }
             }
-        break;
+
+            break;
         case ShowMenuAction:
             if (m_itemType == LauncherType || m_itemType == JobType || m_itemType == TaskType || m_itemType == GroupType)
             {
@@ -1544,7 +1578,7 @@ void Icon::performAction(IconAction action, Task *task)
                     menu->exec(m_applet->containment()->corona()->popupPosition(this, menu->sizeHint(), Qt::AlignCenter));
                 }
 
-                delete menu;
+                menu->deleteLater();
 
                 m_menuVisible = false;
             }
@@ -1558,26 +1592,28 @@ void Icon::performAction(IconAction action, Task *task)
                 groupMenu->addSeparator();
                 groupMenu->addAction(KIcon("process-stop"), i18nc("@action:inmenu", "Cancel"));
                 groupMenu->exec(m_applet->containment()->corona()->popupPosition(this, groupMenu->sizeHint(), Qt::AlignCenter));
-
-                delete groupMenu;
+                groupMenu->deleteLater();
 
                 m_menuVisible = false;
             }
-        break;
+
+            break;
         case ShowWindowsAction:
             if (task && m_itemType == GroupType && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::PresentWindowsGroup))
             {
                 Plasma::WindowEffects::presentWindows(m_applet->window(), task->windows());
             }
-        break;
+
+            break;
         case CloseTaskAction:
             if (task && (m_itemType == TaskType || m_itemType == GroupType))
             {
                 task->close();
             }
-        break;
+
+            break;
         default:
-        break;
+            break;
     }
 }
 
@@ -1673,7 +1709,6 @@ QString Icon::title() const
         case TaskType:
         case GroupType:
             return (m_task?m_task->title():QString());
-        break;
         case LauncherType:
             return (m_launcher?m_launcher->title():QString());
         case JobType:
@@ -1689,11 +1724,11 @@ QString Icon::title() const
             {
                 return QString();
             }
-        break;
         default:
             return QString();
-        break;
     }
+
+    return QString();
 }
 
 QString Icon::description() const
@@ -1706,7 +1741,6 @@ QString Icon::description() const
         case TaskType:
         case GroupType:
             return m_task->description();
-        break;
         case LauncherType:
             return m_launcher->description();
         case JobType:
@@ -1729,10 +1763,8 @@ QString Icon::description() const
             }
 
             return description;
-        break;
         default:
             return QString();
-        break;
     }
 
     return QString();
@@ -1747,16 +1779,20 @@ QPainterPath Icon::shape() const
     {
         case Plasma::LeftEdge:
             rectangle = QRectF((boundingRect().width() - m_size), 0, size, boundingRect().height());
-        break;
+
+            break;
         case Plasma::RightEdge:
             rectangle = QRectF((m_size - size), 0, size, boundingRect().height());
-        break;
+
+            break;
         case Plasma::TopEdge:
             rectangle = QRectF(0, (boundingRect().height() - m_size), boundingRect().width(), size);
-        break;
+
+            break;
         default:
             rectangle = QRectF(0, (m_size - size), boundingRect().width(), size);
-        break;
+
+            break;
     }
 
     QPainterPath path;
@@ -1773,16 +1809,15 @@ KIcon Icon::icon()
         case TaskType:
         case GroupType:
             return (m_task?m_task->icon():KIcon());
-        break;
         case LauncherType:
             return (m_launcher?m_launcher->icon():KIcon());
         case JobType:
             return m_jobs.at(0)->icon();
-        break;
         default:
             return KIcon();
-        break;
     }
+
+    return KIcon();
 }
 
 qreal Icon::factor() const

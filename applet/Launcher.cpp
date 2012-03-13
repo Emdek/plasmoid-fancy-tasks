@@ -137,13 +137,16 @@ void Launcher::dropUrls(const KUrl::List &urls, Qt::KeyboardModifiers modifiers)
         {
             case Qt::MoveAction:
                 KIO::move(urls, m_targetUrl);
-            break;
+
+                break;
             case Qt::CopyAction:
                 KIO::copy(urls, m_targetUrl);
-            break;
+
+                break;
             case Qt::LinkAction:
                 KIO::link(urls, m_targetUrl);
-            break;
+
+                break;
             default:
                 return;
         }

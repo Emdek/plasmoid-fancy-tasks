@@ -390,17 +390,15 @@ KIcon Task::icon()
     {
         case StartupType:
             return ((m_task && m_task->startup())?KIcon(m_task->startup()->icon()):KIcon());
-        break;
         case TaskType:
             return ((m_task && m_task->task())?KIcon(m_task->task()->icon()):KIcon());
-        break;
         case GroupType:
             return (m_group?KIcon(m_group->icon()):KIcon());
-        break;
         default:
             return KIcon();
-        break;
     }
+
+    return KIcon();
 }
 
 QString Task::title() const
