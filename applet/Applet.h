@@ -251,12 +251,12 @@ class Applet : public Plasma::Applet
         QList<QPointer<Launcher> > m_launchers;
         QMap<WId, QPointer<Task> > m_tasks;
         QMap<QString, QPointer<Job> > m_jobs;
-        QMap<Launcher*, QPointer<Icon> > m_launcherIcons;
-        QMap<Job*, QPointer<Icon> > m_jobIcons;
         QMap<AbstractGroupableItem*, QPointer<Icon> > m_taskIcons;
         QMap<AbstractGroupableItem*, QPointer<Icon> > m_launcherTaskIcons;
-        QMap<Icon*, QDateTime> m_removedStartups;
+        QMap<Launcher*, QPointer<Icon> > m_launcherIcons;
+        QMap<Job*, QPointer<Icon> > m_jobIcons;
         QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> m_iconActions;
+        QList<QPair<QPointer<Icon>, QDateTime> > m_removedStartups;
         QDateTime m_lastAttentionDemand;
         QPixmap m_lightPixmap;
         QSize m_size;

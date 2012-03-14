@@ -753,23 +753,25 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
     {
         const QString title = task->title();
         const QString command = task->command();
-        QMap<Icon*, QDateTime>::iterator removedStartupsIterator;
+        QList<QPair<QPointer<Icon>, QDateTime> >::iterator iterator;
 
-        for (removedStartupsIterator = m_removedStartups.begin(); removedStartupsIterator != m_removedStartups.end(); ++removedStartupsIterator)
+        for (iterator = m_removedStartups.begin(); iterator != m_removedStartups.end(); ++iterator)
         {
-            if (!removedStartupsIterator.key() || !removedStartupsIterator.key()->task())
+            QPair<QPointer<Icon>, QDateTime> pair = * iterator;
+
+            if (!pair.first || !pair.first->task())
             {
-                m_removedStartups.erase(removedStartupsIterator);
+                m_removedStartups.erase(iterator);
 
                 continue;
             }
 
-            if (((!title.isEmpty() && title.contains(removedStartupsIterator.key()->task()->title(), Qt::CaseInsensitive)) || (command.isEmpty() && command.contains(removedStartupsIterator.key()->task()->command(), Qt::CaseInsensitive))) && removedStartupsIterator.key()->itemType() == StartupType)
+            if (((!title.isEmpty() && title.contains(pair.first->task()->title(), Qt::CaseInsensitive)) || (command.isEmpty() && command.contains(pair.first->task()->command(), Qt::CaseInsensitive))) && pair.first->itemType() == StartupType)
             {
-                icon = removedStartupsIterator.key();
+                icon = pair.first;
                 icon->setTask(task);
 
-                m_removedStartups.erase(removedStartupsIterator);
+                m_removedStartups.erase(iterator);
 
                 break;
             }
@@ -820,7 +822,7 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
 
     if (icon && icon->itemType() == StartupType)
     {
-        m_removedStartups[icon] = QDateTime::currentDateTime();
+        m_removedStartups.append(qMakePair(icon, QDateTime::currentDateTime()));
 
         QTimer::singleShot(2000, this, SLOT(cleanupRemovedStartups()));
 
@@ -1190,17 +1192,20 @@ void Applet::showJob()
 
 void Applet::cleanupRemovedStartups()
 {
-    QMutableMapIterator<Icon*, QDateTime> iterator(m_removedStartups);
+    QList<QPair<QPointer<Icon>, QDateTime> >::iterator iterator;
 
-    while (iterator.hasNext())
+    for (iterator = m_removedStartups.begin(); iterator != m_removedStartups.end(); ++iterator)
     {
-        iterator.next();
+        QPair<QPointer<Icon>, QDateTime> pair = * iterator;
 
-        if (iterator.value().secsTo(QDateTime::currentDateTime()) > 1 && iterator.key()->itemType() == StartupType)
+        if (pair.second.secsTo(QDateTime::currentDateTime()) > 1 && (!pair.first || pair.first->itemType() == StartupType))
         {
-            iterator.key()->deleteLater();
+            if (pair.first)
+            {
+                pair.first->deleteLater();
+            }
 
-            iterator.remove();
+            m_removedStartups.erase(iterator);
         }
     }
 }
