@@ -330,17 +330,17 @@ void Applet::configChanged()
     m_iconActions.clear();
 
     QList<IconAction> actionIds;
-    actionIds << ActivateItemAction << ActivateTaskAction << ActivateLauncherAction << ShowMenuAction << ShowChildrenListAction << ShowWindowsAction << CloseTaskAction;
+    actionIds << ActivateItemAction << ActivateTaskAction << ActivateLauncherAction << ShowMenuAction << ShowChildrenListAction << ShowWindowsAction << CloseTaskAction << MinimizeTaskAction << MaximizeTaskAcion << FullscreenTaskAction << ShadeTaskAction << ResizeTaskAction << MoveTaskAction << MoveTaskToCurrentDesktopAction << MoveTaskToAllDesktopsAction;
 
     QStringList actionOptions;
-    actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask";
+    actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask" << "minimizeTask" << "maximizeTask" << "fullscreenTask" << "shadeTask" << "resizeTask" << "moveTask" << "moveTaskToCurrentDesktop" << "moveTaskToAllDesktops";
 
     QStringList actionDefaults;
     actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString('+') << "middle+shift" << "left+shift";
 
     for (int i = 0; i < actionOptions.count(); ++i)
     {
-        QStringList action = configuration.readEntry((actionOptions.at(i) + "Action"), actionDefaults.at(i)).split('+', QString::KeepEmptyParts);
+        QStringList action = configuration.readEntry((actionOptions.at(i) + "Action"), ((i < actionDefaults.count())?actionDefaults.at(i):QString('+'))).split('+', QString::KeepEmptyParts);
         QPair<Qt::MouseButton, Qt::KeyboardModifier> actionPair;
 
         actionPair.first = Qt::NoButton;

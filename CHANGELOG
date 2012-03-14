@@ -1,7 +1,8 @@
 1.1.0 (15.03.2012):
 - add per launcher task connecting rules;
 - use command name for default launcher matching rules;
-- show icon tool tip instantly;
+- add toggle fullscreen, minimize, maximize etc actions;
+- show item tool tip instantly;
 - add support for showing tasks from current activity only;
 - window context menus for entries of Entries menu also for not grouped tasks;
 - lots of other internal (tasks management related) improvements and fixes.

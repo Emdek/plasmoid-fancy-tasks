@@ -1476,6 +1476,11 @@ void Icon::performAction(IconAction action, Task *task)
         task = m_task;
     }
 
+    if ((action == ActivateTaskAction || action >= CloseTaskAction) && !task)
+    {
+        return;
+    }
+
     switch (action)
     {
         case ActivateItemAction:
@@ -1483,10 +1488,7 @@ void Icon::performAction(IconAction action, Task *task)
 
             break;
         case ActivateTaskAction:
-            if (task)
-            {
-                task->activate();
-            }
+            task->activate();
 
             break;
         case ActivateLauncherAction:
@@ -1498,7 +1500,6 @@ void Icon::performAction(IconAction action, Task *task)
 
                     KMenu* menu = m_launcher->serviceMenu();
                     menu->exec(m_applet->containment()->corona()->popupPosition(this, menu->sizeHint(), Qt::AlignCenter));
-
                     menu->deleteLater();
 
                     m_menuVisible = false;
@@ -1606,10 +1607,7 @@ void Icon::performAction(IconAction action, Task *task)
 
             break;
         case CloseTaskAction:
-            if (task && (m_itemType == TaskType || m_itemType == GroupType))
-            {
-                task->close();
-            }
+            task->close();
 
             break;
         default:

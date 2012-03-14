@@ -96,7 +96,15 @@ enum IconAction
     ShowMenuAction,
     ShowChildrenListAction,
     ShowWindowsAction,
-    CloseTaskAction
+    CloseTaskAction,
+    MinimizeTaskAction,
+    MaximizeTaskAcion,
+    FullscreenTaskAction,
+    ShadeTaskAction,
+    ResizeTaskAction,
+    MoveTaskAction,
+    MoveTaskToCurrentDesktopAction,
+    MoveTaskToAllDesktopsAction
 };
 
 enum AnimationType

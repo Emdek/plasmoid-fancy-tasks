@@ -196,10 +196,10 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     }
 
     QStringList actionOptions;
-    actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask";
+    actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask" << "minimizeTask" << "maximizeTask" << "fullscreenTask" << "shadeTask" << "resizeTask" << "moveTask" << "moveTaskToCurrentDesktop" << "moveTaskToAllDesktops";
 
     QStringList actionNames;
-    actionNames << i18n("Activate Item") << i18n("Activate Task") << i18n("Activate Launcher") << i18n("Show Item Menu") << i18n("Show Item Children List") << i18n("Show Item Windows") << i18n("Close Task");
+    actionNames << i18n("Activate Item") << i18n("Activate Task") << i18n("Activate Launcher") << i18n("Show Item Menu") << i18n("Show Item Children List") << i18n("Show Item Windows") << i18n("Close Task") << i18n("Minimize Task") << i18n("Maximize Task") << i18n("Toggle Fullscreen State Of Task") << i18n("Toggle Shade State Of Task") << i18n("Resize Task") << i18n("Move Task") << i18n("Move Task To Current Desktop") << i18n("Move Task To All Desktops");
 
     QStringList actionDefaults;
     actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString('+') << "middle+shift" << "left+shift";
@@ -213,7 +213,7 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
         descriptionItem->setToolTip(actionNames.at(i));
         descriptionItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-        QTableWidgetItem *editingItem = new QTableWidgetItem(configuration.readEntry((actionOptions.at(i) + "Action"), actionDefaults.at(i)));
+        QTableWidgetItem *editingItem = new QTableWidgetItem(configuration.readEntry((actionOptions.at(i) + "Action"), ((i < actionDefaults.count())?actionDefaults.at(i):QString('+'))));
         editingItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
         m_actionsUi.actionsTableWidget->setItem(i, 0, descriptionItem);
