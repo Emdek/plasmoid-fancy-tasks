@@ -57,16 +57,113 @@ void Task::validate()
     }
 }
 
-void Task::close()
-{
-    m_abstractItem->close();
-}
-
 void Task::activate()
 {
     if (m_taskType == TaskType && m_task && m_task->task())
     {
         m_task->task()->activateRaiseOrIconify();
+    }
+}
+
+void Task::close()
+{
+    if (m_abstractItem)
+    {
+        m_abstractItem->close();
+    }
+}
+
+void Task::resize()
+{
+    if (m_abstractItem)
+    {
+        Task *task = qobject_cast<Task*>(m_abstractItem);
+
+        if (task)
+        {
+            task->resize();
+        }
+    }
+}
+
+void Task::move()
+{
+    if (m_abstractItem)
+    {
+        Task *task = qobject_cast<Task*>(m_abstractItem);
+
+        if (task)
+        {
+            task->move();
+        }
+    }
+}
+
+void Task::moveToCurrentDesktop()
+{
+    if (m_abstractItem)
+    {
+        m_abstractItem->toDesktop(KWindowSystem::currentDesktop());
+    }
+}
+
+void Task::moveToAllDesktops()
+{
+    if (m_abstractItem)
+    {
+        m_abstractItem->toDesktop(0);
+    }
+}
+
+void Task::setMinimized(int mode)
+{
+    if (m_abstractItem)
+    {
+        if (mode < 0)
+        {
+            mode = m_abstractItem->isMinimized();
+        }
+
+        m_abstractItem->setMinimized(mode);
+    }
+}
+
+void Task::setMaximized(int mode)
+{
+    if (m_abstractItem)
+    {
+        if (mode < 0)
+        {
+            mode = m_abstractItem->isMaximized();
+        }
+
+        m_abstractItem->setMaximized(mode);
+    }
+}
+
+void Task::setFullscreen(int mode)
+{
+    if (m_abstractItem)
+    {
+        if (mode < 0)
+        {
+            mode = m_abstractItem->isFullScreen();
+        }
+
+        m_abstractItem->setFullScreen(mode);
+    }
+}
+
+void Task::setShaded(int mode)
+{
+    if (m_abstractItem)
+    {
+        if (mode < 0)
+        {
+            mode = m_abstractItem->isShaded();
+        }
+
+         m_abstractItem->setShaded(mode);
     }
 }
 

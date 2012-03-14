@@ -68,8 +68,16 @@ class Task : public QObject
         bool isDemandingAttention() const;
 
     public slots:
-        void close();
         void activate();
+        void close();
+        void resize();
+        void move();
+        void moveToCurrentDesktop();
+        void moveToAllDesktops();
+        void setMinimized(int mode = -1);
+        void setMaximized(int mode = -1);
+        void setFullscreen(int mode = -1);
+        void setShaded(int mode = -1);
         void setTask(AbstractGroupableItem *abstractItem);
 
     protected:
