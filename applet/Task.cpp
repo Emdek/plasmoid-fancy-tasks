@@ -407,7 +407,7 @@ QString Task::title() const
 
     if (title.isEmpty())
     {
-        if (m_taskType == GroupType)
+        if (m_taskType == GroupType && m_group)
         {
             title = qobject_cast<TaskItem*>(m_group->members().at(0))->task()->visibleName();
 

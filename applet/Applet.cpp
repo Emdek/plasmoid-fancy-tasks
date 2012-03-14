@@ -687,9 +687,17 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
     }
 
     Icon *icon = NULL;
-    Task *task = ((abstractItem->itemType() == TaskManager::TaskItemType)?taskForWindow(*abstractItem->winIds().begin()):new Task(abstractItem, this));
-    const QString title = task->title();
-    const QString command = task->command();
+    Task *task = NULL;
+
+    if (abstractItem->itemType() == TaskManager::TaskItemType)
+    {
+        task = taskForWindow(*abstractItem->winIds().begin());
+    }
+
+    if (!task)
+    {
+        task = new Task(abstractItem, this);
+    }
 
     if (m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || m_showOnlyTasksWithLaunchers)
     {
@@ -741,8 +749,10 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
         }
     }
 
-    if ((task->taskType() == TaskType || task->taskType() == TaskType) && (!title.isEmpty() || !command.isEmpty()))
+    if ((task->taskType() == TaskType || task->taskType() == GroupType) && (!task->title().isEmpty() || !task->command().isEmpty()))
     {
+        const QString title = task->title();
+        const QString command = task->command();
         QMap<Icon*, QDateTime>::iterator removedStartupsIterator;
 
         for (removedStartupsIterator = m_removedStartups.begin(); removedStartupsIterator != m_removedStartups.end(); ++removedStartupsIterator)
