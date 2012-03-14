@@ -37,6 +37,8 @@ Task::Task(AbstractGroupableItem *abstractItem, Applet *applet) : QObject(applet
     m_validateTimer(0)
 {
     setTask(abstractItem);
+
+    connect(this, SIGNAL(destroyed()), m_applet, SLOT(cleanup()));
 }
 
 void Task::timerEvent(QTimerEvent *event)

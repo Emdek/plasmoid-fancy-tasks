@@ -110,6 +110,7 @@ Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *parent) : QGraphics
     }
 
     connect(this, SIGNAL(destroyed()), m_applet, SLOT(updateSize()));
+    connect(this, SIGNAL(destroyed()), m_applet, SLOT(cleanup()));
     connect(this, SIGNAL(hoverMoved(QGraphicsWidget*, qreal)), m_applet, SLOT(itemHoverMoved(QGraphicsWidget*, qreal)));
     connect(this, SIGNAL(hoverLeft()), m_applet, SLOT(hoverLeft()));
     connect(m_applet, SIGNAL(sizeChanged(qreal)), this, SLOT(setSize(qreal)));

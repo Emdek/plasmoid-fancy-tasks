@@ -755,13 +755,13 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
         const QString command = task->command();
         QList<QPair<QPointer<Icon>, QDateTime> >::iterator iterator;
 
-        for (iterator = m_removedStartups.begin(); iterator != m_removedStartups.end(); ++iterator)
+        for (iterator = m_startups.begin(); iterator != m_startups.end(); ++iterator)
         {
             QPair<QPointer<Icon>, QDateTime> pair = * iterator;
 
             if (!pair.first || !pair.first->task())
             {
-                m_removedStartups.erase(iterator);
+                m_startups.erase(iterator);
 
                 continue;
             }
@@ -771,7 +771,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
                 icon = pair.first;
                 icon->setTask(task);
 
-                m_removedStartups.erase(iterator);
+                m_startups.erase(iterator);
 
                 break;
             }
@@ -822,9 +822,9 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
 
     if (icon && icon->itemType() == StartupType)
     {
-        m_removedStartups.append(qMakePair(icon, QDateTime::currentDateTime()));
+        m_startups.append(qMakePair(icon, QDateTime::currentDateTime()));
 
-        QTimer::singleShot(2000, this, SLOT(cleanupRemovedStartups()));
+        QTimer::singleShot(2000, this, SLOT(cleanup()));
 
         return;
     }
@@ -1190,13 +1190,16 @@ void Applet::showJob()
     m_jobIcons[job] = icon;
 }
 
-void Applet::cleanupRemovedStartups()
+void Applet::cleanup()
 {
-    QList<QPair<QPointer<Icon>, QDateTime> >::iterator iterator;
+    QList<QPair<QPointer<Icon>, QDateTime> >::iterator startupsIterator;
+    QMap<AbstractGroupableItem*, QPointer<Icon> >::iterator taskIconsIterator;
+    QMap<Launcher*, QPointer<Icon> >::iterator launcherIconsIterator;
+    QMap<Job*, QPointer<Icon> >::iterator jobIconsIterator;
 
-    for (iterator = m_removedStartups.begin(); iterator != m_removedStartups.end(); ++iterator)
+    for (startupsIterator = m_startups.begin(); startupsIterator != m_startups.end(); ++startupsIterator)
     {
-        QPair<QPointer<Icon>, QDateTime> pair = * iterator;
+        QPair<QPointer<Icon>, QDateTime> pair = * startupsIterator;
 
         if (pair.second.secsTo(QDateTime::currentDateTime()) > 1 && (!pair.first || pair.first->itemType() == StartupType))
         {
@@ -1205,7 +1208,39 @@ void Applet::cleanupRemovedStartups()
                 pair.first->deleteLater();
             }
 
-            m_removedStartups.erase(iterator);
+            m_startups.erase(startupsIterator);
+        }
+    }
+
+    for (taskIconsIterator = m_taskIcons.begin(); taskIconsIterator != m_taskIcons.end(); ++taskIconsIterator)
+    {
+        if (!taskIconsIterator.value())
+        {
+            m_taskIcons.erase(taskIconsIterator);
+        }
+    }
+
+    for (taskIconsIterator = m_launcherTaskIcons.begin(); taskIconsIterator != m_launcherTaskIcons.end(); ++taskIconsIterator)
+    {
+        if (!taskIconsIterator.value())
+        {
+            m_launcherTaskIcons.erase(taskIconsIterator);
+        }
+    }
+
+    for (launcherIconsIterator = m_launcherIcons.begin(); launcherIconsIterator != m_launcherIcons.end(); ++launcherIconsIterator)
+    {
+        if (!launcherIconsIterator.value())
+        {
+            m_launcherIcons.erase(launcherIconsIterator);
+        }
+    }
+
+    for (jobIconsIterator = m_jobIcons.begin(); jobIconsIterator != m_jobIcons.end(); ++jobIconsIterator)
+    {
+        if (!jobIconsIterator.value())
+        {
+            m_jobIcons.erase(jobIconsIterator);
         }
     }
 }

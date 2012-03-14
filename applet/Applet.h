@@ -217,7 +217,7 @@ class Applet : public Plasma::Applet
         void addJob(const QString &source);
         void removeJob(const QString &source, bool force = false);
         void showJob();
-        void cleanupRemovedStartups();
+        void cleanup();
         void itemHoverMoved(QGraphicsWidget *item, qreal across);
         void hoverLeft();
         void moveAnimation(int progress);
@@ -249,6 +249,7 @@ class Applet : public Plasma::Applet
         QQueue<QPointer<Job> > m_jobsQueue;
         QList<QGraphicsWidget*> m_visibleItems;
         QList<QPointer<Launcher> > m_launchers;
+        QList<QPair<QPointer<Icon>, QDateTime> > m_startups;
         QMap<WId, QPointer<Task> > m_tasks;
         QMap<QString, QPointer<Job> > m_jobs;
         QMap<AbstractGroupableItem*, QPointer<Icon> > m_taskIcons;
@@ -256,7 +257,6 @@ class Applet : public Plasma::Applet
         QMap<Launcher*, QPointer<Icon> > m_launcherIcons;
         QMap<Job*, QPointer<Icon> > m_jobIcons;
         QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> m_iconActions;
-        QList<QPair<QPointer<Icon>, QDateTime> > m_removedStartups;
         QDateTime m_lastAttentionDemand;
         QPixmap m_lightPixmap;
         QSize m_size;
