@@ -72,8 +72,7 @@ class Task : public QObject
         void close();
         void resize();
         void move();
-        void moveToCurrentDesktop();
-        void moveToAllDesktops();
+        void moveToDesktop(int desktop = -1);
         void setMinimized(int mode = -1);
         void setMaximized(int mode = -1);
         void setFullscreen(int mode = -1);

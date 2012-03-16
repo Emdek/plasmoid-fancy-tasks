@@ -1,4 +1,4 @@
-1.1.0 (15.03.2012):
+1.1.0 (20.03.2012):
 - add per launcher task connecting rules;
 - use command name for default launcher matching rules;
 - add toggle fullscreen, minimize, maximize etc actions;

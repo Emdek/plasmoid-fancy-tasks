@@ -101,19 +101,11 @@ void Task::move()
     }
 }
 
-void Task::moveToCurrentDesktop()
+void Task::moveToDesktop(int desktop)
 {
     if (m_abstractItem)
     {
-        m_abstractItem->toDesktop(KWindowSystem::currentDesktop());
-    }
-}
-
-void Task::moveToAllDesktops()
-{
-    if (m_abstractItem)
-    {
-        m_abstractItem->toDesktop(0);
+        m_abstractItem->toDesktop((desktop < 0)?KWindowSystem::currentDesktop():desktop);
     }
 }
 

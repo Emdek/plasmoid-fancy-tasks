@@ -1611,6 +1611,38 @@ void Icon::performAction(IconAction action, Task *task)
             task->close();
 
             break;
+        case MinimizeTaskAction:
+            task->setMinimized();
+
+            break;
+        case MaximizeTaskAcion:
+            task->setMaximized();
+
+            break;
+        case FullscreenTaskAction:
+            task->setFullscreen();
+
+            break;
+        case ShadeTaskAction:
+            task->setShaded();
+
+            break;
+        case ResizeTaskAction:
+            task->resize();
+
+            break;
+        case MoveTaskAction:
+            task->move();
+
+            break;
+        case MoveTaskToCurrentDesktopAction:
+            task->moveToDesktop(-1);
+
+            break;
+        case MoveTaskToAllDesktopsAction:
+            task->moveToDesktop(0);
+
+            break;
         default:
             break;
     }
