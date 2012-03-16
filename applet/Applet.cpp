@@ -336,7 +336,7 @@ void Applet::configChanged()
     actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask" << "minimizeTask" << "maximizeTask" << "fullscreenTask" << "shadeTask" << "resizeTask" << "moveTask" << "moveTaskToCurrentDesktop" << "moveTaskToAllDesktops";
 
     QStringList actionDefaults;
-    actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString('+') << "middle+shift" << "left+shift";
+    actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString("right+") << "middle+shift" << "left+shift";
 
     for (int i = 0; i < actionOptions.count(); ++i)
     {

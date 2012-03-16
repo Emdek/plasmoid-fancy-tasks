@@ -202,7 +202,7 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     actionNames << i18n("Activate Item") << i18n("Activate Task") << i18n("Activate Launcher") << i18n("Show Item Menu") << i18n("Show Item Children List") << i18n("Show Item Windows") << i18n("Close Task") << i18n("Minimize Task") << i18n("Maximize Task") << i18n("Toggle Fullscreen State Of Task") << i18n("Toggle Shade State Of Task") << i18n("Resize Task") << i18n("Move Task") << i18n("Move Task To Current Desktop") << i18n("Move Task To All Desktops");
 
     QStringList actionDefaults;
-    actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString('+') << "middle+shift" << "left+shift";
+    actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString("right+") << "middle+shift" << "left+shift";
 
     m_actionsUi.actionsTableWidget->setRowCount(actionOptions.count());
     m_actionsUi.actionsTableWidget->setItemDelegateForColumn(1, new ActionDelegate(this));

@@ -712,9 +712,16 @@ void Icon::keyPressEvent(QKeyEvent *event)
 
 void Icon::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    performAction(ShowMenuAction);
+    if (event->reason() != QGraphicsSceneContextMenuEvent::Mouse)
+    {
+        performAction(ShowMenuAction);
 
-    event->accept();
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+    }
 }
 
 void Icon::timerEvent(QTimerEvent *event)
