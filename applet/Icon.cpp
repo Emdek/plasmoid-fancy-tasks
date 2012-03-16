@@ -1433,20 +1433,16 @@ void Icon::windowPreviewActivated(WId window, Qt::MouseButtons buttons, Qt::Keyb
 {
     Q_UNUSED(point)
 
-    TaskManager::Task *taskPointer = TaskManager::TaskManager::self()->findTask(window);
+    Task *task = m_applet->taskForWindow(window);
 
     Plasma::ToolTipManager::self()->hide(this);
 
-    if (!taskPointer)
+    if (!task)
     {
         return;
     }
 
-    Task *task = new Task(new TaskManager::TaskItem(m_applet->groupManager(), taskPointer), m_applet);
-
     performAction(buttons, modifiers, task);
-
-    task->deleteLater();
 }
 
 void Icon::performAction(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Task *task)
@@ -1482,6 +1478,8 @@ void Icon::performAction(IconAction action, Task *task)
         return;
     }
 
+    KMenu *menu = NULL;
+
     switch (action)
     {
         case ActivateItemAction:
@@ -1493,111 +1491,115 @@ void Icon::performAction(IconAction action, Task *task)
 
             break;
         case ActivateLauncherAction:
-            if (m_launcher)
+            if (!m_launcher)
             {
-                if (m_launcher->isMenu())
-                {
-                    m_menuVisible = true;
-
-                    KMenu* menu = m_launcher->serviceMenu();
-                    menu->exec(m_applet->containment()->corona()->popupPosition(this, menu->sizeHint(), Qt::AlignCenter));
-                    menu->deleteLater();
-
-                    m_menuVisible = false;
-                }
-                else
-                {
-                    m_launcher->activate();
-                }
+                break;
             }
 
-            break;
-        case ShowMenuAction:
-            if (m_itemType == LauncherType || m_itemType == JobType || m_itemType == TaskType || m_itemType == GroupType)
+            if (m_launcher->isMenu())
             {
-                KMenu *menu;
-
-                if (task && (m_itemType == TaskType || m_itemType == GroupType))
-                {
-                    menu = task->contextMenu();
-
-                    if (m_launcher)
-                    {
-                        KMenu *launcherMenu = m_launcher->contextMenu();
-
-                        menu->insertMenu(menu->actions().at(menu->actions().count() - 2), launcherMenu);
-
-                        connect(menu, SIGNAL(destroyed()), launcherMenu, SLOT(deleteLater()));
-                    }
-                }
-                else if (m_launcher)
-                {
-                    menu = m_launcher->contextMenu();
-                }
-                else if (m_itemType == JobType && m_jobs.count() == 1)
-                {
-                    menu = m_jobs.at(0)->contextMenu();
-                }
-                else
-                {
-                    menu = new KMenu;
-                }
-
                 m_menuVisible = true;
 
-                if (m_task == task && m_jobs.count() && (m_itemType != JobType || m_jobs.count() > 1))
-                {
-                    if (menu->actions().count())
-                    {
-                        menu->addSeparator();
-                    }
-
-                    for (int i = 0; i < m_jobs.count(); ++i)
-                    {
-                        QAction *action = menu->addAction(m_jobs.at(i)->icon(), m_jobs.at(i)->title());
-                        action->setMenu(m_jobs.at(i)->contextMenu());
-                    }
-                }
-
-                if (menu->actions().count())
-                {
-                    QAction *settingsAction = new QAction(KIcon("configure"), i18n("Settings"), menu);
-
-                    connect(settingsAction, SIGNAL(triggered()), m_applet, SLOT(showConfigurationInterface()));
-
-                    menu->insertSeparator(menu->actions().at(0));
-                    menu->insertAction(menu->actions().at(0), settingsAction);
-
-                    if (m_task == task)
-                    {
-                        menu->addTitle(icon(), title().left(20), menu->actions().at(0));
-                    }
-                    else
-                    {
-                        menu->addTitle(task->icon(), task->title().left(20), menu->actions().at(0));
-                    }
-
-                    menu->exec(m_applet->containment()->corona()->popupPosition(this, menu->sizeHint(), Qt::AlignCenter));
-                }
-
+                menu = m_launcher->serviceMenu();
+                menu->exec(m_applet->containment()->corona()->popupPosition(this, menu->sizeHint(), Qt::AlignCenter));
                 menu->deleteLater();
 
                 m_menuVisible = false;
             }
+            else
+            {
+                m_launcher->activate();
+            }
+
+            break;
+        case ShowMenuAction:
+            if (m_itemType == OtherType)
+            {
+                break;
+            }
+
+            if (task && (m_itemType == TaskType || m_itemType == GroupType))
+            {
+                menu = task->contextMenu();
+
+                if (m_launcher)
+                {
+                    KMenu *launcherMenu = m_launcher->contextMenu();
+
+                    menu->insertMenu(menu->actions().at(menu->actions().count() - 2), launcherMenu);
+
+                    connect(menu, SIGNAL(destroyed()), launcherMenu, SLOT(deleteLater()));
+                }
+            }
+            else if (m_launcher)
+            {
+                menu = m_launcher->contextMenu();
+            }
+            else if (m_itemType == JobType && m_jobs.count() == 1)
+            {
+                menu = m_jobs.at(0)->contextMenu();
+            }
+            else
+            {
+                menu = new KMenu;
+            }
+
+            m_menuVisible = true;
+
+            if (m_task == task && m_jobs.count() && (m_itemType != JobType || m_jobs.count() > 1))
+            {
+                if (menu->actions().count())
+                {
+                    menu->addSeparator();
+                }
+
+                for (int i = 0; i < m_jobs.count(); ++i)
+                {
+                    QAction *action = menu->addAction(m_jobs.at(i)->icon(), m_jobs.at(i)->title());
+                    action->setMenu(m_jobs.at(i)->contextMenu());
+                }
+            }
+
+            if (menu->actions().count())
+            {
+                QAction *settingsAction = new QAction(KIcon("configure"), i18n("Settings"), menu);
+
+                connect(settingsAction, SIGNAL(triggered()), m_applet, SLOT(showConfigurationInterface()));
+
+                menu->insertSeparator(menu->actions().at(0));
+                menu->insertAction(menu->actions().at(0), settingsAction);
+
+                if (m_task == task)
+                {
+                    menu->addTitle(icon(), title().left(20), menu->actions().at(0));
+                }
+                else
+                {
+                    menu->addTitle(task->icon(), task->title().left(20), menu->actions().at(0));
+                }
+
+                menu->exec(m_applet->containment()->corona()->popupPosition(this, menu->sizeHint(), Qt::AlignCenter));
+            }
+
+            menu->deleteLater();
+
+            m_menuVisible = false;
         break;
         case ShowChildrenListAction:
-            if (!m_menuVisible && task)
+            if (m_menuVisible || !task)
             {
-                m_menuVisible = true;
-
-                Menu *groupMenu = new Menu(task, m_applet);
-                groupMenu->addSeparator();
-                groupMenu->addAction(KIcon("process-stop"), i18nc("@action:inmenu", "Cancel"));
-                groupMenu->exec(m_applet->containment()->corona()->popupPosition(this, groupMenu->sizeHint(), Qt::AlignCenter));
-                groupMenu->deleteLater();
-
-                m_menuVisible = false;
+                break;
             }
+
+            m_menuVisible = true;
+
+            menu = new Menu(task, m_applet);
+            menu->addSeparator();
+            menu->addAction(KIcon("process-stop"), i18nc("@action:inmenu", "Cancel"));
+            menu->exec(m_applet->containment()->corona()->popupPosition(this, menu->sizeHint(), Qt::AlignCenter));
+            menu->deleteLater();
+
+            m_menuVisible = false;
 
             break;
         case ShowWindowsAction:
