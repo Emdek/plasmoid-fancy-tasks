@@ -19,14 +19,14 @@
      <item row="1" column="0">
       <widget class="QLabel" name="availableActionsLabel">
        <property name="text">
-        <string>Available actions:</string>
+        <string>Available entries:</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
       <widget class="QLabel" name="currentActionsLabel">
        <property name="text">
-        <string>Current actions:</string>
+        <string>Current entries:</string>
        </property>
       </widget>
      </item>
@@ -74,6 +74,9 @@
          <property name="toolTip">
           <string>Remove</string>
          </property>
+         <property name="shortcut">
+          <string>Del</string>
+         </property>
         </widget>
        </item>
        <item row="2" column="3">
@@ -83,6 +86,9 @@
          </property>
          <property name="toolTip">
           <string>Add</string>
+         </property>
+         <property name="shortcut">
+          <string>Return</string>
          </property>
         </widget>
        </item>
@@ -110,6 +116,9 @@
          <property name="toolTip">
           <string>Move Down</string>
          </property>
+         <property name="shortcut">
+          <string>Down</string>
+         </property>
         </widget>
        </item>
        <item row="1" column="2">
@@ -119,6 +128,9 @@
          </property>
          <property name="toolTip">
           <string>Move Up</string>
+         </property>
+         <property name="shortcut">
+          <string>Up</string>
          </property>
         </widget>
        </item>
