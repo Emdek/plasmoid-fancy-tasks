@@ -20,9 +20,13 @@
 
 #include "TriggerDelegate.h"
 
+#include <QtGui/QMouseEvent>
 #include <QtGui/QPushButton>
 
 #include <KLocale>
+
+
+#include <QDebug>
 
 namespace FancyTasks
 {
@@ -61,44 +65,50 @@ QString TriggerDelegate::displayText(const QVariant &value, const QLocale &local
         return value.toString();
     }
 
-    QStringList action = value.toString().split('+');
-    QString text;
+    QStringList action = value.toString().split('+', QString::SkipEmptyParts);
+    QStringList text;
 
-    if (action.count() > 0 && !action.at(0).isEmpty())
+    if (action.isEmpty())
     {
-        if (action.at(0) == "left")
-        {
-            text = i18n("Left mouse button");
-        }
-        else if (action.at(0) == "middle")
-        {
-            text = i18n("Middle mouse button");
-        }
-        else if (action.at(0) == "right")
-        {
-            text = i18n("Right mouse button");
-        }
-
-        if (action.count() > 1 && !action.at(1).isEmpty())
-        {
-            text.append(" + ");
-
-            if (action.at(1) == "ctrl")
-            {
-                text.append(i18n("Ctrl modifier"));
-            }
-            else if (action.at(1) == "shift")
-            {
-                text.append(i18n("Shift modifier"));
-            }
-            else if (action.at(1) == "alt")
-            {
-                text.append(i18n("Alt modifier"));
-            }
-       }
+        return i18n("No trigger");
     }
 
-    return text;
+    if (action.contains("left"))
+    {
+        text.append(i18nc("As mouse button", "Left button"));
+    }
+
+    if (action.contains("middle"))
+    {
+        text.append(i18nc("As mouse button", "Middle button"));
+    }
+
+    if (action.contains("right"))
+    {
+        text.append(i18nc("As mouse button", "Right button"));
+    }
+
+    if (text.isEmpty())
+    {
+        return i18n("No trigger");
+    }
+
+    if (action.contains("shift"))
+    {
+        text.append(i18nc("As keyboard modifier", "Shift modifier"));
+    }
+
+    if (action.contains("ctrl"))
+    {
+        text.append(i18nc("As keyboard modifier", "Ctrl modifier"));
+    }
+
+    if (action.contains("alt"))
+    {
+        text.append(i18nc("As keyboard modifier", "Alt modifier"));
+    }
+
+    return text.join(" + ");
 }
 
 QWidget* TriggerDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -111,6 +121,53 @@ QWidget* TriggerDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
     setEditorData(triggerButton, index);
 
     return triggerButton;
+}
+
+bool TriggerDelegate::eventFilter(QObject *editor, QEvent *event)
+{
+    QPushButton *button = qobject_cast<QPushButton*>(editor);
+
+    if (button && event->type() == QEvent::MouseButtonPress)
+    {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        QStringList action;
+
+        if (mouseEvent->buttons() & Qt::LeftButton)
+        {
+            action.append("left");
+        }
+
+        if (mouseEvent->buttons() & Qt::MiddleButton)
+        {
+            action.append("middle");
+        }
+
+        if (mouseEvent->buttons() & Qt::RightButton)
+        {
+            action.append("right");
+        }
+
+        if (mouseEvent->modifiers() & Qt::ShiftModifier)
+        {
+            action.append("shift");
+        }
+
+        if (mouseEvent->modifiers() & Qt::ControlModifier)
+        {
+            action.append("ctrl");
+        }
+
+        if (mouseEvent->modifiers() & Qt::AltModifier)
+        {
+            action.append("alt");
+        }
+
+        button->setWindowTitle(action.join(QChar('+')));
+
+        return true;
+    }
+
+    return QStyledItemDelegate::eventFilter(editor, event);
 }
 
 }
