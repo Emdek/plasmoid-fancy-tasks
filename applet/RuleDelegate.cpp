@@ -22,8 +22,6 @@
 
 #include <QtGui/QCheckBox>
 #include <QtGui/QHBoxLayout>
-#include <QtGui/QApplication>
-#include <QtGui/QTableWidgetItem>
 
 #include <KLocale>
 #include <KComboBox>

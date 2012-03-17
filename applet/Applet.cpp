@@ -330,7 +330,7 @@ void Applet::configChanged()
     m_iconActions.clear();
 
     QList<IconAction> actionIds;
-    actionIds << ActivateItemAction << ActivateTaskAction << ActivateLauncherAction << ShowMenuAction << ShowChildrenListAction << ShowWindowsAction << CloseTaskAction << MinimizeTaskAction << MaximizeTaskAcion << FullscreenTaskAction << ShadeTaskAction << ResizeTaskAction << MoveTaskAction << MoveTaskToCurrentDesktopAction << MoveTaskToAllDesktopsAction;
+    actionIds << ActivateItemAction << ActivateTaskAction << ActivateLauncherAction << ShowItemMenuAction << ShowItemChildrenListAction << ShowItemWindowsAction << CloseTaskAction << MinimizeTaskAction << MaximizeTaskAction << FullscreenTaskAction << ShadeTaskAction << ResizeTaskAction << MoveTaskAction << MoveTaskToCurrentDesktopAction << MoveTaskToAllDesktopsAction;
 
     QStringList actionOptions;
     actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask" << "minimizeTask" << "maximizeTask" << "fullscreenTask" << "shadeTask" << "resizeTask" << "moveTask" << "moveTaskToCurrentDesktop" << "moveTaskToAllDesktops";

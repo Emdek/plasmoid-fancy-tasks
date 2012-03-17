@@ -20,88 +20,58 @@
 
 #include "ActionDelegate.h"
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QApplication>
-#include <QtGui/QTableWidgetItem>
-
 #include <KLocale>
 #include <KComboBox>
 
 namespace FancyTasks
 {
 
+QMap<IconAction, QString> ActionDelegate::m_actions;
+
 ActionDelegate::ActionDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
+    m_actions[NoAction] = i18n("No Action");
+    m_actions[ActivateItemAction] = i18n("Activate Item");
+    m_actions[ActivateTaskAction] = i18n("Activate Task");
+    m_actions[ActivateLauncherAction] = i18n("Activate Launcher");
+    m_actions[ShowItemMenuAction] = i18n("Show Item Menu");
+    m_actions[ShowItemChildrenListAction] = i18n("Show Item Children List");
+    m_actions[ShowItemWindowsAction] = i18n("Show Item Windows");
+    m_actions[CloseTaskAction] = i18n("Close Task");
+    m_actions[MinimizeTaskAction] = i18n("Minimize Task");
+    m_actions[MaximizeTaskAction] = i18n("Maximize Task");
+    m_actions[FullscreenTaskAction] = i18n("Toggle Fullscreen State Of Task");
+    m_actions[ShadeTaskAction] = i18n("Toggle Shade State Of Task");
+    m_actions[ResizeTaskAction] = i18n("Resize Task");
+    m_actions[MoveTaskAction] = i18n("Move Task");
+    m_actions[MoveTaskToCurrentDesktopAction] = i18n("Move Task To Current Desktop");
+    m_actions[MoveTaskToAllDesktopsAction] = i18n("Move Task To All Desktops");
 }
 
 void ActionDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    QStringList action = index.data(Qt::EditRole).toString().split('+', QString::KeepEmptyParts);
-    KComboBox *buttonComboBox = static_cast<KComboBox*>(editor->layout()->itemAt(0)->widget());
-    buttonComboBox->setCurrentIndex(0);
+    KComboBox *actionComboBox = static_cast<KComboBox*>(editor);
+    int item = actionComboBox->findData(index.data(Qt::EditRole), Qt::UserRole);
 
-    KComboBox *modifierComboBox = static_cast<KComboBox*>(editor->layout()->itemAt(1)->widget());
-    modifierComboBox->setCurrentIndex(0);
-
-    if (action.count() > 0 && !action.at(0).isEmpty())
+    if (item < 0)
     {
-        if (action.at(0) == "left")
-        {
-            buttonComboBox->setCurrentIndex(1);
-        }
-        else if (action.at(0) == "middle")
-        {
-            buttonComboBox->setCurrentIndex(2);
-        }
-        else if (action.at(0) == "right")
-        {
-            buttonComboBox->setCurrentIndex(3);
-        }
-
-        if (action.count() > 1)
-        {
-            if (action.at(1) == "ctrl")
-            {
-                modifierComboBox->setCurrentIndex(1);
-            }
-            else if (action.at(1) == "shift")
-            {
-                modifierComboBox->setCurrentIndex(2);
-            }
-            else if (action.at(1) == "alt")
-            {
-                modifierComboBox->setCurrentIndex(3);
-            }
-        }
+        item = 0;
     }
+
+    actionComboBox->setCurrentIndex(item);
 }
 
 void ActionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    KComboBox *buttonComboBox = static_cast<KComboBox*>(editor->layout()->itemAt(0)->widget());
-    KComboBox *modifierComboBox = static_cast<KComboBox*>(editor->layout()->itemAt(1)->widget());
-    QStringList buttons;
-    buttons << QString() << "left" << "middle" << "right";
+    KComboBox *actionComboBox = static_cast<KComboBox*>(editor);
 
-    QStringList modifiers;
-    modifiers << QString() << "ctrl" << "shift" << "alt";
-
-    if (buttonComboBox->currentIndex() > 0)
+    if (actionComboBox->currentIndex() > 0)
     {
-        QString action = buttons.at(buttonComboBox->currentIndex());
-        action.append('+');
-
-        if (modifierComboBox->currentIndex() > 0)
-        {
-            action.append(modifiers.at(modifierComboBox->currentIndex()));
-        }
-
-        model->setData(index, action, Qt::EditRole);
-
+        model->setData(index, actionComboBox->itemData(actionComboBox->currentIndex()), Qt::EditRole);
     }
     else
     {
-        model->setData(index, QString('+'), Qt::EditRole);
+        model->setData(index, QString(), Qt::EditRole);
     }
 }
 
@@ -109,78 +79,33 @@ QString ActionDelegate::displayText(const QVariant &value, const QLocale &locale
 {
     Q_UNUSED(locale)
 
-    if (!value.toString().contains('+'))
+    IconAction action = static_cast<IconAction>(value.toInt());
+
+    if (action < 1)
     {
-        return value.toString();
+        return QString();
     }
 
-    QStringList action = value.toString().split('+');
-    QString text;
-
-    if (action.count() > 0 && !action.at(0).isEmpty())
-    {
-        if (action.at(0) == "left")
-        {
-            text = i18n("Left mouse button");
-        }
-        else if (action.at(0) == "middle")
-        {
-            text = i18n("Middle mouse button");
-        }
-        else if (action.at(0) == "right")
-        {
-            text = i18n("Right mouse button");
-        }
-
-        if (action.count() > 1 && !action.at(1).isEmpty())
-        {
-            text.append(" + ");
-
-            if (action.at(1) == "ctrl")
-            {
-                text.append(i18n("Ctrl modifier"));
-            }
-            else if (action.at(1) == "shift")
-            {
-                text.append(i18n("Shift modifier"));
-            }
-            else if (action.at(1) == "alt")
-            {
-                text.append(i18n("Alt modifier"));
-            }
-       }
-    }
-
-    return text;
+    return m_actions[action];
 }
 
 QWidget* ActionDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option)
 
-    QWidget *editor = new QWidget(parent);
-    KComboBox *buttonComboBox = new KComboBox(editor);
-    buttonComboBox->setToolTip(i18n("Mouse Button"));
-    buttonComboBox->addItem(i18n("Disabled"));
-    buttonComboBox->addItem(i18n("Left"));
-    buttonComboBox->addItem(i18n("Middle"));
-    buttonComboBox->addItem(i18n("Right"));
+    KComboBox *actionComboBox = new KComboBox(parent);
+    actionComboBox->setToolTip(i18n("Action"));
 
-    KComboBox *modifierComboBox = new KComboBox(editor);
-    modifierComboBox->setToolTip(i18n("Modifier Key"));
-    modifierComboBox->addItem(i18n("None"));
-    modifierComboBox->addItem("Ctrl");
-    modifierComboBox->addItem("Shift");
-    modifierComboBox->addItem("Alt");
+    QMap<IconAction, QString>::iterator iterator;
 
-    QHBoxLayout *layout = new QHBoxLayout(editor);
-    layout->addWidget(buttonComboBox);
-    layout->addWidget(modifierComboBox);
-    layout->setMargin(0);
+    for (iterator = m_actions.begin(); iterator != m_actions.end(); ++iterator)
+    {
+        actionComboBox->addItem(iterator.value(), QString::number(iterator.key()));
+    }
 
-    setEditorData(editor, index);
+    setEditorData(actionComboBox, index);
 
-    return editor;
+    return actionComboBox;
 }
 
 }

@@ -14,7 +14,7 @@ if(X11_Xcomposite_FOUND AND X11_Xrender_FOUND AND X11_Xfixes_FOUND)
     set(FANCYTASKS_HAVE_COMPOSITING 1)
 endif(X11_Xcomposite_FOUND AND X11_Xrender_FOUND AND X11_Xfixes_FOUND)
 
-set(fancytasks_SRCS Applet.cpp Icon.cpp Light.cpp Separator.cpp DropZone.cpp Task.cpp Launcher.cpp LauncherProperties.cpp RuleDelegate.cpp Job.cpp Menu.cpp Configuration.cpp ActionDelegate.cpp)
+set(fancytasks_SRCS Applet.cpp Icon.cpp Light.cpp Separator.cpp DropZone.cpp Task.cpp Launcher.cpp LauncherProperties.cpp RuleDelegate.cpp Job.cpp Menu.cpp Configuration.cpp ActionDelegate.cpp TriggerDelegate.cpp)
 
 add_subdirectory(locale)
 

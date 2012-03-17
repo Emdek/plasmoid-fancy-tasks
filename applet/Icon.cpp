@@ -714,7 +714,7 @@ void Icon::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     if (event->reason() != QGraphicsSceneContextMenuEvent::Mouse)
     {
-        performAction(ShowMenuAction);
+        performAction(ShowItemMenuAction);
 
         event->accept();
     }
@@ -734,7 +734,7 @@ void Icon::timerEvent(QTimerEvent *event)
         }
         else if (m_itemType == GroupType)
         {
-            performAction(ShowChildrenListAction);
+            performAction(ShowItemChildrenListAction);
         }
     }
     else if (event->timerId() == m_highlightTimer && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::HighlightWindows) && (m_itemType == TaskType || m_itemType == GroupType))
@@ -792,7 +792,7 @@ void Icon::activate()
 
             break;
         case GroupType:
-            performAction(ShowChildrenListAction);
+            performAction(ShowItemChildrenListAction);
 
             break;
         default:
@@ -1519,7 +1519,7 @@ void Icon::performAction(IconAction action, Task *task)
             }
 
             break;
-        case ShowMenuAction:
+        case ShowItemMenuAction:
             if (m_itemType == OtherType)
             {
                 break;
@@ -1592,7 +1592,7 @@ void Icon::performAction(IconAction action, Task *task)
 
             m_menuVisible = false;
         break;
-        case ShowChildrenListAction:
+        case ShowItemChildrenListAction:
             if (m_menuVisible || !task)
             {
                 break;
@@ -1609,7 +1609,7 @@ void Icon::performAction(IconAction action, Task *task)
             m_menuVisible = false;
 
             break;
-        case ShowWindowsAction:
+        case ShowItemWindowsAction:
             if (task && m_itemType == GroupType && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::PresentWindowsGroup))
             {
                 Plasma::WindowEffects::presentWindows(m_applet->window(), task->windows());
@@ -1624,7 +1624,7 @@ void Icon::performAction(IconAction action, Task *task)
             task->setMinimized();
 
             break;
-        case MaximizeTaskAcion:
+        case MaximizeTaskAction:
             task->setMaximized();
 
             break;

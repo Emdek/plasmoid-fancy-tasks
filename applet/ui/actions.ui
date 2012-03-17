@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>204</height>
+    <height>238</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -45,15 +45,39 @@
      </attribute>
      <column>
       <property name="text">
-       <string>Action</string>
+       <string>Trigger</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Activation</string>
+       <string>Action</string>
       </property>
      </column>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="removeButton">
+       <property name="toolTip">
+        <string>Add Action Trigger</string>
+       </property>
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addButton">
+       <property name="toolTip">
+        <string>Remove Action Trigger</string>
+       </property>
+       <property name="text">
+        <string>Remove</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <spacer name="verticalSpacer">

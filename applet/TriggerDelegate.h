@@ -18,30 +18,25 @@
 *
 ***********************************************************************************/
 
-#ifndef FANCYTASKSACTIONDELEGATE_HEADER
-#define FANCYTASKSACTIONDELEGATE_HEADER
-
-#include "Applet.h"
+#ifndef FANCYTASKSTRIGGERDELEGATE_HEADER
+#define FANCYTASKSTRIGGERDELEGATE_HEADER
 
 #include <QtGui/QStyledItemDelegate>
 
 namespace FancyTasks
 {
 
-class ActionDelegate : public QStyledItemDelegate
+class TriggerDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
     public:
-        ActionDelegate(QObject *parent = NULL);
+        TriggerDelegate(QObject *parent = NULL);
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-        QString displayText(const QVariant &value, const QLocale &locale) const;
+        QString displayText(const QVariant &value, const QLocale &locale = QLocale()) const;
         QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-    private:
-        static QMap<IconAction, QString> m_actions;
 };
 
 }

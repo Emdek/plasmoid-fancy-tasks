@@ -22,6 +22,7 @@
 
 #include "Configuration.h"
 #include "ActionDelegate.h"
+#include "TriggerDelegate.h"
 #include "Launcher.h"
 
 #include <QtGui/QLabel>
@@ -198,26 +199,23 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     QStringList actionOptions;
     actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask" << "minimizeTask" << "maximizeTask" << "fullscreenTask" << "shadeTask" << "resizeTask" << "moveTask" << "moveTaskToCurrentDesktop" << "moveTaskToAllDesktops";
 
-    QStringList actionNames;
-    actionNames << i18n("Activate Item") << i18n("Activate Task") << i18n("Activate Launcher") << i18n("Show Item Menu") << i18n("Show Item Children List") << i18n("Show Item Windows") << i18n("Close Task") << i18n("Minimize Task") << i18n("Maximize Task") << i18n("Toggle Fullscreen State Of Task") << i18n("Toggle Shade State Of Task") << i18n("Resize Task") << i18n("Move Task") << i18n("Move Task To Current Desktop") << i18n("Move Task To All Desktops");
-
     QStringList actionDefaults;
     actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString("right+") << "middle+shift" << "left+shift";
 
     m_actionsUi.actionsTableWidget->setRowCount(actionOptions.count());
+    m_actionsUi.actionsTableWidget->setItemDelegateForColumn(0, new TriggerDelegate(this));
     m_actionsUi.actionsTableWidget->setItemDelegateForColumn(1, new ActionDelegate(this));
 
     for (int i = 0; i < actionOptions.count(); ++i)
     {
-        QTableWidgetItem *descriptionItem = new QTableWidgetItem(actionNames.at(i));
-        descriptionItem->setToolTip(actionNames.at(i));
-        descriptionItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        QTableWidgetItem *triggerItem = new QTableWidgetItem(configuration.readEntry((actionOptions.at(i) + "Action"), ((i < actionDefaults.count())?actionDefaults.at(i):QString('+'))));
+        triggerItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-        QTableWidgetItem *editingItem = new QTableWidgetItem(configuration.readEntry((actionOptions.at(i) + "Action"), ((i < actionDefaults.count())?actionDefaults.at(i):QString('+'))));
-        editingItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        QTableWidgetItem *actionItem = new QTableWidgetItem(actionOptions.at(i));
+        actionItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-        m_actionsUi.actionsTableWidget->setItem(i, 0, descriptionItem);
-        m_actionsUi.actionsTableWidget->setItem(i, 1, editingItem);
+        m_actionsUi.actionsTableWidget->setItem(i, 0, triggerItem);
+        m_actionsUi.actionsTableWidget->setItem(i, 1, actionItem);
     }
 
     moveAnimationTypeChanged(m_appearanceUi.moveAnimation->currentIndex());
@@ -268,10 +266,7 @@ void Configuration::accepted()
     KConfigGroup configuration = m_applet->config();
     QStringList arrangement;
 
-    if (m_actionsUi.actionsTableWidget->currentItem())
-    {
-        m_actionsUi.actionsTableWidget->closePersistentEditor(m_actionsUi.actionsTableWidget->currentItem());
-    }
+    closeActionEditors();
 
     for (int i = 0; i < m_arrangementUi.currentActionsListWidget->count(); ++i)
     {
@@ -640,9 +635,21 @@ void Configuration::closeFindApplicationDialog()
     m_findApplicationUi.query->setText(QString());
 }
 
+void Configuration::closeActionEditors()
+{
+    for (int i = 0; i < m_actionsUi.actionsTableWidget->rowCount(); ++i)
+    {
+        m_actionsUi.actionsTableWidget->closePersistentEditor(m_actionsUi.actionsTableWidget->item(i, 0));
+        m_actionsUi.actionsTableWidget->closePersistentEditor(m_actionsUi.actionsTableWidget->item(i, 1));
+    }
+}
+
 void Configuration::actionClicked(const QModelIndex &index)
 {
-    m_actionsUi.actionsTableWidget->edit(m_actionsUi.actionsTableWidget->model()->index(index.row(), 1));
+    closeActionEditors();
+
+    m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 0));
+    m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 1));
 }
 
 bool Configuration::eventFilter(QObject *object, QEvent *event)

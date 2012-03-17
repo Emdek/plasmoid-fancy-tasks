@@ -64,6 +64,7 @@ class Configuration : public QObject
         void populateMenu();
         void findApplication(const QString &query);
         void closeFindApplicationDialog();
+        void closeActionEditors();
         void actionClicked(const QModelIndex &index);
 
     private:
