@@ -19,6 +19,7 @@
 ***********************************************************************************/
 
 #include "TriggerDelegate.h"
+#include "Configuration.h"
 
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPushButton>
@@ -28,7 +29,8 @@
 namespace FancyTasks
 {
 
-TriggerDelegate::TriggerDelegate(QObject *parent) : QStyledItemDelegate(parent)
+TriggerDelegate::TriggerDelegate(Configuration *parent) : QStyledItemDelegate(parent),
+    m_parent(parent)
 {
 }
 
@@ -37,6 +39,11 @@ void TriggerDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
     QPushButton *triggerButton = static_cast<QPushButton*>(editor);
     triggerButton->setToolTip(displayText(index.data(Qt::EditRole)));
     triggerButton->setWindowTitle(index.data(Qt::EditRole).toString());
+
+    if (m_parent->hasTrigger(triggerButton->windowTitle()))
+    {
+        triggerButton->setText(i18n("Already used..."));
+    }
 }
 
 void TriggerDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
@@ -157,7 +164,10 @@ bool TriggerDelegate::eventFilter(QObject *editor, QEvent *event)
         button->setWindowTitle(action.join(QChar('+')));
         button->setToolTip(displayText(button->windowTitle()));
 
-        emit assigned(button->windowTitle(), button->toolTip());
+        if (m_parent->hasTrigger(button->windowTitle()))
+        {
+            button->setText(i18n("Already used..."));
+        }
 
         return true;
     }

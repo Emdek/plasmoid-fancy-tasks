@@ -45,6 +45,7 @@ class Configuration : public QObject
         Configuration(Applet *applet, KConfigDialog *parent);
         ~Configuration();
 
+        bool hasTrigger(const QString &trigger);
         bool eventFilter(QObject *object, QEvent *event);
 
     protected:
@@ -69,7 +70,6 @@ class Configuration : public QObject
         void closeFindApplicationDialog();
         void closeActionEditors();
         void actionClicked(const QModelIndex &index);
-        void triggerSelected(const QString &trigger, const QString &description);
 
     private:
         QPointer<Applet> m_applet;

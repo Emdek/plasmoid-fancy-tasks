@@ -26,18 +26,23 @@
 namespace FancyTasks
 {
 
+class Configuration;
+
 class TriggerDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
     public:
-        TriggerDelegate(QObject *parent = NULL);
+        TriggerDelegate(Configuration *parent);
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
         QString displayText(const QVariant &value, const QLocale &locale = QLocale()) const;
         QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
         bool eventFilter(QObject *editor, QEvent *event);
+
+    private:
+        Configuration *m_parent;
 
     signals:
         void assigned(QString trigger, QString description);
