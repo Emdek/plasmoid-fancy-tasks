@@ -17,26 +17,26 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="1" column="0">
-      <widget class="QLabel" name="availableActionsLabel">
+      <widget class="QLabel" name="availableEntriesLabel">
        <property name="text">
         <string>Available entries:</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QLabel" name="currentActionsLabel">
+      <widget class="QLabel" name="currentEntriesLabel">
        <property name="text">
         <string>Current entries:</string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QListWidget" name="availableActionsListWidget"/>
+      <widget class="QListWidget" name="availableEntriesListWidget"/>
      </item>
      <item row="2" column="2">
-      <layout class="QVBoxLayout" name="currentActionsLayout">
+      <layout class="QVBoxLayout" name="currentEntriesLayout">
        <item>
-        <widget class="QListWidget" name="currentActionsListWidget">
+        <widget class="QListWidget" name="currentEntriesListWidget">
          <property name="dragDropMode">
           <enum>QAbstractItemView::InternalMove</enum>
          </property>

@@ -148,52 +148,74 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     m_arrangementUi.addButton->setIcon(KIcon("go-next"));
     m_arrangementUi.moveUpButton->setIcon(KIcon("go-up"));
     m_arrangementUi.moveDownButton->setIcon(KIcon("go-down"));
-    m_arrangementUi.availableActionsListWidget->addItem(i18n("--- separator ---"));
 
-    QStringList arrangement = configuration.readEntry("arrangement", QStringList("tasks"));
+    QStringList currentEntries = configuration.readEntry("arrangement", QStringList("tasks"));
+    QStringList availableEntries;
+    availableEntries << i18n("--- separator ---") << i18n("--- tasks area ---") << i18n("--- jobs area ---");
 
-    if (!arrangement.contains("tasks"))
-    {
-        m_arrangementUi.availableActionsListWidget->addItem(i18n("--- tasks area ---"));
-    }
-
-    if (!arrangement.contains("jobs"))
-    {
-        m_arrangementUi.availableActionsListWidget->addItem(i18n("--- jobs area ---"));
-    }
-
-    for (int i = 0; i < arrangement.count(); ++i)
+    for (int i = 0; i < currentEntries.count(); ++i)
     {
         QListWidgetItem *item = NULL;
 
-        if (arrangement.at(i) == "tasks")
+        if (currentEntries.at(i) == "tasks")
         {
-            item = new QListWidgetItem(i18n("--- tasks area ---"), m_arrangementUi.currentActionsListWidget);
+            item = new QListWidgetItem(i18n("--- tasks area ---"), m_arrangementUi.currentEntriesListWidget);
         }
-        else if (arrangement.at(i) == "jobs")
+        else if (currentEntries.at(i) == "jobs")
         {
-            item = new QListWidgetItem(i18n("--- jobs area ---"), m_arrangementUi.currentActionsListWidget);
+            item = new QListWidgetItem(i18n("--- jobs area ---"), m_arrangementUi.currentEntriesListWidget);
         }
-        else if (arrangement.at(i) == "separator")
+        else if (currentEntries.at(i) == "separator")
         {
-            item = new QListWidgetItem(i18n("--- separator ---"), m_arrangementUi.currentActionsListWidget);
+            item = new QListWidgetItem(i18n("--- separator ---"), m_arrangementUi.currentEntriesListWidget);
         }
         else
         {
-            Launcher *launcher = m_applet->launcherForUrl(KUrl(arrangement.at(i)));
+            Launcher *launcher = m_applet->launcherForUrl(KUrl(currentEntries.at(i)));
 
             if (!launcher)
             {
                 continue;
             }
 
-            item = new QListWidgetItem(launcher->icon(), launcher->title(), m_arrangementUi.currentActionsListWidget);
+            item = new QListWidgetItem(launcher->icon(), launcher->title(), m_arrangementUi.currentEntriesListWidget);
             item->setToolTip(launcher->launcherUrl().pathOrUrl());
 
             m_rules[launcher->launcherUrl().pathOrUrl()] = qMakePair(launcher->rules(), launcher->isExcluded());
         }
 
-        m_arrangementUi.currentActionsListWidget->addItem(item);
+        m_arrangementUi.currentEntriesListWidget->addItem(item);
+    }
+
+    for (int i = 0; i < availableEntries.count(); ++i)
+    {
+        if (i > 0 && hasEntry(availableEntries.at(i), false))
+        {
+            continue;
+        }
+
+        QListWidgetItem *item = NULL;
+
+        if (availableEntries.at(i).startsWith("--- "))
+        {
+            item = new QListWidgetItem(availableEntries.at(i), m_arrangementUi.availableEntriesListWidget);
+        }
+        else
+        {
+            Launcher *launcher = m_applet->launcherForUrl(KUrl(availableEntries.at(i)));
+
+            if (!launcher)
+            {
+                continue;
+            }
+
+            item = new QListWidgetItem(launcher->icon(), launcher->title(), m_arrangementUi.availableEntriesListWidget);
+            item->setToolTip(launcher->launcherUrl().pathOrUrl());
+
+            m_rules[launcher->launcherUrl().pathOrUrl()] = qMakePair(launcher->rules(), launcher->isExcluded());
+        }
+
+        m_arrangementUi.availableEntriesListWidget->addItem(item);
     }
 
     QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction> iconActions = m_applet->iconActions();
@@ -274,8 +296,8 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
 
     connect(parent, SIGNAL(okClicked()), this, SLOT(accepted()));
     connect(m_appearanceUi.moveAnimation, SIGNAL(currentIndexChanged(int)), this, SLOT(moveAnimationTypeChanged(int)));
-    connect(m_arrangementUi.availableActionsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(availableActionsCurrentItemChanged(int)));
-    connect(m_arrangementUi.currentActionsListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(currentActionsCurrentItemChanged(int)));
+    connect(m_arrangementUi.availableEntriesListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(availableEntriesCurrentItemChanged(int)));
+    connect(m_arrangementUi.currentEntriesListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(currentEntriesCurrentItemChanged(int)));
     connect(m_arrangementUi.removeButton, SIGNAL(clicked()), this, SLOT(removeItem()));
     connect(m_arrangementUi.addButton, SIGNAL(clicked()), this, SLOT(addItem()));
     connect(m_arrangementUi.moveUpButton, SIGNAL(clicked()), this, SLOT(moveUpItem()));
@@ -307,9 +329,9 @@ void Configuration::accepted()
 
     closeActionEditors();
 
-    for (int i = 0; i < m_arrangementUi.currentActionsListWidget->count(); ++i)
+    for (int i = 0; i < m_arrangementUi.currentEntriesListWidget->count(); ++i)
     {
-        QListWidgetItem *item = m_arrangementUi.currentActionsListWidget->item(i);
+        QListWidgetItem *item = m_arrangementUi.currentEntriesListWidget->item(i);
 
         if (!item->toolTip().isEmpty())
         {
@@ -387,38 +409,38 @@ void Configuration::moveAnimationTypeChanged(int option)
     m_appearanceUi.parabolicMoveAnimation->setEnabled(option != 0 && m_appearanceUi.moveAnimation->itemData(option).toInt() != static_cast<int>(JumpAnimation));
 }
 
-void Configuration::availableActionsCurrentItemChanged(int row)
+void Configuration::availableEntriesCurrentItemChanged(int row)
 {
     m_arrangementUi.addButton->setEnabled(row >= 0);
 
     if (row >= 0)
     {
-        m_arrangementUi.descriptionLabel->setText(m_arrangementUi.availableActionsListWidget->currentItem()->text());
+        m_arrangementUi.descriptionLabel->setText(m_arrangementUi.availableEntriesListWidget->currentItem()->text());
     }
 }
 
-void Configuration::currentActionsCurrentItemChanged(int row)
+void Configuration::currentEntriesCurrentItemChanged(int row)
 {
     m_arrangementUi.removeButton->setEnabled(row >= 0);
     m_arrangementUi.moveUpButton->setEnabled(row > 0);
-    m_arrangementUi.moveDownButton->setEnabled(row >= 0 && row < (m_arrangementUi.currentActionsListWidget->count() - 1));
-    m_arrangementUi.editLauncherButton->setEnabled(row >= 0 && !m_arrangementUi.currentActionsListWidget->currentItem()->toolTip().isEmpty() && m_arrangementUi.currentActionsListWidget->currentItem()->toolTip().left(5) != "menu:");
+    m_arrangementUi.moveDownButton->setEnabled(row >= 0 && row < (m_arrangementUi.currentEntriesListWidget->count() - 1));
+    m_arrangementUi.editLauncherButton->setEnabled(row >= 0 && !m_arrangementUi.currentEntriesListWidget->currentItem()->toolTip().isEmpty() && m_arrangementUi.currentEntriesListWidget->currentItem()->toolTip().left(5) != "menu:");
 
     if (row >= 0)
     {
-        m_arrangementUi.descriptionLabel->setText(m_arrangementUi.currentActionsListWidget->currentItem()->text());
+        m_arrangementUi.descriptionLabel->setText(m_arrangementUi.currentEntriesListWidget->currentItem()->text());
     }
 }
 
 void Configuration::removeItem()
 {
-    if (m_arrangementUi.currentActionsListWidget->currentRow() >= 0)
+    if (m_arrangementUi.currentEntriesListWidget->currentRow() >= 0)
     {
-        QListWidgetItem *currentItem = m_arrangementUi.currentActionsListWidget->takeItem(m_arrangementUi.currentActionsListWidget->currentRow());
+        QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(m_arrangementUi.currentEntriesListWidget->currentRow());
 
         if (currentItem->text() != i18n("--- separator ---"))
         {
-            m_arrangementUi.availableActionsListWidget->addItem(currentItem);
+            m_arrangementUi.availableEntriesListWidget->addItem(currentItem);
         }
         else
         {
@@ -429,66 +451,66 @@ void Configuration::removeItem()
 
 void Configuration::addItem()
 {
-    if (m_arrangementUi.availableActionsListWidget->currentRow() >= 0)
+    if (m_arrangementUi.availableEntriesListWidget->currentRow() >= 0)
     {
-        QListWidgetItem *currentItem = m_arrangementUi.availableActionsListWidget->takeItem(m_arrangementUi.availableActionsListWidget->currentRow());
+        QListWidgetItem *currentItem = m_arrangementUi.availableEntriesListWidget->takeItem(m_arrangementUi.availableEntriesListWidget->currentRow());
 
         if (currentItem->text() == i18n("--- separator ---"))
         {
-            m_arrangementUi.availableActionsListWidget->insertItem(0, currentItem->clone());
+            m_arrangementUi.availableEntriesListWidget->insertItem(0, currentItem->clone());
         }
 
-        m_arrangementUi.currentActionsListWidget->insertItem((m_arrangementUi.currentActionsListWidget->currentRow() + 1), currentItem);
-        m_arrangementUi.currentActionsListWidget->setCurrentItem(currentItem);
-        m_arrangementUi.availableActionsListWidget->setCurrentItem(NULL);
+        m_arrangementUi.currentEntriesListWidget->insertItem((m_arrangementUi.currentEntriesListWidget->currentRow() + 1), currentItem);
+        m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
+        m_arrangementUi.availableEntriesListWidget->setCurrentItem(NULL);
     }
 }
 
 void Configuration::moveUpItem()
 {
-    const int currentRow = m_arrangementUi.currentActionsListWidget->currentRow();
+    const int currentRow = m_arrangementUi.currentEntriesListWidget->currentRow();
 
     if (currentRow > 0)
     {
-        QListWidgetItem *currentItem = m_arrangementUi.currentActionsListWidget->takeItem(currentRow);
+        QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(currentRow);
 
-        m_arrangementUi.currentActionsListWidget->insertItem((currentRow - 1), currentItem);
-        m_arrangementUi.currentActionsListWidget->setCurrentItem(currentItem);
+        m_arrangementUi.currentEntriesListWidget->insertItem((currentRow - 1), currentItem);
+        m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
     }
 }
 
 void Configuration::moveDownItem()
 {
-    const int currentRow = m_arrangementUi.currentActionsListWidget->currentRow();
+    const int currentRow = m_arrangementUi.currentEntriesListWidget->currentRow();
 
-    if (currentRow < (m_arrangementUi.currentActionsListWidget->count() - 1))
+    if (currentRow < (m_arrangementUi.currentEntriesListWidget->count() - 1))
     {
-        QListWidgetItem *currentItem = m_arrangementUi.currentActionsListWidget->takeItem(currentRow);
+        QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(currentRow);
 
-        m_arrangementUi.currentActionsListWidget->insertItem((currentRow + 1), currentItem);
+        m_arrangementUi.currentEntriesListWidget->insertItem((currentRow + 1), currentItem);
 
-        m_arrangementUi.currentActionsListWidget->setCurrentItem(currentItem);
+        m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
     }
 }
 
 void Configuration::addLauncher(const QString &url)
 {
-    if (url.isEmpty() || hasLauncher(url))
+    if (url.isEmpty() || hasEntry(url))
     {
         return;
     }
 
     Launcher launcher(KUrl(url), m_applet);
-    const int row = (m_arrangementUi.currentActionsListWidget->currentIndex().row() + 1);
+    const int row = (m_arrangementUi.currentEntriesListWidget->currentIndex().row() + 1);
 
-    m_arrangementUi.currentActionsListWidget->model()->insertRow(row);
+    m_arrangementUi.currentEntriesListWidget->model()->insertRow(row);
 
-    const QModelIndex index = m_arrangementUi.currentActionsListWidget->model()->index(row, 0);
+    const QModelIndex index = m_arrangementUi.currentEntriesListWidget->model()->index(row, 0);
 
-    m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.title(), Qt::DisplayRole);
-    m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.icon(), Qt::DecorationRole);
-    m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.launcherUrl().pathOrUrl(), Qt::ToolTipRole);
-    m_arrangementUi.currentActionsListWidget->setCurrentRow(row);
+    m_arrangementUi.currentEntriesListWidget->model()->setData(index, launcher.title(), Qt::DisplayRole);
+    m_arrangementUi.currentEntriesListWidget->model()->setData(index, launcher.icon(), Qt::DecorationRole);
+    m_arrangementUi.currentEntriesListWidget->model()->setData(index, launcher.launcherUrl().pathOrUrl(), Qt::ToolTipRole);
+    m_arrangementUi.currentEntriesListWidget->setCurrentRow(row);
 }
 
 void Configuration::addLauncher()
@@ -513,12 +535,12 @@ void Configuration::editLauncher()
         m_editedLauncher = NULL;
     }
 
-    if (!m_arrangementUi.currentActionsListWidget->currentItem() || m_arrangementUi.currentActionsListWidget->currentItem()->toolTip().isEmpty() || m_arrangementUi.currentActionsListWidget->currentItem()->toolTip().left(5) == "menu:")
+    if (!m_arrangementUi.currentEntriesListWidget->currentItem() || m_arrangementUi.currentEntriesListWidget->currentItem()->toolTip().isEmpty() || m_arrangementUi.currentEntriesListWidget->currentItem()->toolTip().left(5) == "menu:")
     {
         return;
     }
 
-    const QString url = m_arrangementUi.currentActionsListWidget->currentItem()->toolTip();
+    const QString url = m_arrangementUi.currentEntriesListWidget->currentItem()->toolTip();
 
     m_editedLauncher = new Launcher(KUrl(url), m_applet);
 
@@ -544,7 +566,7 @@ void Configuration::changeLauncher(Launcher *launcher, const KUrl &oldUrl)
 
     const QString url = launcher->launcherUrl().pathOrUrl();
 
-    if (hasLauncher(url))
+    if (hasEntry(url))
     {
         return;
     }
@@ -713,13 +735,18 @@ void Configuration::triggerSelected(const QString &trigger, const QString &descr
     }
 }
 
-bool Configuration::hasLauncher(const QString &url)
+bool Configuration::hasEntry(const QString &entry, bool warn)
 {
-    for (int i = 0; i < m_arrangementUi.currentActionsListWidget->count(); ++i)
+    for (int i = 0; i < m_arrangementUi.currentEntriesListWidget->count(); ++i)
     {
-        if (url == m_arrangementUi.currentActionsListWidget->item(i)->toolTip())
+        QListWidgetItem *item = m_arrangementUi.currentEntriesListWidget->item(i);
+
+        if (entry == item->toolTip() || (item->toolTip().isEmpty() && entry == item->text()))
         {
-            KMessageBox::sorry(static_cast<QWidget*>(parent()), i18n("Launcher with URL \"%1\" already exists.").arg(url));
+            if (warn)
+            {
+                KMessageBox::sorry(static_cast<QWidget*>(parent()), i18n("Launcher with URL \"%1\" already exists.").arg(entry));
+            }
 
             return true;
         }

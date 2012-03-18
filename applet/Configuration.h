@@ -48,13 +48,13 @@ class Configuration : public QObject
         bool eventFilter(QObject *object, QEvent *event);
 
     protected:
-        bool hasLauncher(const QString &url);
+        bool hasEntry(const QString &entry, bool warn = true);
 
     protected slots:
         void accepted();
         void moveAnimationTypeChanged(int option);
-        void availableActionsCurrentItemChanged(int row);
-        void currentActionsCurrentItemChanged(int row);
+        void availableEntriesCurrentItemChanged(int row);
+        void currentEntriesCurrentItemChanged(int row);
         void removeItem();
         void addItem();
         void moveUpItem();
