@@ -43,9 +43,6 @@ class TriggerDelegate : public QStyledItemDelegate
 
     private:
         Configuration *m_parent;
-
-    signals:
-        void assigned(QString trigger, QString description);
 };
 
 }

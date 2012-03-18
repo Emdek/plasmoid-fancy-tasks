@@ -149,6 +149,8 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     qreal size = 0;
     qreal width = 0;
     qreal height = 0;
+    const bool showLabel = (m_applet->titleLabelMode() != NoLabel && !title().isEmpty() && (m_applet->titleLabelMode() == AlwaysShowLabel || (m_task && m_task->isActive() && m_applet->titleLabelMode() == ActiveIconLabel) || (isUnderMouse() && m_applet->titleLabelMode() == MouseOverLabel)));
+    const bool useThumbnail = (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && m_itemType != GroupType);
 
     switch (m_applet->location())
     {
@@ -186,13 +188,18 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         QPainter pixmapPainter(&visualizationPixmap);
         pixmapPainter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-        if (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && m_itemType != GroupType)
+        if (useThumbnail)
         {
             QPixmap thumbnail = ((m_thumbnailPixmap.width() > m_thumbnailPixmap.height())?m_thumbnailPixmap.scaledToWidth(m_size, Qt::SmoothTransformation):m_thumbnailPixmap.scaledToHeight(m_size, Qt::SmoothTransformation));
-            qreal iconSize = (m_size * 0.3);
 
             pixmapPainter.drawPixmap(((m_size - thumbnail.width()) / 2), ((m_size - thumbnail.height()) / 2), thumbnail);
-            pixmapPainter.drawPixmap((m_size - iconSize), (m_size - iconSize), iconSize, iconSize, icon().pixmap(iconSize));
+
+            if (!showLabel)
+            {
+                const qreal iconSize = (m_size * 0.3);
+
+                pixmapPainter.drawPixmap((m_size - iconSize), (m_size - iconSize), iconSize, iconSize, icon().pixmap(iconSize));
+            }
         }
         else
         {
@@ -395,27 +402,25 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         targetPainter.restore();
     }
 
-    if (m_applet->titleLabelMode() != NoLabel && !title().isEmpty() && (m_applet->titleLabelMode() == AlwaysShowLabel || (m_task && m_task->isActive() && m_applet->titleLabelMode() == ActiveIconLabel) || (isUnderMouse() && m_applet->titleLabelMode() == MouseOverLabel)))
+    if (showLabel)
     {
         QFont font = targetPainter.font();
         font.setPixelSize(visualizationSize * 0.2);
 
         targetPainter.setFont(font);
 
-        qreal textLength = (targetPainter.fontMetrics().width(title()) + (3 * targetPainter.fontMetrics().width(' ')));
-        qreal textFieldWidth = ((textLength > (visualizationSize * 0.9))?(visualizationSize * 0.9):textLength);
-
-        QRectF textField = QRectF(QPointF((((visualizationSize - textFieldWidth) / 2) + xOffset), ((target.height() * 0.5))), QSizeF(textFieldWidth, (visualizationSize * 0.25)));
-
+        const qreal textLength = (targetPainter.fontMetrics().width(title()) + (3 * targetPainter.fontMetrics().width(' ')));
+        const qreal textFieldWidth = ((textLength > visualizationSize)?visualizationSize:textLength);
+        const QRectF textField = QRectF(QPointF((((visualizationSize - textFieldWidth) / 2) + xOffset), (target.height() * 0.5)), QSizeF(textFieldWidth, (visualizationSize * 0.25)));
         QPainterPath textFieldPath;
         textFieldPath.addRoundedRect(textField, 3, 3);
 
-        targetPainter.setOpacity(0.6);
+        targetPainter.setOpacity(0.75);
         targetPainter.fillPath(textFieldPath, QBrush(Plasma::Theme::defaultTheme()->color(Plasma::Theme::BackgroundColor)));
         targetPainter.setPen(QPen(Plasma::Theme::defaultTheme()->color(Plasma::Theme::BackgroundColor).darker()));
         targetPainter.drawRoundedRect(textField, 3, 3);
         targetPainter.setPen(QPen(Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor)));
-        targetPainter.setOpacity(0.9);
+        targetPainter.setOpacity(1);
         targetPainter.drawText(textField, ((textLength > textFieldWidth)?((QApplication::layoutDirection() == Qt::LeftToRight)?Qt::AlignLeft:Qt::AlignRight):Qt::AlignCenter), ((textLength > textFieldWidth)?(' ' + title()):title()));
 
         if (textLength > textFieldWidth)
@@ -439,6 +444,13 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             targetPainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
             targetPainter.fillPath(textFieldPath, alphaGradient);
             targetPainter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        }
+
+        if (useThumbnail)
+        {
+            const qreal iconSize = (visualizationSize * 0.25);
+
+            targetPainter.drawPixmap((m_size - iconSize), (m_size - (iconSize * 1.1)), iconSize, iconSize, icon().pixmap(iconSize));
         }
     }
 
