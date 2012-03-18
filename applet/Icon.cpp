@@ -459,7 +459,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
                 break;
             case Plasma::RightEdge:
-                reflectionPoint = QPointF((target.width() * 0.7), 0);
+                reflectionPoint = QPointF((target.width() * 0.75), 0);
 
                 reflectionPixmap = target.copy((target.width() * 0.5), 0, (target.width() * 0.2), target.height());
                 reflectionPixmap = reflectionPixmap.transformed(QTransform(-1, 0, 0, 0, 1, 0, 0, 0, 1), Qt::SmoothTransformation);
@@ -477,7 +477,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
                 break;
             default:
-                reflectionPoint = QPointF(0, (target.height() * 0.7));
+                reflectionPoint = QPointF(0, (target.height() * 0.75));
 
                 reflectionPixmap = target.copy(0, (target.height() * 0.5), target.width(), (target.height() * 0.2));
                 reflectionPixmap = reflectionPixmap.transformed(QTransform(1, 0, 0, 0, -1, 0, 0, 0, 1), Qt::SmoothTransformation);
