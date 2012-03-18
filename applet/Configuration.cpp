@@ -196,26 +196,63 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
         m_arrangementUi.currentActionsListWidget->addItem(item);
     }
 
-    QStringList actionOptions;
-    actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask" << "minimizeTask" << "maximizeTask" << "fullscreenTask" << "shadeTask" << "resizeTask" << "moveTask" << "moveTaskToCurrentDesktop" << "moveTaskToAllDesktops";
+    QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction> iconActions = m_applet->iconActions();
+    QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction>::iterator iterator;
+    int i = 0;
 
-    QStringList actionDefaults;
-    actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString("right+") << "middle+shift" << "left+shift";
-
-    m_actionsUi.actionsTableWidget->setRowCount(actionOptions.count());
     m_actionsUi.actionsTableWidget->setItemDelegateForColumn(0, new TriggerDelegate(this));
     m_actionsUi.actionsTableWidget->setItemDelegateForColumn(1, new ActionDelegate(this));
 
-    for (int i = 0; i < actionOptions.count(); ++i)
+    for (iterator = iconActions.begin(); iterator != iconActions.end(); ++iterator)
     {
-        QTableWidgetItem *triggerItem = new QTableWidgetItem(configuration.readEntry((actionOptions.at(i) + "Action"), ((i < actionDefaults.count())?actionDefaults.at(i):QString('+'))));
+        if (iterator.key().first == Qt::NoButton)
+        {
+            continue;
+        }
+
+        QStringList action;
+
+        if (iterator.key().first & Qt::LeftButton)
+        {
+            action.append("left");
+        }
+
+        if (iterator.key().first & Qt::MiddleButton)
+        {
+            action.append("middle");
+        }
+
+        if (iterator.key().first & Qt::RightButton)
+        {
+            action.append("right");
+        }
+
+        if (iterator.key().second & Qt::ShiftModifier)
+        {
+            action.append("shift");
+        }
+
+        if (iterator.key().second & Qt::ControlModifier)
+        {
+            action.append("ctrl");
+        }
+
+        if (iterator.key().second & Qt::AltModifier)
+        {
+            action.append("alt");
+        }
+
+        QTableWidgetItem *triggerItem = new QTableWidgetItem(action.join(QChar('+')));
         triggerItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-        QTableWidgetItem *actionItem = new QTableWidgetItem(actionOptions.at(i));
+        QTableWidgetItem *actionItem = new QTableWidgetItem(QString::number(static_cast<int>(iterator.value())));
         actionItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
+        m_actionsUi.actionsTableWidget->setRowCount(i + 1);
         m_actionsUi.actionsTableWidget->setItem(i, 0, triggerItem);
         m_actionsUi.actionsTableWidget->setItem(i, 1, actionItem);
+
+        ++i;
     }
 
     moveAnimationTypeChanged(m_appearanceUi.moveAnimation->currentIndex());
@@ -303,12 +340,21 @@ void Configuration::accepted()
         }
     }
 
-    QStringList actionOptions;
-    actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask";
+    configuration.deleteGroup("Actions");
 
-    for (int i = 0; i < actionOptions.count(); ++i)
+    KConfigGroup actionsConfiguration = configuration.group("Actions");
+
+    for (int i = 0; i < m_actionsUi.actionsTableWidget->rowCount(); ++i)
     {
-        configuration.writeEntry((actionOptions.at(i) + "Action"), m_actionsUi.actionsTableWidget->item(i, 1)->data(Qt::EditRole).toString());
+        QTableWidgetItem *triggerItem = m_actionsUi.actionsTableWidget->item(i, 0);
+        QTableWidgetItem *actionItem = m_actionsUi.actionsTableWidget->item(i, 1);
+
+        if (triggerItem->data(Qt::EditRole).toString().isEmpty() || actionItem->data(Qt::EditRole).toInt() == 0)
+        {
+            continue;
+        }
+
+        actionsConfiguration.writeEntry(triggerItem->data(Qt::EditRole).toString(), actionItem->data(Qt::EditRole).toInt());
     }
 
     configuration.writeEntry("moveAnimation", m_appearanceUi.moveAnimation->itemData(m_appearanceUi.moveAnimation->currentIndex()).toInt());

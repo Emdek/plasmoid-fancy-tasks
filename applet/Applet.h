@@ -191,7 +191,7 @@ class Applet : public Plasma::Applet
         AnimationType moveAnimation() const;
         AnimationType demandsAttentionAnimation() const;
         AnimationType startupAnimation() const;
-        QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> iconActions() const;
+        QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction> iconActions() const;
         QList<QAction*> contextualActions();
         QPixmap lightPixmap();
         WId window() const;
@@ -256,7 +256,7 @@ class Applet : public Plasma::Applet
         QMap<AbstractGroupableItem*, QPointer<Icon> > m_launcherTaskIcons;
         QMap<Launcher*, QPointer<Icon> > m_launcherIcons;
         QMap<Job*, QPointer<Icon> > m_jobIcons;
-        QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> m_iconActions;
+        QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction> m_iconActions;
         QDateTime m_lastAttentionDemand;
         QPixmap m_lightPixmap;
         QSize m_size;

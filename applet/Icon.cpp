@@ -715,13 +715,9 @@ void Icon::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     if (event->reason() != QGraphicsSceneContextMenuEvent::Mouse)
     {
         performAction(ShowItemMenuAction);
+    }
 
-        event->accept();
-    }
-    else
-    {
-        event->ignore();
-    }
+    event->accept();
 }
 
 void Icon::timerEvent(QTimerEvent *event)
@@ -1454,8 +1450,8 @@ void Icon::windowPreviewActivated(WId window, Qt::MouseButtons buttons, Qt::Keyb
 
 void Icon::performAction(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Task *task)
 {
-    QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> iconActions = m_applet->iconActions();
-    QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction>::iterator actionsIterator;
+    QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction> iconActions = m_applet->iconActions();
+    QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction>::iterator actionsIterator;
 
     for (actionsIterator = iconActions.begin(); actionsIterator != iconActions.end(); ++actionsIterator)
     {
@@ -1464,7 +1460,7 @@ void Icon::performAction(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifie
             continue;
         }
 
-        if (buttons == actionsIterator.key().first && ((actionsIterator.key().second == Qt::NoModifier && modifiers == Qt::NoModifier) || (actionsIterator.key().second != Qt::NoModifier && modifiers & actionsIterator.key().second)))
+        if (buttons == actionsIterator.key().first && ((actionsIterator.key().second == Qt::NoModifier && modifiers == Qt::NoModifier) || (actionsIterator.key().second != Qt::NoModifier && modifiers == actionsIterator.key().second)))
         {
             performAction(actionsIterator.value(), task);
 

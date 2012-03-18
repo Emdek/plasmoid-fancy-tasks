@@ -329,56 +329,91 @@ void Applet::configChanged()
 
     m_iconActions.clear();
 
-    QList<IconAction> actionIds;
-    actionIds << ActivateItemAction << ActivateTaskAction << ActivateLauncherAction << ShowItemMenuAction << ShowItemChildrenListAction << ShowItemWindowsAction << CloseTaskAction << MinimizeTaskAction << MaximizeTaskAction << FullscreenTaskAction << ShadeTaskAction << ResizeTaskAction << MoveTaskAction << MoveTaskToCurrentDesktopAction << MoveTaskToAllDesktopsAction;
-
-    QStringList actionOptions;
-    actionOptions << "activateItem" << "activateTask" << "activateLauncher" << "showItemMenu" << "showItemChildrenList" << "showItemWindows" << "closeTask" << "minimizeTask" << "maximizeTask" << "fullscreenTask" << "shadeTask" << "resizeTask" << "moveTask" << "moveTaskToCurrentDesktop" << "moveTaskToAllDesktops";
-
-    QStringList actionDefaults;
-    actionDefaults << "left+" << QString('+') << "middle+" << QString('+') << QString("right+") << "middle+shift" << "left+shift";
-
-    for (int i = 0; i < actionOptions.count(); ++i)
+    if (configuration.hasGroup("Actions"))
     {
-        QStringList action = configuration.readEntry((actionOptions.at(i) + "Action"), ((i < actionDefaults.count())?actionDefaults.at(i):QString('+'))).split('+', QString::KeepEmptyParts);
-        QPair<Qt::MouseButton, Qt::KeyboardModifier> actionPair;
+        KConfigGroup actionsConfiguration = configuration.group("Actions");
+        QStringList actions = actionsConfiguration.keyList();
 
-        actionPair.first = Qt::NoButton;
-        actionPair.second = Qt::NoModifier;
-
-        if (action.count() > 0 && !action.at(0).isEmpty())
+        for (int i = 0; i < actions.count(); ++i)
         {
-            if (action.at(0) == "left")
+            IconAction action = static_cast<IconAction>(actionsConfiguration.readEntry(actions.at(i), 0));
+
+            if (action == NoAction)
             {
-                actionPair.first = Qt::LeftButton;
-            }
-            else if (action.at(0) == "middle")
-            {
-                actionPair.first = Qt::MidButton;
-            }
-            else if (action.at(0) == "right")
-            {
-                actionPair.first = Qt::RightButton;
+                continue;
             }
 
-            if (action.count() > 1)
+            QStringList trigger = actions.at(i).split('+', QString::KeepEmptyParts);
+            QPair<Qt::MouseButtons, Qt::KeyboardModifiers> triggerPair;
+
+            triggerPair.first = Qt::NoButton;
+            triggerPair.second = Qt::NoModifier;
+
+            if (trigger.contains("left"))
             {
-                if (action.at(1) == "ctrl")
-                {
-                    actionPair.second = Qt::ControlModifier;
-                }
-                else if (action.at(1) == "shift")
-                {
-                    actionPair.second = Qt::ShiftModifier;
-                }
-                else if (action.at(1) == "alt")
-                {
-                    actionPair.second = Qt::AltModifier;
-                }
+                triggerPair.first |= Qt::LeftButton;
             }
+
+            if (trigger.contains("middle"))
+            {
+                triggerPair.first |= Qt::MidButton;
+            }
+
+            if (trigger.contains("right"))
+            {
+                triggerPair.first |= Qt::RightButton;
+            }
+
+            if (triggerPair.first == Qt::NoButton)
+            {
+                continue;
+            }
+
+            if (trigger.contains("ctrl"))
+            {
+                triggerPair.second |= Qt::ControlModifier;
+            }
+
+            if (trigger.contains("shift"))
+            {
+                triggerPair.second |= Qt::ShiftModifier;
+            }
+
+            if (trigger.contains("alt"))
+            {
+                triggerPair.second |= Qt::AltModifier;
+            }
+
+            m_iconActions[triggerPair] = action;
         }
+    }
+    else
+    {
+        QPair<Qt::MouseButtons, Qt::KeyboardModifiers> triggerPair;
+        triggerPair.first = Qt::LeftButton;
+        triggerPair.second = Qt::NoModifier;
 
-        m_iconActions[actionPair] = actionIds.at(i);
+        m_iconActions[triggerPair] = ActivateItemAction;
+
+        triggerPair.first = Qt::MidButton;
+        triggerPair.second = Qt::NoModifier;
+
+        m_iconActions[triggerPair] = ActivateLauncherAction;
+
+        triggerPair.first = Qt::RightButton;
+        triggerPair.second = Qt::NoModifier;
+
+        m_iconActions[triggerPair] = ShowItemMenuAction;
+
+        triggerPair.first = Qt::MidButton;
+        triggerPair.second = Qt::ShiftModifier;
+
+        m_iconActions[triggerPair] = ShowItemWindowsAction;
+
+        triggerPair.first = Qt::LeftButton;
+        triggerPair.second = Qt::ShiftModifier;
+
+        m_iconActions[triggerPair] = CloseTaskAction;
     }
 
     m_jobCloseMode = static_cast<CloseJobMode>(configuration.readEntry("jobCloseMode", static_cast<int>(DelayedClose)));
@@ -2024,7 +2059,7 @@ AnimationType Applet::startupAnimation() const
     return m_startupAnimation;
 }
 
-QMap<QPair<Qt::MouseButton, Qt::KeyboardModifier>, IconAction> Applet::iconActions() const
+QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction> Applet::iconActions() const
 {
     return m_iconActions;
 }

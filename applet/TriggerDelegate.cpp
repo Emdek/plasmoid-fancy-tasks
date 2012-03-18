@@ -25,9 +25,6 @@
 
 #include <KLocale>
 
-
-#include <QDebug>
-
 namespace FancyTasks
 {
 
@@ -59,11 +56,6 @@ void TriggerDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, c
 QString TriggerDelegate::displayText(const QVariant &value, const QLocale &locale) const
 {
     Q_UNUSED(locale)
-
-    if (!value.toString().contains('+'))
-    {
-        return value.toString();
-    }
 
     QStringList action = value.toString().split('+', QString::SkipEmptyParts);
     QStringList text;
