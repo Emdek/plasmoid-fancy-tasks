@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plasma_applet_fancytasks\n"
 "Report-Msgid-Bugs-To: emdeck@gmail.com\n"
-"POT-Creation-Date: 2012-03-13 18:05+0100\n"
+"POT-Creation-Date: 2012-03-18 11:02+0100\n"
 "PO-Revision-Date: 2009-05-28 07:18+0200\n"
 "Last-Translator: Manfred Wiese <m.j.wiese@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -18,210 +18,208 @@ msgstr ""
 "X-Generator: Lokalize 0.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ActionDelegate.cpp:124
-msgid "Left mouse button"
+#: ActionDelegate.cpp:33
+#, fuzzy
+msgid "No Action"
+msgstr "Programm"
+
+#: ActionDelegate.cpp:34
+#, fuzzy
+msgid "Activate Item"
+msgstr "Starter"
+
+#: ActionDelegate.cpp:35
+#, fuzzy
+msgid "Activate Task"
+msgstr "Starter"
+
+#: ActionDelegate.cpp:36
+#, fuzzy
+msgid "Activate Launcher"
+msgstr "Starter"
+
+#: ActionDelegate.cpp:37
+msgid "Show Item Menu"
 msgstr ""
 
-#: ActionDelegate.cpp:128
-msgid "Middle mouse button"
+#: ActionDelegate.cpp:38
+msgid "Show Item Children List"
 msgstr ""
 
-#: ActionDelegate.cpp:132
-msgid "Right mouse button"
+#: ActionDelegate.cpp:39
+msgid "Show Item Windows"
 msgstr ""
 
-#: ActionDelegate.cpp:141
-msgid "Ctrl modifier"
+#: ActionDelegate.cpp:40
+msgid "Close Task"
 msgstr ""
 
-#: ActionDelegate.cpp:145
-msgid "Shift modifier"
+#: ActionDelegate.cpp:41
+msgid "Minimize Task"
 msgstr ""
 
-#: ActionDelegate.cpp:149
-msgid "Alt modifier"
+#: ActionDelegate.cpp:42
+msgid "Maximize Task"
 msgstr ""
 
-#: ActionDelegate.cpp:163
-msgid "Mouse Button"
+#: ActionDelegate.cpp:43
+msgid "Toggle Fullscreen State Of Task"
 msgstr ""
 
-#: ActionDelegate.cpp:164
-msgid "Disabled"
+#: ActionDelegate.cpp:44
+msgid "Toggle Shade State Of Task"
 msgstr ""
 
-#: ActionDelegate.cpp:165
-msgid "Left"
+#: ActionDelegate.cpp:45
+msgid "Resize Task"
 msgstr ""
 
-#: ActionDelegate.cpp:166
-msgid "Middle"
-msgstr ""
+#: ActionDelegate.cpp:46
+#, fuzzy
+msgid "Move Task"
+msgstr "Starter"
 
-#: ActionDelegate.cpp:167
-msgid "Right"
-msgstr ""
+#: ActionDelegate.cpp:47
+#, fuzzy
+msgid "Move Task To Current Desktop"
+msgstr "Bloots Programmen vun den aktuellen Schriefdisch wiesen"
 
-#: ActionDelegate.cpp:170
-msgid "Modifier Key"
-msgstr ""
+#: ActionDelegate.cpp:48
+#, fuzzy
+msgid "Move Task To All Desktops"
+msgstr "Op all Schriefdischen"
 
-#: ActionDelegate.cpp:171 Configuration.cpp:104 Configuration.cpp:115
-#: Configuration.cpp:132
-msgid "None"
-msgstr "Keen"
+#. i18n: file: ui/actions.ui:48
+#. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
+#: ActionDelegate.cpp:97 locale/rc.cpp:6 rc.cpp:6
+#, fuzzy
+msgid "Action"
+msgstr "Programm"
 
-#: Applet.cpp:1992
+#: Applet.cpp:2069
 msgid "Entries"
 msgstr ""
 
-#: Configuration.cpp:55
+#: Configuration.cpp:56
 #, fuzzy
 msgid "Add Application..."
 msgstr "Programm"
 
-#: Configuration.cpp:56
+#: Configuration.cpp:57
 msgid "Add File or Directory..."
 msgstr ""
 
-#: Configuration.cpp:57
+#: Configuration.cpp:58
 msgid "Add Menu"
 msgstr ""
 
 #. i18n: file: ui/findApplication.ui:26
 #. i18n: ectx: property (windowTitle), widget (QWidget, findApplication)
-#: Configuration.cpp:73 locale/rc.cpp:60 rc.cpp:60
+#: Configuration.cpp:74 locale/rc.cpp:96 rc.cpp:96
 #, fuzzy
 msgid "Find Application"
 msgstr "Programm"
 
-#: Configuration.cpp:79
+#: Configuration.cpp:80
 msgid "Do Not Group"
 msgstr "Nich tosamenkoppeln"
 
-#: Configuration.cpp:80 Configuration.cpp:85 Configuration.cpp:100
+#: Configuration.cpp:81 Configuration.cpp:86 Configuration.cpp:101
 msgid "Manually"
 msgstr "Vun Hand"
 
-#: Configuration.cpp:81
+#: Configuration.cpp:82
 msgid "By Program Name"
 msgstr "Na Programmnaam"
 
-#: Configuration.cpp:84
+#: Configuration.cpp:85
 msgid "Do Not Sort"
 msgstr "Nich sorteren"
 
-#: Configuration.cpp:86
+#: Configuration.cpp:87
 msgid "Alphabetically"
 msgstr "Alfabeetsch"
 
-#: Configuration.cpp:87
+#: Configuration.cpp:88
 msgid "By Desktop"
 msgstr "Na Schriefdisch"
 
-#: Configuration.cpp:98
+#: Configuration.cpp:99
 msgid "Instantly"
 msgstr ""
 
-#: Configuration.cpp:99
+#: Configuration.cpp:100
 msgid "After delay"
 msgstr ""
 
-#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:133
+#: Configuration.cpp:105 Configuration.cpp:116 Configuration.cpp:133
+msgid "None"
+msgstr "Keen"
+
+#: Configuration.cpp:105 Configuration.cpp:116 Configuration.cpp:134
 msgid "Zoom"
 msgstr "Ansichtgrött"
 
-#: Configuration.cpp:104
+#: Configuration.cpp:105
 msgid "Jump"
 msgstr "Jump"
 
-#: Configuration.cpp:104 Configuration.cpp:115
+#: Configuration.cpp:105 Configuration.cpp:116
 msgid "Spotlight"
 msgstr "Lichtstrahler"
 
-#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:134
+#: Configuration.cpp:105 Configuration.cpp:116 Configuration.cpp:135
 msgid "Glow"
 msgstr ""
 
-#: Configuration.cpp:104 Configuration.cpp:135
+#: Configuration.cpp:105 Configuration.cpp:136
 msgid "Fade"
 msgstr "Naglöhen"
 
-#: Configuration.cpp:115
+#: Configuration.cpp:116
 msgid "Bounce"
 msgstr ""
 
-#: Configuration.cpp:115
+#: Configuration.cpp:116
 msgid "Blink"
 msgstr ""
 
-#: Configuration.cpp:115
+#: Configuration.cpp:116
 msgid "Rotate"
 msgstr "Dreihen"
 
-#: Configuration.cpp:126
+#: Configuration.cpp:127
 msgid "Never"
 msgstr "Nienich"
 
-#: Configuration.cpp:127
+#: Configuration.cpp:128
 msgid "On mouse-over"
 msgstr "Bi't Anrögen mit de Muus"
 
-#: Configuration.cpp:128
+#: Configuration.cpp:129
 msgid "For active icon"
 msgstr ""
 
-#: Configuration.cpp:129
+#: Configuration.cpp:130
 msgid "Always"
 msgstr "Jümmers"
 
-#: Configuration.cpp:150 Configuration.cpp:178 Configuration.cpp:376
-#: Configuration.cpp:393
+#: Configuration.cpp:151 Configuration.cpp:179 Configuration.cpp:419
+#: Configuration.cpp:436
 msgid "--- separator ---"
 msgstr ""
 
-#: Configuration.cpp:156 Configuration.cpp:170 Configuration.cpp:297
+#: Configuration.cpp:157 Configuration.cpp:171 Configuration.cpp:331
 msgid "--- tasks area ---"
 msgstr ""
 
-#: Configuration.cpp:161 Configuration.cpp:174 Configuration.cpp:301
+#: Configuration.cpp:162 Configuration.cpp:175 Configuration.cpp:335
 msgid "--- jobs area ---"
-msgstr ""
-
-#: Configuration.cpp:202
-#, fuzzy
-msgid "Activate Item"
-msgstr "Starter"
-
-#: Configuration.cpp:202
-#, fuzzy
-msgid "Activate Task"
-msgstr "Starter"
-
-#: Configuration.cpp:202
-#, fuzzy
-msgid "Activate Launcher"
-msgstr "Starter"
-
-#: Configuration.cpp:202
-msgid "Show Item Menu"
-msgstr ""
-
-#: Configuration.cpp:202
-msgid "Show Item Children List"
-msgstr ""
-
-#: Configuration.cpp:202
-msgid "Show Item Windows"
-msgstr ""
-
-#: Configuration.cpp:202
-msgid "Close Task"
 msgstr ""
 
 #. i18n: file: ui/general.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, general)
-#: Configuration.cpp:234 locale/rc.cpp:66 rc.cpp:66
+#: Configuration.cpp:270 locale/rc.cpp:102 rc.cpp:102
 msgid "General"
 msgstr "Allmeen"
 
@@ -233,42 +231,46 @@ msgstr "Allmeen"
 #. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
 #. i18n: file: ui/appearance.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
-#: Configuration.cpp:235 locale/rc.cpp:12 locale/rc.cpp:15 rc.cpp:12 rc.cpp:15
+#: Configuration.cpp:271 locale/rc.cpp:24 locale/rc.cpp:27 rc.cpp:24 rc.cpp:27
 msgid "Appearance"
 msgstr "Utsehn"
 
 #. i18n: file: ui/arrangement.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, arrangement)
-#: Configuration.cpp:236 locale/rc.cpp:45 rc.cpp:45
+#: Configuration.cpp:272 locale/rc.cpp:57 rc.cpp:57
 msgid "Arrangement"
 msgstr ""
 
 #. i18n: file: ui/actions.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, actions)
-#: Configuration.cpp:237 locale/rc.cpp:3 rc.cpp:3
+#: Configuration.cpp:273 locale/rc.cpp:3 rc.cpp:3
 #, fuzzy
 msgid "Actions"
 msgstr "Programm"
 
-#: Configuration.cpp:439
-msgid "Launcher with this URL was already added."
-msgstr ""
-
-#: Configuration.cpp:543
+#: Configuration.cpp:581
 msgid "Add This Menu"
 msgstr ""
 
-#: Icon.cpp:1562
+#: Configuration.cpp:709
+msgid "Trigger \"%1\" was already added."
+msgstr ""
+
+#: Configuration.cpp:722
+msgid "Launcher with URL \"%1\" already exists."
+msgstr ""
+
+#: Icon.cpp:1563
 #, fuzzy
 msgid "Settings"
 msgstr "%1 instellen"
 
-#: Icon.cpp:1593 Launcher.cpp:112
+#: Icon.cpp:1596 Launcher.cpp:112
 msgctxt "@action:inmenu"
 msgid "Cancel"
 msgstr "Afbreken"
 
-#: Icon.cpp:1717
+#: Icon.cpp:1748
 msgid "1 job"
 msgid_plural "%1 jobs"
 msgstr[0] ""
@@ -372,7 +374,7 @@ msgstr ""
 
 #. i18n: file: ui/arrangement.ui:61
 #. i18n: ectx: property (text), widget (QPushButton, editLauncherButton)
-#: Launcher.cpp:532 locale/rc.cpp:57 rc.cpp:57
+#: Launcher.cpp:532 locale/rc.cpp:69 rc.cpp:69
 msgid "Edit"
 msgstr "Bewerken"
 
@@ -380,7 +382,7 @@ msgstr "Bewerken"
 msgid "Launcher"
 msgstr "Starter"
 
-#: LauncherProperties.cpp:48 Task.cpp:216
+#: LauncherProperties.cpp:48 Task.cpp:307
 msgid "%1 Settings"
 msgstr "%1 instellen"
 
@@ -404,279 +406,384 @@ msgstr ""
 msgid "Rules"
 msgstr ""
 
-#. i18n: file: ui/actions.ui:48
-#. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
-#: locale/rc.cpp:6 rc.cpp:6
-#, fuzzy
-msgid "Action"
-msgstr "Programm"
-
 #. i18n: file: ui/actions.ui:53
 #. i18n: ectx: property (text), widget (QTableWidget, actionsTableWidget)
 #: locale/rc.cpp:9 rc.cpp:9
-#, fuzzy
-msgid "Activation"
-msgstr "Programm"
+msgid "Trigger"
+msgstr ""
+
+#. i18n: file: ui/actions.ui:66
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: locale/rc.cpp:12 rc.cpp:12
+msgid "Add Action Trigger"
+msgstr ""
+
+#. i18n: file: ui/actions.ui:69
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#. i18n: file: ui/arrangement.ui:51
+#. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
+#. i18n: file: ui/arrangement.ui:88
+#. i18n: ectx: property (toolTip), widget (QToolButton, addButton)
+#. i18n: file: ui/actions.ui:69
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#. i18n: file: ui/arrangement.ui:51
+#. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
+#. i18n: file: ui/arrangement.ui:88
+#. i18n: ectx: property (toolTip), widget (QToolButton, addButton)
+#: locale/rc.cpp:15 locale/rc.cpp:66 locale/rc.cpp:78 rc.cpp:15 rc.cpp:66
+#: rc.cpp:78
+msgid "Add"
+msgstr ""
+
+#. i18n: file: ui/actions.ui:79
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: locale/rc.cpp:18 rc.cpp:18
+msgid "Remove Action Trigger"
+msgstr ""
+
+#. i18n: file: ui/actions.ui:82
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#. i18n: file: ui/arrangement.ui:75
+#. i18n: ectx: property (toolTip), widget (QToolButton, removeButton)
+#. i18n: file: ui/actions.ui:82
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#. i18n: file: ui/arrangement.ui:75
+#. i18n: ectx: property (toolTip), widget (QToolButton, removeButton)
+#: locale/rc.cpp:21 locale/rc.cpp:72 rc.cpp:21 rc.cpp:72
+msgid "Remove"
+msgstr "Wegmaken"
 
 #. i18n: file: ui/appearance.ui:32
 #. i18n: ectx: property (text), widget (QCheckBox, useThumbnails)
-#: locale/rc.cpp:18 rc.cpp:18
+#: locale/rc.cpp:30 rc.cpp:30
 msgid "Use thumbnails instead of icons"
 msgstr ""
 
 #. i18n: file: ui/appearance.ui:44
 #. i18n: ectx: property (text), widget (QLabel, customBackgroundPathLabel)
-#: locale/rc.cpp:21 rc.cpp:21
+#: locale/rc.cpp:33 rc.cpp:33
 msgid "Custom background image:"
 msgstr ""
 
 #. i18n: file: ui/appearance.ui:57
 #. i18n: ectx: property (text), widget (QLabel, titleLabelModeLabel)
-#: locale/rc.cpp:24 rc.cpp:24
+#: locale/rc.cpp:36 rc.cpp:36
 msgid "Show title label:"
 msgstr "Titelnaam wiesen:"
 
 #. i18n: file: ui/appearance.ui:67
 #. i18n: ectx: property (text), widget (QLabel, activeIconIndicationLabel)
-#: locale/rc.cpp:27 rc.cpp:27
+#: locale/rc.cpp:39 rc.cpp:39
 msgid "Indication for active icon:"
 msgstr ""
 
 #. i18n: file: ui/appearance.ui:85
 #. i18n: ectx: property (title), widget (QGroupBox, animationsGoupBox)
-#: locale/rc.cpp:30 rc.cpp:30
+#: locale/rc.cpp:42 rc.cpp:42
 msgid "Animations"
 msgstr ""
 
 #. i18n: file: ui/appearance.ui:91
 #. i18n: ectx: property (text), widget (QLabel, startupAnimationLabel)
-#: locale/rc.cpp:33 rc.cpp:33
+#: locale/rc.cpp:45 rc.cpp:45
 msgid "Starting tasks:"
 msgstr ""
 
 #. i18n: file: ui/appearance.ui:101
 #. i18n: ectx: property (text), widget (QLabel, demandsAttentionAnimationLabel)
-#: locale/rc.cpp:36 rc.cpp:36
+#: locale/rc.cpp:48 rc.cpp:48
 msgid "Tasks needing attention:"
 msgstr ""
 
 #. i18n: file: ui/appearance.ui:117
 #. i18n: ectx: property (text), widget (QCheckBox, parabolicMoveAnimation)
-#: locale/rc.cpp:39 rc.cpp:39
+#: locale/rc.cpp:51 rc.cpp:51
 msgid "Parabolic"
 msgstr ""
 
 #. i18n: file: ui/appearance.ui:124
 #. i18n: ectx: property (text), widget (QLabel, moveAnimationLabel)
-#: locale/rc.cpp:42 rc.cpp:42
+#: locale/rc.cpp:54 rc.cpp:54
 msgid "Moving between icons:"
 msgstr ""
 
 #. i18n: file: ui/arrangement.ui:22
 #. i18n: ectx: property (text), widget (QLabel, availableActionsLabel)
-#: locale/rc.cpp:48 rc.cpp:48
-msgid "Available actions:"
+#: locale/rc.cpp:60 rc.cpp:60
+msgid "Available entries:"
 msgstr ""
 
 #. i18n: file: ui/arrangement.ui:29
 #. i18n: ectx: property (text), widget (QLabel, currentActionsLabel)
-#: locale/rc.cpp:51 rc.cpp:51
-msgid "Current actions:"
+#: locale/rc.cpp:63 rc.cpp:63
+msgid "Current entries:"
 msgstr ""
 
-#. i18n: file: ui/arrangement.ui:51
-#. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
-#: locale/rc.cpp:54 rc.cpp:54
-msgid "Add"
+#. i18n: file: ui/arrangement.ui:78
+#. i18n: ectx: property (shortcut), widget (QToolButton, removeButton)
+#: locale/rc.cpp:75 rc.cpp:75
+msgid "Del"
+msgstr ""
+
+#. i18n: file: ui/arrangement.ui:91
+#. i18n: ectx: property (shortcut), widget (QToolButton, addButton)
+#: locale/rc.cpp:81 rc.cpp:81
+msgid "Return"
+msgstr ""
+
+#. i18n: file: ui/arrangement.ui:117
+#. i18n: ectx: property (toolTip), widget (QToolButton, moveDownButton)
+#: locale/rc.cpp:84 rc.cpp:84
+msgid "Move Down"
+msgstr ""
+
+#. i18n: file: ui/arrangement.ui:120
+#. i18n: ectx: property (shortcut), widget (QToolButton, moveDownButton)
+#: locale/rc.cpp:87 rc.cpp:87
+msgid "Down"
+msgstr ""
+
+#. i18n: file: ui/arrangement.ui:130
+#. i18n: ectx: property (toolTip), widget (QToolButton, moveUpButton)
+#: locale/rc.cpp:90 rc.cpp:90
+msgid "Move Up"
+msgstr ""
+
+#. i18n: file: ui/arrangement.ui:133
+#. i18n: ectx: property (shortcut), widget (QToolButton, moveUpButton)
+#: locale/rc.cpp:93 rc.cpp:93
+msgid "Up"
 msgstr ""
 
 #. i18n: file: ui/findApplication.ui:32
 #. i18n: ectx: property (clickMessage), widget (KLineEdit, query)
-#: locale/rc.cpp:63 rc.cpp:63
+#: locale/rc.cpp:99 rc.cpp:99
 msgid "Search..."
 msgstr ""
 
 #. i18n: file: ui/general.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupingAndSortingGroupBox)
-#: locale/rc.cpp:69 rc.cpp:69
+#: locale/rc.cpp:105 rc.cpp:105
 msgid "Grouping and sorting"
 msgstr "Tosamenkoppeln un sorteren"
 
 #. i18n: file: ui/general.ui:32
 #. i18n: ectx: property (text), widget (QLabel, groupingStrategyLabel)
-#: locale/rc.cpp:72 rc.cpp:72
+#: locale/rc.cpp:108 rc.cpp:108
 msgid "Grouping:"
 msgstr "Tosamenkoppeln:"
 
 #. i18n: file: ui/general.ui:45
 #. i18n: ectx: property (text), widget (QLabel, sortingStrategyLabel)
-#: locale/rc.cpp:75 rc.cpp:75
+#: locale/rc.cpp:111 rc.cpp:111
 msgid "Sorting:"
 msgstr "Sorteren:"
 
 #. i18n: file: ui/general.ui:61
 #. i18n: ectx: property (title), widget (QGroupBox, filtersGroupBox)
-#: locale/rc.cpp:78 rc.cpp:78
+#: locale/rc.cpp:114 rc.cpp:114
 msgid "Filters"
 msgstr ""
 
 #. i18n: file: ui/general.ui:67
 #. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentDesktop)
-#: locale/rc.cpp:81 rc.cpp:81
+#: locale/rc.cpp:117 rc.cpp:117
 msgid "Only show tasks from the current desktop"
 msgstr "Bloots Programmen vun den aktuellen Schriefdisch wiesen"
 
 #. i18n: file: ui/general.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentActivity)
-#: locale/rc.cpp:84 rc.cpp:84
+#: locale/rc.cpp:120 rc.cpp:120
 #, fuzzy
 msgid "Only show tasks from current activity"
 msgstr "Bloots Programmen vun den aktuellen Schirm wiesen"
 
 #. i18n: file: ui/general.ui:81
 #. i18n: ectx: property (text), widget (QCheckBox, showOnlyCurrentScreen)
-#: locale/rc.cpp:87 rc.cpp:87
+#: locale/rc.cpp:123 rc.cpp:123
 msgid "Only show tasks from the current screen"
 msgstr "Bloots Programmen vun den aktuellen Schirm wiesen"
 
 #. i18n: file: ui/general.ui:88
 #. i18n: ectx: property (text), widget (QCheckBox, showOnlyMinimized)
-#: locale/rc.cpp:90 rc.cpp:90
+#: locale/rc.cpp:126 rc.cpp:126
 msgid "Only show tasks that are minimized"
 msgstr "Bloots minimeert Programmen wiesen"
 
 #. i18n: file: ui/general.ui:95
 #. i18n: ectx: property (text), widget (QCheckBox, showOnlyTasksWithLaunchers)
-#: locale/rc.cpp:93 rc.cpp:93
+#: locale/rc.cpp:129 rc.cpp:129
 #, fuzzy
 msgid "Only show tasks that have launchers"
 msgstr "Bloots minimeert Programmen wiesen"
 
 #. i18n: file: ui/general.ui:105
 #. i18n: ectx: property (title), widget (QGroupBox, jobsGroupBox)
-#: locale/rc.cpp:96 rc.cpp:96
+#: locale/rc.cpp:132 rc.cpp:132
 msgid "Jobs"
 msgstr ""
 
 #. i18n: file: ui/general.ui:113
 #. i18n: ectx: property (text), widget (QLabel, jobCloseModeLabel)
-#: locale/rc.cpp:99 rc.cpp:99
+#: locale/rc.cpp:135 rc.cpp:135
 msgid "Close jobs:"
 msgstr ""
 
 #. i18n: file: ui/general.ui:128
 #. i18n: ectx: property (text), widget (QCheckBox, connectJobsWithTasks)
-#: locale/rc.cpp:102 rc.cpp:102
+#: locale/rc.cpp:138 rc.cpp:138
 msgid "Connect jobs with tasks"
 msgstr ""
 
 #. i18n: file: ui/general.ui:135
 #. i18n: ectx: property (text), widget (QCheckBox, groupJobs)
-#: locale/rc.cpp:105 rc.cpp:105
+#: locale/rc.cpp:141 rc.cpp:141
 msgid "Group similar jobs"
 msgstr ""
 
 #. i18n: file: ui/group.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, group)
-#: locale/rc.cpp:108 rc.cpp:108
+#: locale/rc.cpp:144 rc.cpp:144
 msgid "Group settings"
 msgstr "Koppelinstellen"
 
 #. i18n: file: ui/group.ui:40
 #. i18n: ectx: property (toolTip), widget (KIconButton, icon)
-#: locale/rc.cpp:111 rc.cpp:111
+#: locale/rc.cpp:147 rc.cpp:147
 msgid "Group icon"
 msgstr ""
 
 #. i18n: file: ui/group.ui:52
 #. i18n: ectx: property (text), widget (QLabel, nameLabel)
-#: locale/rc.cpp:114 rc.cpp:114
+#: locale/rc.cpp:150 rc.cpp:150
 msgid "Group name:"
 msgstr "Koppelnaam:"
 
 #. i18n: file: ui/launcherRules.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, launcherRules)
-#: locale/rc.cpp:117 rc.cpp:117
+#: locale/rc.cpp:153 rc.cpp:153
 #, fuzzy
 msgid "Launcher Rules"
 msgstr "Starter"
 
 #. i18n: file: ui/launcherRules.ui:20
 #. i18n: ectx: property (text), widget (QCheckBox, connectCheckBox)
-#: locale/rc.cpp:120 rc.cpp:120
+#: locale/rc.cpp:156 rc.cpp:156
 #, fuzzy
 msgid "Connect tasks with this launcher"
 msgstr "Bloots minimeert Programmen wiesen"
 
 #. i18n: file: ui/launcherRules.ui:52
 #. i18n: ectx: property (text), widget (QTableWidget, rulesTableWidget)
-#: locale/rc.cpp:123 rc.cpp:123
+#: locale/rc.cpp:159 rc.cpp:159
 msgid "Rule"
 msgstr ""
 
 #. i18n: file: ui/launcherRules.ui:57
 #. i18n: ectx: property (text), widget (QTableWidget, rulesTableWidget)
-#: locale/rc.cpp:126 RuleDelegate.cpp:87 rc.cpp:126
+#: locale/rc.cpp:162 RuleDelegate.cpp:85 rc.cpp:162
 msgid "Expression"
 msgstr ""
 
 #. i18n: file: ui/launcherRules.ui:65
 #. i18n: ectx: property (text), widget (QPushButton, detectPropertiesButton)
-#: locale/rc.cpp:129 rc.cpp:129
+#: locale/rc.cpp:165 rc.cpp:165
 msgid "Detect Window Properties"
 msgstr ""
 
-#: locale/rc.cpp:130 rc.cpp:130
+#: locale/rc.cpp:166 rc.cpp:166
 #, fuzzy
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Koppelnaam:"
 
-#: locale/rc.cpp:131 rc.cpp:131
+#: locale/rc.cpp:167 rc.cpp:167
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 
-#: RuleDelegate.cpp:90
+#: RuleDelegate.cpp:88
 msgid "Match Mode"
 msgstr ""
 
-#: RuleDelegate.cpp:91
+#: RuleDelegate.cpp:89
 msgid "Ignore"
 msgstr ""
 
-#: RuleDelegate.cpp:92
+#: RuleDelegate.cpp:90
 msgid "Regular expression"
 msgstr ""
 
-#: RuleDelegate.cpp:93
+#: RuleDelegate.cpp:91
 msgid "Partial match"
 msgstr ""
 
-#: RuleDelegate.cpp:94
+#: RuleDelegate.cpp:92
 msgid "Exact match"
 msgstr ""
 
-#: RuleDelegate.cpp:97
+#: RuleDelegate.cpp:95
 msgid "Required"
 msgstr ""
 
-#: Task.cpp:418
+#: Task.cpp:509
 msgid "Application"
 msgstr "Programm"
 
-#: Task.cpp:429
+#: Task.cpp:520
 msgid "Starting application..."
 msgstr "Programm warrt start..."
 
-#: Task.cpp:433
+#: Task.cpp:524
 msgid "On all desktops"
 msgstr "Op all Schriefdischen"
 
-#: Task.cpp:433
+#: Task.cpp:524
 msgctxt "Which virtual desktop a window is currently on"
 msgid "On %1"
 msgstr "Op %1"
+
+#: TriggerDelegate.cpp:65 TriggerDelegate.cpp:85
+msgid "No trigger"
+msgstr ""
+
+#: TriggerDelegate.cpp:70
+msgctxt "As mouse button"
+msgid "Left button"
+msgstr ""
+
+#: TriggerDelegate.cpp:75
+msgctxt "As mouse button"
+msgid "Middle button"
+msgstr ""
+
+#: TriggerDelegate.cpp:80
+msgctxt "As mouse button"
+msgid "Right button"
+msgstr ""
+
+#: TriggerDelegate.cpp:90
+msgctxt "As keyboard modifier"
+msgid "Shift modifier"
+msgstr ""
+
+#: TriggerDelegate.cpp:95
+msgctxt "As keyboard modifier"
+msgid "Ctrl modifier"
+msgstr ""
+
+#: TriggerDelegate.cpp:100
+msgctxt "As keyboard modifier"
+msgid "Alt modifier"
+msgstr ""
+
+#: TriggerDelegate.cpp:111
+msgid "Click..."
+msgstr ""
+
+#, fuzzy
+#~ msgid "Activation"
+#~ msgstr "Programm"
 
 #, fuzzy
 #~ msgid "No indication"
@@ -693,9 +800,6 @@ msgstr "Op %1"
 
 #~ msgid "Highlight"
 #~ msgstr "Markeren"
-
-#~ msgid "Remove"
-#~ msgstr "Wegmaken"
 
 #~ msgid "Draw reflections"
 #~ msgstr "Torüchstrahlen wiesen"
