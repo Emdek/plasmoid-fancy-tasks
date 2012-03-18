@@ -21,7 +21,7 @@
 #ifndef FANCYTASKSTASK_HEADER
 #define FANCYTASKSTASK_HEADER
 
-#include "Applet.h"
+#include "Constants.h"
 
 #include <QtCore/QPointer>
 
@@ -30,6 +30,7 @@
 
 #include <taskmanager/task.h>
 #include <taskmanager/taskitem.h>
+#include <taskmanager/taskactions.h>
 #include <taskmanager/taskmanager.h>
 #include <taskmanager/groupmanager.h>
 #include <taskmanager/abstractgroupingstrategy.h>

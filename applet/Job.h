@@ -21,7 +21,7 @@
 #ifndef FANCYTASKSJOB_HEADER
 #define FANCYTASKSJOB_HEADER
 
-#include "Applet.h"
+#include "Constants.h"
 
 #include <KIcon>
 #include <KMenu>
@@ -31,15 +31,6 @@
 
 namespace FancyTasks
 {
-
-enum JobState
-{
-    UnknownState = 0,
-    RunningState,
-    SuspendedState,
-    FinishedState,
-    ErrorState
-};
 
 class Applet;
 

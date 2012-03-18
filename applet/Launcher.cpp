@@ -19,6 +19,7 @@
 ***********************************************************************************/
 
 #include "Launcher.h"
+#include "Applet.h"
 #include "LauncherProperties.h"
 #include "Icon.h"
 

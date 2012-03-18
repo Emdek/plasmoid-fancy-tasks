@@ -21,6 +21,8 @@
 #ifndef FANCYTASKSAPPLET_HEADER
 #define FANCYTASKSAPPLET_HEADER
 
+#include "Constants.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QQueue>
 #include <QtCore/QPointer>
@@ -38,7 +40,6 @@
 
 #include <taskmanager/task.h>
 #include <taskmanager/taskitem.h>
-#include <taskmanager/taskactions.h>
 #include <taskmanager/taskmanager.h>
 #include <taskmanager/groupmanager.h>
 
@@ -54,112 +55,6 @@ using TaskManager::TaskGroup;
 
 namespace FancyTasks
 {
-
-enum RuleMatch
-{
-    NoMatch = 0,
-    RegExpMatch,
-    PartialMatch,
-    ExactMatch
-};
-
-enum ConnectionRule
-{
-    NoRule = 0,
-    TaskCommandRule,
-    TaskTitleRule,
-    WindowClassRule,
-    WindowRoleRule
-};
-
-enum TitleLabelMode
-{
-    NoLabel = 0,
-    MouseOverLabel,
-    ActiveIconLabel,
-    AlwaysShowLabel
-};
-
-enum CloseJobMode
-{
-    InstantClose,
-    DelayedClose,
-    ManualClose
-};
-
-enum IconAction
-{
-    NoAction = 0,
-    ActivateItemAction,
-    ActivateTaskAction,
-    ActivateLauncherAction,
-    ShowItemMenuAction,
-    ShowItemChildrenListAction,
-    ShowItemWindowsAction,
-    CloseTaskAction,
-    MinimizeTaskAction,
-    MaximizeTaskAction,
-    FullscreenTaskAction,
-    ShadeTaskAction,
-    ResizeTaskAction,
-    MoveTaskAction,
-    MoveTaskToCurrentDesktopAction,
-    MoveTaskToAllDesktopsAction
-};
-
-enum AnimationType
-{
-    NoAnimation = 0,
-    ZoomAnimation,
-    JumpAnimation,
-    RotateAnimation,
-    BounceAnimation,
-    BlinkAnimation,
-    GlowAnimation,
-    SpotlightAnimation,
-    FadeAnimation
-};
-
-enum ActiveIconIndication
-{
-    NoIndication = 0,
-    ZoomIndication,
-    GlowIndication,
-    FadeIndication
-};
-
-enum ItemChange
-{
-    NoChanges = 0,
-    TextChanged,
-    IconChanged,
-    WindowsChanged,
-    StateChanged,
-    OtherChanges,
-    EveythingChanged = (TextChanged | IconChanged | WindowsChanged | StateChanged | OtherChanges)
-};
-
-enum ItemType
-{
-    OtherType = 0,
-    LauncherType,
-    JobType,
-    StartupType,
-    TaskType,
-    GroupType
-};
-
-Q_DECLARE_FLAGS(ItemChanges, ItemChange)
-
-struct LauncherRule
-{
-    QString expression;
-    RuleMatch match;
-    bool required;
-
-    LauncherRule();
-    LauncherRule(QString expressionI, RuleMatch matchI = ExactMatch, bool requiredI = false);
-};
 
 class Icon;
 class Task;

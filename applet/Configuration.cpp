@@ -18,9 +18,8 @@
 *
 ***********************************************************************************/
 
-#include "config-fancytasks.h"
-
 #include "Configuration.h"
+#include "Applet.h"
 #include "ActionDelegate.h"
 #include "TriggerDelegate.h"
 #include "Launcher.h"

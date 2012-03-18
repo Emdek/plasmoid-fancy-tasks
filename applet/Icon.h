@@ -21,7 +21,7 @@
 #ifndef FANCYTASKSICON_HEADER
 #define FANCYTASKSICON_HEADER
 
-#include "Applet.h"
+#include "Constants.h"
 
 #include <QtCore/QPointer>
 #include <QtCore/QTimeLine>

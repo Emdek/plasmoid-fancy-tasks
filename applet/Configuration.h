@@ -21,7 +21,7 @@
 #ifndef FANCYTASKSCONFIGURATION_HEADER
 #define FANCYTASKSCONFIGURATION_HEADER
 
-#include "Applet.h"
+#include "Constants.h"
 
 #include <KConfigDialog>
 

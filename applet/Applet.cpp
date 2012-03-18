@@ -20,8 +20,6 @@
 
 #define PI 3.141592653
 
-#include "config-fancytasks.h"
-
 #include "Applet.h"
 #include "Icon.h"
 #include "Task.h"

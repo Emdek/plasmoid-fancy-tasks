@@ -21,6 +21,7 @@
 #define PI 3.141592653
 
 #include "Icon.h"
+#include "Applet.h"
 #include "Task.h"
 #include "Launcher.h"
 #include "Job.h"

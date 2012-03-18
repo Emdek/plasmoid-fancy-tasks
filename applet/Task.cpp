@@ -19,6 +19,7 @@
 ***********************************************************************************/
 
 #include "Task.h"
+#include "Applet.h"
 
 #include <KLocale>
 #include <NETRootInfo>

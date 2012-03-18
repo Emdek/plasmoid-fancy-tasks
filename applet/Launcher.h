@@ -21,7 +21,7 @@
 #ifndef FANCYTASKSLAUNCHER_HEADER
 #define FANCYTASKSLAUNCHER_HEADER
 
-#include "Applet.h"
+#include "Constants.h"
 
 #include <QtCore/QPointer>
 #include <QtGui/QGraphicsSceneDragDropEvent>
