@@ -51,7 +51,7 @@ Launcher::Launcher(const KUrl &url, Applet *parent) : QObject(parent),
 
     m_isExcluded = !m_isExecutable;
 
-    if (m_isExecutable)
+    if (m_isExecutable && !m_executable.isEmpty())
     {
         const QString command = m_executable.split(QRegExp("(?!\\\\)\\s"), QString::SkipEmptyParts).first().split(QRegExp("(?!\\\\)\\/"), QString::SkipEmptyParts).last();
 
