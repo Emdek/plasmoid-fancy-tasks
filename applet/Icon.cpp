@@ -404,7 +404,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         qreal textLength = (targetPainter.fontMetrics().width(title()) + (3 * targetPainter.fontMetrics().width(' ')));
         qreal textFieldWidth = ((textLength > (visualizationSize * 0.9))?(visualizationSize * 0.9):textLength);
 
-        QRectF textField = QRectF(QPointF((((visualizationSize - textFieldWidth) / 2) + xOffset), ((target.height() * 0.55))), QSizeF(textFieldWidth, (visualizationSize * 0.25)));
+        QRectF textField = QRectF(QPointF((((visualizationSize - textFieldWidth) / 2) + xOffset), ((target.height() * 0.5))), QSizeF(textFieldWidth, (visualizationSize * 0.25)));
 
         QPainterPath textFieldPath;
         textFieldPath.addRoundedRect(textField, 3, 3);
@@ -459,7 +459,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
                 break;
             case Plasma::RightEdge:
-                reflectionPoint = QPointF((target.width() * 0.75), 0);
+                reflectionPoint = QPointF((target.width() * 0.7), 0);
 
                 reflectionPixmap = target.copy((target.width() * 0.5), 0, (target.width() * 0.2), target.height());
                 reflectionPixmap = reflectionPixmap.transformed(QTransform(-1, 0, 0, 0, 1, 0, 0, 0, 1), Qt::SmoothTransformation);
@@ -477,7 +477,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
                 break;
             default:
-                reflectionPoint = QPointF(0, (target.height() * 0.75));
+                reflectionPoint = QPointF(0, (target.height() * 0.7));
 
                 reflectionPixmap = target.copy(0, (target.height() * 0.5), target.width(), (target.height() * 0.2));
                 reflectionPixmap = reflectionPixmap.transformed(QTransform(1, 0, 0, 0, -1, 0, 0, 0, 1), Qt::SmoothTransformation);
