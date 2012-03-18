@@ -73,7 +73,6 @@ class Configuration : public QObject
         KDialog *m_findApplicationDialog;
         Launcher *m_editedLauncher;
         QMap<QString, QPair<QMap<ConnectionRule, LauncherRule>, bool> > m_rules;
-        int m_currentAction;
         Ui::general m_generalUi;
         Ui::appearance m_appearanceUi;
         Ui::arrangement m_arrangementUi;

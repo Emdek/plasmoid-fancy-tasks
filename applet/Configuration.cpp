@@ -44,8 +44,7 @@ namespace FancyTasks
 
 Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(parent),
     m_applet(applet),
-    m_editedLauncher(NULL),
-    m_currentAction(0)
+    m_editedLauncher(NULL)
 {
     KConfigGroup configuration = m_applet->config();
     KMenu *addLauncherMenu = new KMenu(parent);
@@ -697,8 +696,6 @@ void Configuration::actionClicked(const QModelIndex &index)
 {
     closeActionEditors();
 
-    m_currentAction = index.row();
-
     m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 0));
     m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 1));
 }
@@ -712,7 +709,7 @@ void Configuration::triggerSelected(const QString &trigger, const QString &descr
 
     for (int i = 0; i < m_actionsUi.actionsTableWidget->rowCount(); ++i)
     {
-        if (i != m_currentAction && m_actionsUi.actionsTableWidget->item(i, 1)->data(Qt::EditRole).toString() == trigger)
+        if (i != m_actionsUi.actionsTableWidget->currentItem()->row() && trigger == m_actionsUi.actionsTableWidget->item(i, 1)->data(Qt::EditRole).toString())
         {
             KMessageBox::information(static_cast<QWidget*>(parent()), i18n("Trigger \"%1\" was already added.").arg(description));
 
