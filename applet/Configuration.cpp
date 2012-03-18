@@ -149,9 +149,12 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     m_arrangementUi.moveUpButton->setIcon(KIcon("go-up"));
     m_arrangementUi.moveDownButton->setIcon(KIcon("go-down"));
 
+    KConfig kickoffConfiguration("kickoffrc", KConfig::NoGlobals);
+    KConfigGroup favoritesGroup(&kickoffConfiguration, "Favorites");
     QStringList currentEntries = configuration.readEntry("arrangement", QStringList("tasks"));
     QStringList availableEntries;
-    availableEntries << i18n("--- separator ---") << i18n("--- tasks area ---") << i18n("--- jobs area ---");
+    availableEntries << i18n("--- separator ---") << i18n("--- tasks area ---") << i18n("--- jobs area ---") << "menu:/";
+    availableEntries.append(favoritesGroup.readEntry("FavoriteURLs", QStringList()));
 
     for (int i = 0; i < currentEntries.count(); ++i)
     {
