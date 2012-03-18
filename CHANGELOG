@@ -5,6 +5,7 @@
 - show item tool tip instantly;
 - add support for showing tasks from current activity only;
 - window context menus for entries of Entries menu also for not grouped tasks;
+- preparations for removing use of libtaskmanager;
 - lots of other internal (tasks management related) improvements and fixes.
 
 1.0.99 (05.03.2012):

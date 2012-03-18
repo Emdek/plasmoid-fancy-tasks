@@ -200,8 +200,8 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction>::iterator iterator;
     int i = 0;
 
-    m_actionsUi.actionsTableWidget->setItemDelegateForColumn(0, new TriggerDelegate(this));
-    m_actionsUi.actionsTableWidget->setItemDelegateForColumn(1, new ActionDelegate(this));
+    m_actionsUi.actionsTableWidget->setItemDelegateForColumn(0, new ActionDelegate(this));
+    m_actionsUi.actionsTableWidget->setItemDelegateForColumn(1, new TriggerDelegate(this));
 
     for (iterator = iconActions.begin(); iterator != iconActions.end(); ++iterator)
     {
@@ -249,8 +249,8 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
         actionItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
         m_actionsUi.actionsTableWidget->setRowCount(i + 1);
-        m_actionsUi.actionsTableWidget->setItem(i, 0, triggerItem);
-        m_actionsUi.actionsTableWidget->setItem(i, 1, actionItem);
+        m_actionsUi.actionsTableWidget->setItem(i, 0, actionItem);
+        m_actionsUi.actionsTableWidget->setItem(i, 1, triggerItem);
 
         ++i;
     }
@@ -346,8 +346,8 @@ void Configuration::accepted()
 
     for (int i = 0; i < m_actionsUi.actionsTableWidget->rowCount(); ++i)
     {
-        QTableWidgetItem *triggerItem = m_actionsUi.actionsTableWidget->item(i, 0);
-        QTableWidgetItem *actionItem = m_actionsUi.actionsTableWidget->item(i, 1);
+        QTableWidgetItem *actionItem = m_actionsUi.actionsTableWidget->item(i, 0);
+        QTableWidgetItem *triggerItem = m_actionsUi.actionsTableWidget->item(i, 1);
 
         if (triggerItem->data(Qt::EditRole).toString().isEmpty() || actionItem->data(Qt::EditRole).toInt() == 0)
         {
