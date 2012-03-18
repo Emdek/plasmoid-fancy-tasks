@@ -44,7 +44,8 @@ namespace FancyTasks
 
 Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(parent),
     m_applet(applet),
-    m_editedLauncher(NULL)
+    m_editedLauncher(NULL),
+    m_currentAction(0)
 {
     KConfigGroup configuration = m_applet->config();
     KMenu *addLauncherMenu = new KMenu(parent);
@@ -198,10 +199,11 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
 
     QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction> iconActions = m_applet->iconActions();
     QMap<QPair<Qt::MouseButtons, Qt::KeyboardModifiers>, IconAction>::iterator iterator;
+    TriggerDelegate *triggerDelegate = new TriggerDelegate(this);
     int i = 0;
 
     m_actionsUi.actionsTableWidget->setItemDelegateForColumn(0, new ActionDelegate(this));
-    m_actionsUi.actionsTableWidget->setItemDelegateForColumn(1, new TriggerDelegate(this));
+    m_actionsUi.actionsTableWidget->setItemDelegateForColumn(1, triggerDelegate);
 
     for (iterator = iconActions.begin(); iterator != iconActions.end(); ++iterator)
     {
@@ -288,6 +290,7 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     connect(addMenuLauncherMenu, SIGNAL(aboutToShow()), this, SLOT(populateMenu()));
     connect(addMenuLauncherMenu, SIGNAL(triggered(QAction*)), this, SLOT(addMenu(QAction*)));
     connect(m_findApplicationDialog, SIGNAL(finished()), this, SLOT(closeFindApplicationDialog()));
+    connect(triggerDelegate, SIGNAL(assigned(QString,QString)), this, SLOT(triggerSelected(QString,QString)));
 }
 
 Configuration::~Configuration()
@@ -694,8 +697,28 @@ void Configuration::actionClicked(const QModelIndex &index)
 {
     closeActionEditors();
 
+    m_currentAction = index.row();
+
     m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 0));
     m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 1));
+}
+
+void Configuration::triggerSelected(const QString &trigger, const QString &description)
+{
+    if (trigger.isEmpty())
+    {
+        return;
+    }
+
+    for (int i = 0; i < m_actionsUi.actionsTableWidget->rowCount(); ++i)
+    {
+        if (i != m_currentAction && m_actionsUi.actionsTableWidget->item(i, 1)->data(Qt::EditRole).toString() == trigger)
+        {
+            KMessageBox::information(static_cast<QWidget*>(parent()), i18n("Trigger \"%1\" was already added.").arg(description));
+
+            break;
+        }
+    }
 }
 
 bool Configuration::eventFilter(QObject *object, QEvent *event)

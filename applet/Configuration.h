@@ -66,12 +66,14 @@ class Configuration : public QObject
         void closeFindApplicationDialog();
         void closeActionEditors();
         void actionClicked(const QModelIndex &index);
+        void triggerSelected(const QString &trigger, const QString &description);
 
     private:
         QPointer<Applet> m_applet;
         KDialog *m_findApplicationDialog;
         Launcher *m_editedLauncher;
         QMap<QString, QPair<QMap<ConnectionRule, LauncherRule>, bool> > m_rules;
+        int m_currentAction;
         Ui::general m_generalUi;
         Ui::appearance m_appearanceUi;
         Ui::arrangement m_arrangementUi;

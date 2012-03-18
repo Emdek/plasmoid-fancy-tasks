@@ -155,6 +155,9 @@ bool TriggerDelegate::eventFilter(QObject *editor, QEvent *event)
         }
 
         button->setWindowTitle(action.join(QChar('+')));
+        button->setToolTip(displayText(button->windowTitle()));
+
+        emit assigned(button->windowTitle(), button->toolTip());
 
         return true;
     }

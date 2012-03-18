@@ -59,6 +59,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="removeButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="toolTip">
         <string>Add Action Trigger</string>
        </property>
@@ -69,6 +72,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="addButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="toolTip">
         <string>Remove Action Trigger</string>
        </property>

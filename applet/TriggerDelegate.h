@@ -38,6 +38,9 @@ class TriggerDelegate : public QStyledItemDelegate
         QString displayText(const QVariant &value, const QLocale &locale = QLocale()) const;
         QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
         bool eventFilter(QObject *editor, QEvent *event);
+
+    signals:
+        void assigned(QString trigger, QString description);
 };
 
 }
