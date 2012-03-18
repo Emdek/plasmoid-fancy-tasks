@@ -47,6 +47,9 @@ class Configuration : public QObject
 
         bool eventFilter(QObject *object, QEvent *event);
 
+    protected:
+        bool hasLauncher(const QString &url);
+
     protected slots:
         void accepted();
         void moveAnimationTypeChanged(int option);

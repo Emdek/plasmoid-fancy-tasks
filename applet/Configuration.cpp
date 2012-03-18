@@ -473,30 +473,22 @@ void Configuration::moveDownItem()
 
 void Configuration::addLauncher(const QString &url)
 {
-    if (!url.isEmpty())
+    if (url.isEmpty() || hasLauncher(url))
     {
-        for (int i = 0; i < m_arrangementUi.currentActionsListWidget->count(); ++i)
-        {
-            if (m_arrangementUi.currentActionsListWidget->item(i)->toolTip() == url)
-            {
-                KMessageBox::sorry(static_cast<QWidget*>(parent()), i18n("Launcher with this URL was already added."));
-
-                return;
-            }
-        }
-
-        Launcher launcher(KUrl(url), m_applet);
-        const int row = (m_arrangementUi.currentActionsListWidget->currentIndex().row() + 1);
-
-        m_arrangementUi.currentActionsListWidget->model()->insertRow(row);
-
-        const QModelIndex index = m_arrangementUi.currentActionsListWidget->model()->index(row, 0);
-
-        m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.title(), Qt::DisplayRole);
-        m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.icon(), Qt::DecorationRole);
-        m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.launcherUrl().pathOrUrl(), Qt::ToolTipRole);
-        m_arrangementUi.currentActionsListWidget->setCurrentRow(row);
+        return;
     }
+
+    Launcher launcher(KUrl(url), m_applet);
+    const int row = (m_arrangementUi.currentActionsListWidget->currentIndex().row() + 1);
+
+    m_arrangementUi.currentActionsListWidget->model()->insertRow(row);
+
+    const QModelIndex index = m_arrangementUi.currentActionsListWidget->model()->index(row, 0);
+
+    m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.title(), Qt::DisplayRole);
+    m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.icon(), Qt::DecorationRole);
+    m_arrangementUi.currentActionsListWidget->model()->setData(index, launcher.launcherUrl().pathOrUrl(), Qt::ToolTipRole);
+    m_arrangementUi.currentActionsListWidget->setCurrentRow(row);
 }
 
 void Configuration::addLauncher()
@@ -552,7 +544,10 @@ void Configuration::changeLauncher(Launcher *launcher, const KUrl &oldUrl)
 
     const QString url = launcher->launcherUrl().pathOrUrl();
 
-///FIXME check for duplicate
+    if (hasLauncher(url))
+    {
+        return;
+    }
 
     m_rules[url] = qMakePair(launcher->rules(), launcher->isExcluded());
 }
@@ -716,6 +711,21 @@ void Configuration::triggerSelected(const QString &trigger, const QString &descr
             break;
         }
     }
+}
+
+bool Configuration::hasLauncher(const QString &url)
+{
+    for (int i = 0; i < m_arrangementUi.currentActionsListWidget->count(); ++i)
+    {
+        if (url == m_arrangementUi.currentActionsListWidget->item(i)->toolTip())
+        {
+            KMessageBox::sorry(static_cast<QWidget*>(parent()), i18n("Launcher with URL \"%1\" already exists.").arg(url));
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool Configuration::eventFilter(QObject *object, QEvent *event)
