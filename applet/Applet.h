@@ -173,7 +173,6 @@ class Applet : public Plasma::Applet
 
     public:
         Applet(QObject *parent, const QVariantList &args);
-        ~Applet();
 
         void init();
         void itemDropped(Icon *icon, int index);

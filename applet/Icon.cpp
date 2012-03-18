@@ -56,8 +56,8 @@
 namespace FancyTasks
 {
 
-Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *parent) : QGraphicsWidget(parent),
-    m_applet(parent),
+Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *applet) : QGraphicsWidget(applet),
+    m_applet(applet),
     m_task(NULL),
     m_launcher(NULL),
     m_glowEffect(NULL),
@@ -65,7 +65,7 @@ Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *parent) : QGraphics
     m_animationTimeLine(new QTimeLine(1000, this)),
     m_jobAnimationTimeLine(NULL),
     m_itemType(OtherType),
-    m_factor(parent->initialFactor()),
+    m_factor(applet->initialFactor()),
     m_animationProgress(-1),
     m_jobsProgress(0),
     m_jobsAnimationProgress(0),
@@ -117,11 +117,6 @@ Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *parent) : QGraphics
     connect(m_applet, SIGNAL(sizeChanged(qreal)), this, SIGNAL(sizeChanged(qreal)));
     connect(m_animationTimeLine, SIGNAL(finished()), this, SLOT(stopAnimation()));
     connect(m_animationTimeLine, SIGNAL(frameChanged(int)), this, SLOT(progressAnimation(int)));
-}
-
-Icon::~Icon()
-{
-    qDeleteAll(m_windowLights);
 }
 
 void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

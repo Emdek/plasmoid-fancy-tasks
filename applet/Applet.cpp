@@ -114,14 +114,6 @@ Applet::Applet(QObject *parent, const QVariantList &args) : Plasma::Applet(paren
     resize(100, 100);
 }
 
-Applet::~Applet()
-{
-    qDeleteAll(m_launcherTaskIcons);
-    qDeleteAll(m_taskIcons);
-    qDeleteAll(m_jobIcons);
-    qDeleteAll(m_launchers);
-}
-
 void Applet::init()
 {
     QGraphicsWidget *leftMargin = new QGraphicsWidget(this);
