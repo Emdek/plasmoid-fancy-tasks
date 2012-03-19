@@ -61,6 +61,7 @@ class Task : public QObject
         ItemType taskType() const;
         KMenu* contextMenu();
         KIcon icon();
+        KUrl launcherUrl() const;
         QString title() const;
         QString description() const;
         QString command() const;
@@ -100,6 +101,7 @@ class Task : public QObject
         QPointer<TaskItem> m_task;
         QPointer<TaskGroup> m_group;
         QString m_command;
+        KUrl m_launcherUrl;
         ItemType m_taskType;
         int m_validateTimer;
         Ui::group m_groupUi;

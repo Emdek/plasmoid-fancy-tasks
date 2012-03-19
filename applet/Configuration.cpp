@@ -682,8 +682,8 @@ void Configuration::findApplication(const QString &query)
                 entryWidget->setLayout(entryWidgetLayout);
                 entryWidget->setFixedSize(300, 40);
                 entryWidget->setObjectName(service->entryPath());
-                entryWidget->installEventFilter(this);
                 entryWidget->setCursor(QCursor(Qt::PointingHandCursor));
+                entryWidget->installEventFilter(this);
 
                 m_findApplicationUi.resultsLayout->addWidget(entryWidget);
             }

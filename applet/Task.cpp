@@ -24,6 +24,7 @@
 #include <KLocale>
 #include <NETRootInfo>
 #include <KWindowSystem>
+#include <KServiceTypeTrader>
 
 #include <ksysguard/process.h>
 #include <ksysguard/processes.h>
@@ -327,6 +328,7 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
 
     m_abstractItem = abstractItem;
     m_command = QString();
+    m_launcherUrl = KUrl();
 
     if (m_abstractItem)
     {
@@ -392,6 +394,16 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
         }
 
         connect(m_task, SIGNAL(changed(::TaskManager::TaskChanges)), this, SLOT(taskChanged(::TaskManager::TaskChanges)));
+    }
+
+    if (!m_command.isEmpty())
+    {
+        KService::List services = KServiceTypeTrader::self()->query("Application", QString("exist Exec and ('%1' =~ Exec)").arg(m_command));
+
+        if (!services.isEmpty())
+        {
+            m_launcherUrl = services.first()->entryPath();
+        }
     }
 
     if (m_taskType == StartupType)
