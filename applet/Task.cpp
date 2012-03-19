@@ -116,7 +116,7 @@ void Task::setMinimized(int mode)
     {
         if (mode < 0)
         {
-            mode = m_abstractItem->isMinimized();
+            mode = !m_abstractItem->isMinimized();
         }
 
         m_abstractItem->setMinimized(mode);
@@ -129,7 +129,7 @@ void Task::setMaximized(int mode)
     {
         if (mode < 0)
         {
-            mode = m_abstractItem->isMaximized();
+            mode = !m_abstractItem->isMaximized();
         }
 
         m_abstractItem->setMaximized(mode);
@@ -142,7 +142,7 @@ void Task::setFullscreen(int mode)
     {
         if (mode < 0)
         {
-            mode = m_abstractItem->isFullScreen();
+            mode = !m_abstractItem->isFullScreen();
         }
 
         m_abstractItem->setFullScreen(mode);
@@ -155,7 +155,7 @@ void Task::setShaded(int mode)
     {
         if (mode < 0)
         {
-            mode = m_abstractItem->isShaded();
+            mode = !m_abstractItem->isShaded();
         }
 
          m_abstractItem->setShaded(mode);
