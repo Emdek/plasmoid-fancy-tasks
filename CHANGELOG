@@ -5,6 +5,7 @@
 - show item tool tip instantly;
 - add support for showing tasks from current activity only;
 - window context menus for entries of Entries menu also for not grouped tasks;
+- add own pin task action;
 - preparations for removing use of libtaskmanager;
 - lots of other internal (tasks management related) improvements and fixes.
 

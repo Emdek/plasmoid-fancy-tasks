@@ -53,6 +53,42 @@ void Task::timerEvent(QTimerEvent *event)
     }
 }
 
+void Task::fixMenu(QMenu *menu, Task *task)
+{
+    if (!menu || menu->actions().count() < 3)
+    {
+        return;
+    }
+
+    const bool group = (task?(task->taskType() == GroupType):false);
+
+    menu->actions().at(menu->actions().count() - 4)->setVisible(false);
+
+    if (menu->actions().count() > 7)
+    {
+        menu->actions().at(menu->actions().count() - 5)->setVisible(false);
+    }
+
+    const QString url = (task?task->launcherUrl().pathOrUrl():QString());
+
+    if (!task || url.isEmpty() || m_applet->arrangement().contains(url) || (group && m_applet->groupManager()->groupingStrategy() != TaskManager::GroupManager::ProgramGrouping))
+    {
+        return;
+    }
+
+    QMenu *moreMenu = menu->actions().at(qMax(0, (menu->actions().count() - 3)))->menu();
+
+    if (!moreMenu)
+    {
+        return;
+    }
+
+    moreMenu->addSeparator();
+
+    QAction *launcherAction = moreMenu->addAction(KIcon("object-locked"), i18n("Pin This Task"), this, SLOT(pinLauncher()));
+    launcherAction->setData(url);
+}
+
 void Task::validate()
 {
     if (!m_abstractItem)
@@ -287,6 +323,16 @@ void Task::removeItem(AbstractGroupableItem *abstractItem)
     }
 }
 
+void Task::pinLauncher()
+{
+    QAction *launcherAction = qobject_cast<QAction*>(sender());
+
+    if (launcherAction)
+    {
+        m_applet->addLauncher(m_applet->launcherForUrl(KUrl(launcherAction->data().toString())));
+    }
+}
+
 void Task::showPropertiesDialog()
 {
     if (m_taskType != GroupType || !(m_applet->groupManager()->taskGrouper()->editableGroupProperties() & TaskManager::AbstractGroupingStrategy::Name))
@@ -398,7 +444,7 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
 
     if (!m_command.isEmpty())
     {
-        KService::List services = KServiceTypeTrader::self()->query("Application", QString("exist Exec and ('%1' =~ Exec)").arg(m_command));
+        KService::List services = KServiceTypeTrader::self()->query("Application", QString("exist Exec and ('%1' ~~ Exec)").arg(m_command.simplified().split(QRegExp("(?!\\\\)\\s"), QString::SkipEmptyParts).first().split(QRegExp("(?!\\\\)\\/"), QString::SkipEmptyParts).last()));
 
         if (!services.isEmpty())
         {
@@ -430,28 +476,28 @@ KMenu* Task::contextMenu()
 
         for (int i = 0; i < taskMenu->actions().count(); ++i)
         {
+            Task *task = NULL;
+
             if (!taskMenu->actions().at(i)->menu())
             {
                 break;
             }
 
-            taskMenu->actions().at(i)->menu()->actions().at(taskMenu->actions().at(i)->menu()->actions().count() - 4)->setVisible(false);
-
-            if (taskMenu->actions().at(i)->menu()->actions().count() > 7)
+            if (i < members().count())
             {
-                taskMenu->actions().at(i)->menu()->actions().at(taskMenu->actions().at(i)->menu()->actions().count() - 5)->setVisible(false);
+                task = m_applet->taskForWindow(members().at(i)->winIds().toList().value(0, 0));
             }
+
+            fixMenu(taskMenu->actions().at(i)->menu(), task);
         }
+
+        fixMenu(taskMenu, this);
     }
     else if (m_task)
     {
         taskMenu = new BasicMenu(menu, m_task, m_applet->groupManager());
-        taskMenu->actions().at(taskMenu->actions().count() - 4)->setVisible(false);
 
-        if (taskMenu->actions().count() > 7)
-        {
-            taskMenu->actions().at(taskMenu->actions().count() - 5)->setVisible(false);
-        }
+        fixMenu(taskMenu, this);
     }
 
     if (taskMenu)
@@ -503,6 +549,11 @@ KIcon Task::icon()
     }
 
     return KIcon();
+}
+
+KUrl Task::launcherUrl() const
+{
+    return m_launcherUrl;
 }
 
 QString Task::title() const

@@ -894,6 +894,11 @@ void Applet::addLauncher(Launcher *launcher, int index)
         return;
     }
 
+    if (index < 0)
+    {
+        index = m_arrangement.indexOf("tasks");
+    }
+
     const QString url = launcher->launcherUrl().pathOrUrl();
 
     if (m_arrangement.contains("tasks") && index >= m_arrangement.indexOf("tasks"))

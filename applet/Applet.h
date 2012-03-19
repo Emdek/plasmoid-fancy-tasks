@@ -104,7 +104,7 @@ class Applet : public Plasma::Applet
         void addTask(AbstractGroupableItem *abstractItem);
         void removeTask(AbstractGroupableItem *abstractItem);
         void changeTaskPosition(AbstractGroupableItem *abstractItem);
-        void addLauncher(Launcher *launcher, int index);
+        void addLauncher(Launcher *launcher, int index = -1);
         void removeLauncher(Launcher *launcher);
         void changeLauncher(Launcher *launcher, const KUrl &oldUrl, bool force = false);
         void updateLauncher(Launcher *launcher);

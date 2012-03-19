@@ -83,6 +83,7 @@ class Task : public QObject
 
     protected:
         void timerEvent(QTimerEvent *event);
+        void fixMenu(QMenu *menu, Task *task = NULL);
         AbstractGroupableItem* abstractItem();
         QList<AbstractGroupableItem*> members();
 
@@ -91,6 +92,7 @@ class Task : public QObject
         void taskChanged(::TaskManager::TaskChanges changes);
         void addItem(AbstractGroupableItem *abstractItem);
         void removeItem(AbstractGroupableItem *abstractItem);
+        void pinLauncher();
         void showPropertiesDialog();
         void setProperties();
         void setTaskPointer();
