@@ -118,12 +118,11 @@ Applet::~Applet()
 
     for (launcherIconsIterator = m_launcherIcons.begin(); launcherIconsIterator != m_launcherIcons.end(); ++launcherIconsIterator)
     {
-        if (!launcherIconsIterator.value())
+        if (launcherIconsIterator.key())
         {
-            m_launcherIcons.erase(launcherIconsIterator);
+            launcherIconsIterator.key()->blockSignals(true);
+            launcherIconsIterator.key()->deleteLater();
         }
-
-        launcherIconsIterator.value()->deleteLater();
     }
 }
 
@@ -909,12 +908,19 @@ void Applet::addLauncher(Launcher *launcher, int index)
         return;
     }
 
+    const QString url = launcher->launcherUrl().pathOrUrl();
+
     if (index < 0)
     {
-        index = m_arrangement.indexOf("tasks");
+        if (m_arrangement.contains(url))
+        {
+            index = m_arrangement.indexOf(url);
+        }
+        else
+        {
+            index = m_arrangement.indexOf("tasks");
+        }
     }
-
-    const QString url = launcher->launcherUrl().pathOrUrl();
 
     if (m_arrangement.contains("tasks") && index >= m_arrangement.indexOf("tasks"))
     {
