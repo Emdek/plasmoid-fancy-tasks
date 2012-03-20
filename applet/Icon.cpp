@@ -806,7 +806,7 @@ void Icon::activate()
 
 void Icon::updateSize()
 {
-    if (!m_isVisible)
+    if (!m_isVisible || !m_applet)
     {
         setPreferredSize(0, 0);
 

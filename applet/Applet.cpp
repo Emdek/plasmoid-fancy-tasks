@@ -112,6 +112,21 @@ Applet::Applet(QObject *parent, const QVariantList &args) : Plasma::Applet(paren
     resize(100, 100);
 }
 
+Applet::~Applet()
+{
+    QMap<Launcher*, QPointer<Icon> >::iterator launcherIconsIterator;
+
+    for (launcherIconsIterator = m_launcherIcons.begin(); launcherIconsIterator != m_launcherIcons.end(); ++launcherIconsIterator)
+    {
+        if (!launcherIconsIterator.value())
+        {
+            m_launcherIcons.erase(launcherIconsIterator);
+        }
+
+        launcherIconsIterator.value()->deleteLater();
+    }
+}
+
 void Applet::init()
 {
     QGraphicsWidget *leftMargin = new QGraphicsWidget(this);
