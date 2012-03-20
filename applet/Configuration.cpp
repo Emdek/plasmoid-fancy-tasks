@@ -173,6 +173,11 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
         }
         else
         {
+            if (hasEntry(currentEntries.at(i), false))
+            {
+                continue;
+            }
+
             Launcher *launcher = m_applet->launcherForUrl(KUrl(currentEntries.at(i)));
 
             if (!launcher)
@@ -335,6 +340,11 @@ void Configuration::accepted()
 
         if (!item->toolTip().isEmpty())
         {
+            if (arrangement.contains(item->toolTip()))
+            {
+                continue;
+            }
+
             arrangement.append(item->toolTip());
 
             const KUrl url(item->toolTip());
