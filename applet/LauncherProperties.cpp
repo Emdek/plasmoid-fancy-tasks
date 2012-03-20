@@ -22,6 +22,8 @@
 #include "Launcher.h"
 #include "RuleDelegate.h"
 
+#include <QtGui/QMouseEvent>
+
 #include <KLocale>
 #include <NETWinInfo>
 #include <KWindowInfo>

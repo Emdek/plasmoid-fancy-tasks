@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: emdeck@gmail.com\n"
-"POT-Creation-Date: 2012-03-18 11:02+0100\n"
+"POT-Creation-Date: 2012-03-20 21:44+0100\n"
 "PO-Revision-Date: 2009-12-28 17:47+0000\n"
 "Last-Translator: Andrew Coles <andrew_coles@yahoo.co.uk>\n"
 "Language-Team: British English <kde-i18n-doc@kde.org>\n"
@@ -97,128 +97,128 @@ msgstr "On all desktops"
 msgid "Action"
 msgstr "Application"
 
-#: Applet.cpp:2069
+#: Applet.cpp:2086
 msgid "Entries"
 msgstr "Entries"
 
-#: Configuration.cpp:56
+#: Configuration.cpp:55
 msgid "Add Application..."
 msgstr "Add Application..."
 
-#: Configuration.cpp:57
+#: Configuration.cpp:56
 msgid "Add File or Directory..."
 msgstr "Add File or Directory..."
 
-#: Configuration.cpp:58
+#: Configuration.cpp:57
 msgid "Add Menu"
 msgstr "Add Menu"
 
 #. i18n: file: ui/findApplication.ui:26
 #. i18n: ectx: property (windowTitle), widget (QWidget, findApplication)
-#: Configuration.cpp:74 locale/rc.cpp:96 rc.cpp:96
+#: Configuration.cpp:73 locale/rc.cpp:96 rc.cpp:96
 msgid "Find Application"
 msgstr "Find Application"
 
-#: Configuration.cpp:80
+#: Configuration.cpp:79
 msgid "Do Not Group"
 msgstr "Do Not Group"
 
-#: Configuration.cpp:81 Configuration.cpp:86 Configuration.cpp:101
+#: Configuration.cpp:80 Configuration.cpp:85 Configuration.cpp:100
 msgid "Manually"
 msgstr "Manually"
 
-#: Configuration.cpp:82
+#: Configuration.cpp:81
 msgid "By Program Name"
 msgstr "By Program Name"
 
-#: Configuration.cpp:85
+#: Configuration.cpp:84
 msgid "Do Not Sort"
 msgstr "Do Not Sort"
 
-#: Configuration.cpp:87
+#: Configuration.cpp:86
 msgid "Alphabetically"
 msgstr "Alphabetically"
 
-#: Configuration.cpp:88
+#: Configuration.cpp:87
 msgid "By Desktop"
 msgstr "By Desktop"
 
-#: Configuration.cpp:99
+#: Configuration.cpp:98
 msgid "Instantly"
 msgstr "Instantly"
 
-#: Configuration.cpp:100
+#: Configuration.cpp:99
 msgid "After delay"
 msgstr "After delay"
 
-#: Configuration.cpp:105 Configuration.cpp:116 Configuration.cpp:133
+#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:132
 msgid "None"
 msgstr "None"
 
-#: Configuration.cpp:105 Configuration.cpp:116 Configuration.cpp:134
+#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:133
 msgid "Zoom"
 msgstr "Zoom"
 
-#: Configuration.cpp:105
+#: Configuration.cpp:104
 msgid "Jump"
 msgstr "Jump"
 
-#: Configuration.cpp:105 Configuration.cpp:116
+#: Configuration.cpp:104 Configuration.cpp:115
 msgid "Spotlight"
 msgstr "Spotlight"
 
-#: Configuration.cpp:105 Configuration.cpp:116 Configuration.cpp:135
+#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:134
 msgid "Glow"
 msgstr "Glow"
 
-#: Configuration.cpp:105 Configuration.cpp:136
+#: Configuration.cpp:104 Configuration.cpp:135
 msgid "Fade"
 msgstr "Fade"
 
-#: Configuration.cpp:116
+#: Configuration.cpp:115
 msgid "Bounce"
 msgstr "Bounce"
 
-#: Configuration.cpp:116
+#: Configuration.cpp:115
 msgid "Blink"
 msgstr "Blink"
 
-#: Configuration.cpp:116
+#: Configuration.cpp:115
 msgid "Rotate"
 msgstr "Rotate"
 
-#: Configuration.cpp:127
+#: Configuration.cpp:126
 msgid "Never"
 msgstr "Never"
 
-#: Configuration.cpp:128
+#: Configuration.cpp:127
 msgid "On mouse-over"
 msgstr "On mouse-over"
 
-#: Configuration.cpp:129
+#: Configuration.cpp:128
 msgid "For active icon"
 msgstr "For active icon"
 
-#: Configuration.cpp:130
+#: Configuration.cpp:129
 msgid "Always"
 msgstr "Always"
 
-#: Configuration.cpp:151 Configuration.cpp:179 Configuration.cpp:419
-#: Configuration.cpp:436
+#: Configuration.cpp:155 Configuration.cpp:172 Configuration.cpp:451
+#: Configuration.cpp:468
 msgid "--- separator ---"
 msgstr "--- separator ---"
 
-#: Configuration.cpp:157 Configuration.cpp:171 Configuration.cpp:331
+#: Configuration.cpp:155 Configuration.cpp:164 Configuration.cpp:363
 msgid "--- tasks area ---"
 msgstr "--- tasks area ---"
 
-#: Configuration.cpp:162 Configuration.cpp:175 Configuration.cpp:335
+#: Configuration.cpp:155 Configuration.cpp:168 Configuration.cpp:367
 msgid "--- jobs area ---"
 msgstr "--- jobs area ---"
 
 #. i18n: file: ui/general.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, general)
-#: Configuration.cpp:270 locale/rc.cpp:102 rc.cpp:102
+#: Configuration.cpp:298 locale/rc.cpp:102 rc.cpp:102
 msgid "General"
 msgstr "General"
 
@@ -230,159 +230,154 @@ msgstr "General"
 #. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
 #. i18n: file: ui/appearance.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
-#: Configuration.cpp:271 locale/rc.cpp:24 locale/rc.cpp:27 rc.cpp:24 rc.cpp:27
+#: Configuration.cpp:299 locale/rc.cpp:24 locale/rc.cpp:27 rc.cpp:24 rc.cpp:27
 msgid "Appearance"
 msgstr "Appearance"
 
 #. i18n: file: ui/arrangement.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, arrangement)
-#: Configuration.cpp:272 locale/rc.cpp:57 rc.cpp:57
+#: Configuration.cpp:300 locale/rc.cpp:57 rc.cpp:57
 msgid "Arrangement"
 msgstr "Arrangement"
 
 #. i18n: file: ui/actions.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, actions)
-#: Configuration.cpp:273 locale/rc.cpp:3 rc.cpp:3
+#: Configuration.cpp:301 locale/rc.cpp:3 rc.cpp:3
 #, fuzzy
 msgid "Actions"
 msgstr "Animations"
 
-#: Configuration.cpp:581
+#: Configuration.cpp:613
 msgid "Add This Menu"
 msgstr "Add This Menu"
 
-#: Configuration.cpp:709
-#, fuzzy
-msgid "Trigger \"%1\" was already added."
-msgstr "Launcher with this URL was already added."
-
-#: Configuration.cpp:722
+#: Configuration.cpp:758
 #, fuzzy
 msgid "Launcher with URL \"%1\" already exists."
 msgstr "Launcher with this URL was already added."
 
-#: Icon.cpp:1563
+#: Icon.cpp:1576
 #, fuzzy
 msgid "Settings"
 msgstr "%1 Settings"
 
-#: Icon.cpp:1596 Launcher.cpp:112
+#: Icon.cpp:1609 Launcher.cpp:113
 msgctxt "@action:inmenu"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: Icon.cpp:1748
+#: Icon.cpp:1761
 msgid "1 job"
 msgid_plural "%1 jobs"
 msgstr[0] "1 job"
 msgstr[1] "%1 jobs"
 
-#: Job.cpp:88
+#: Job.cpp:89
 msgid "%1 [Paused]"
 msgstr "%1 [Paused]"
 
-#: Job.cpp:92
+#: Job.cpp:93
 msgid "%1 (%2 remaining) "
 msgstr "%1 (%2 remaining) "
 
-#: Job.cpp:127
+#: Job.cpp:128
 msgid "%1 [Finished]"
 msgstr "%1 [Finished]"
 
-#: Job.cpp:176
+#: Job.cpp:177
 msgid "Close Job"
 msgstr "Close Job"
 
-#: Job.cpp:184
+#: Job.cpp:185
 msgid "Pause Job"
 msgstr "Pause Job"
 
-#: Job.cpp:188
+#: Job.cpp:189
 msgid "Resume Job"
 msgstr "Resume Job"
 
-#: Job.cpp:199
+#: Job.cpp:200
 msgid "Cancel Job"
 msgstr "Cancel Job"
 
-#: Job.cpp:205
+#: Job.cpp:206
 msgid "Close on Finish"
 msgstr "Close on Finish"
 
-#: Launcher.cpp:107
+#: Launcher.cpp:108
 msgctxt "@action:inmenu"
 msgid "&Move Here\t<shortcut>%1</shortcut>"
 msgstr "&Move Here\t<shortcut>%1</shortcut>"
 
-#: Launcher.cpp:108
+#: Launcher.cpp:109
 msgctxt "@action:inmenu"
 msgid "&Copy Here\t<shortcut>%1</shortcut>"
 msgstr "&Copy Here\t<shortcut>%1</shortcut>"
 
-#: Launcher.cpp:109
+#: Launcher.cpp:110
 msgctxt "@action:inmenu"
 msgid "&Link Here\t<shortcut>%1</shortcut>"
 msgstr "&Link Here\t<shortcut>%1</shortcut>"
 
-#: Launcher.cpp:202
+#: Launcher.cpp:203
 msgctxt "@info"
 msgid "Do you really want to empty the trash? All items will be deleted."
 msgstr "Do you really want to empty the wastebin? All items will be deleted."
 
-#: Launcher.cpp:202
+#: Launcher.cpp:203
 msgctxt "@action:button"
 msgid "Empty Trash"
 msgstr "Empty Wastebin"
 
-#: Launcher.cpp:220
+#: Launcher.cpp:221
 msgid "Trash"
 msgstr "Wastebin"
 
-#: Launcher.cpp:221
+#: Launcher.cpp:222
 msgid "One item"
 msgid_plural "%1 items"
 msgstr[0] "One item"
 msgstr[1] "%1 items"
 
-#: Launcher.cpp:221
+#: Launcher.cpp:222
 msgid "Empty"
 msgstr "Empty"
 
-#: Launcher.cpp:421 Launcher.cpp:514
+#: Launcher.cpp:422 Launcher.cpp:515
 msgid "Open"
 msgstr "Open"
 
-#: Launcher.cpp:502
+#: Launcher.cpp:503
 msgid "Menu Editor"
 msgstr "Menu Editor"
 
-#: Launcher.cpp:503
+#: Launcher.cpp:504
 msgid "Menu"
 msgstr "Menu"
 
-#: Launcher.cpp:508
+#: Launcher.cpp:509
 msgid "Run"
 msgstr "Run"
 
-#: Launcher.cpp:519
+#: Launcher.cpp:520
 msgid "Browse"
 msgstr "Browse"
 
-#: Launcher.cpp:528
+#: Launcher.cpp:529
 msgid "&Empty Trashcan"
 msgstr "&Empty Wastebin"
 
 #. i18n: file: ui/arrangement.ui:61
 #. i18n: ectx: property (text), widget (QPushButton, editLauncherButton)
-#: Launcher.cpp:532 locale/rc.cpp:69 rc.cpp:69
+#: Launcher.cpp:533 locale/rc.cpp:69 rc.cpp:69
 msgid "Edit"
 msgstr "Edit"
 
-#: Launcher.cpp:533
+#: Launcher.cpp:534
 msgid "Launcher"
 msgstr "Launcher"
 
-#: LauncherProperties.cpp:48 Task.cpp:307
+#: LauncherProperties.cpp:48 Task.cpp:355
 msgid "%1 Settings"
 msgstr "%1 Settings"
 
@@ -508,14 +503,14 @@ msgid "Moving between icons:"
 msgstr "Moving between icons:"
 
 #. i18n: file: ui/arrangement.ui:22
-#. i18n: ectx: property (text), widget (QLabel, availableActionsLabel)
+#. i18n: ectx: property (text), widget (QLabel, availableEntriesLabel)
 #: locale/rc.cpp:60 rc.cpp:60
 #, fuzzy
 msgid "Available entries:"
 msgstr "Available actions:"
 
 #. i18n: file: ui/arrangement.ui:29
-#. i18n: ectx: property (text), widget (QLabel, currentActionsLabel)
+#. i18n: ectx: property (text), widget (QLabel, currentEntriesLabel)
 #: locale/rc.cpp:63 rc.cpp:63
 #, fuzzy
 msgid "Current entries:"
@@ -728,60 +723,72 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: Task.cpp:509
+#: Task.cpp:88
+msgid "Pin This Task"
+msgstr ""
+
+#: Task.cpp:573
 msgid "Application"
 msgstr "Application"
 
-#: Task.cpp:520
+#: Task.cpp:584
 msgid "Starting application..."
 msgstr "Starting application..."
 
-#: Task.cpp:524
+#: Task.cpp:588
 msgid "On all desktops"
 msgstr "On all desktops"
 
-#: Task.cpp:524
+#: Task.cpp:588
 msgctxt "Which virtual desktop a window is currently on"
 msgid "On %1"
 msgstr "On %1"
 
-#: TriggerDelegate.cpp:65 TriggerDelegate.cpp:85
+#: TriggerDelegate.cpp:45 TriggerDelegate.cpp:169
+msgid "Already used..."
+msgstr ""
+
+#: TriggerDelegate.cpp:72 TriggerDelegate.cpp:92
 msgid "No trigger"
 msgstr ""
 
-#: TriggerDelegate.cpp:70
+#: TriggerDelegate.cpp:77
 msgctxt "As mouse button"
 msgid "Left button"
 msgstr ""
 
-#: TriggerDelegate.cpp:75
+#: TriggerDelegate.cpp:82
 msgctxt "As mouse button"
 msgid "Middle button"
 msgstr ""
 
-#: TriggerDelegate.cpp:80
+#: TriggerDelegate.cpp:87
 msgctxt "As mouse button"
 msgid "Right button"
 msgstr ""
 
-#: TriggerDelegate.cpp:90
+#: TriggerDelegate.cpp:97
 msgctxt "As keyboard modifier"
 msgid "Shift modifier"
 msgstr ""
 
-#: TriggerDelegate.cpp:95
+#: TriggerDelegate.cpp:102
 msgctxt "As keyboard modifier"
 msgid "Ctrl modifier"
 msgstr ""
 
-#: TriggerDelegate.cpp:100
+#: TriggerDelegate.cpp:107
 msgctxt "As keyboard modifier"
 msgid "Alt modifier"
 msgstr ""
 
-#: TriggerDelegate.cpp:111
+#: TriggerDelegate.cpp:118
 msgid "Click..."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Trigger \"%1\" was already added."
+#~ msgstr "Launcher with this URL was already added."
 
 #, fuzzy
 #~ msgid "Activation"

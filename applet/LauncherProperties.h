@@ -21,7 +21,7 @@
 #ifndef FANCYTASKSLAUNCHERPROPERTIES_HEADER
 #define FANCYTASKSLAUNCHERPROPERTIES_HEADER
 
-#include "Applet.h"
+#include "Constants.h"
 
 #include <KPropertiesDialog>
 
