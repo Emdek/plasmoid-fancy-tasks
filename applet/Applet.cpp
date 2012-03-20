@@ -827,7 +827,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
 
         if (m_arrangement.contains("jobs") && m_arrangement.indexOf("tasks") > m_arrangement.indexOf("jobs"))
         {
-            index += m_jobs.count();
+            index += m_jobIcons.count();
         }
 
         insertItem(index, icon);
@@ -922,6 +922,39 @@ void Applet::addLauncher(Launcher *launcher, int index)
         }
     }
 
+    Icon *icon = NULL;
+
+    if (m_launcherIcons.contains(launcher) && m_launcherIcons[launcher])
+    {
+        const int currentIndex = m_arrangement.indexOf(url);
+
+        if (currentIndex == index)
+        {
+            return;
+        }
+
+        if (currentIndex < index)
+        {
+            --index;
+        }
+
+        m_layout->removeItem(m_launcherIcons[launcher]);
+
+        icon = m_launcherIcons[launcher];
+
+        m_arrangement.removeAll(url);
+    }
+    else
+    {
+        icon = new Icon(NULL, launcher, NULL, this);
+        icon->setSize(m_itemSize);
+        icon->setFactor(m_initialFactor);
+    }
+
+    m_launcherIcons[launcher] = icon;
+
+    m_arrangement.insert(index, url);
+
     if (m_arrangement.contains("tasks") && index >= m_arrangement.indexOf("tasks"))
     {
         index += m_taskIcons.count();
@@ -929,52 +962,12 @@ void Applet::addLauncher(Launcher *launcher, int index)
 
     if (m_arrangement.contains("jobs") && index >= m_arrangement.indexOf("jobs"))
     {
-        index += m_jobs.count();
+        index += m_jobIcons.count();
     }
 
-    if (m_launcherIcons.contains(launcher))
-    {
-        int currentIndex = m_arrangement.indexOf(url);
+    insertItem(index, icon);
 
-        if (m_arrangement.contains("tasks") && currentIndex >= m_arrangement.indexOf("tasks"))
-        {
-            currentIndex += m_taskIcons.count();
-        }
-
-        if (m_arrangement.contains("jobs") && currentIndex >= m_arrangement.indexOf("jobs"))
-        {
-            currentIndex += m_jobs.count();
-        }
-
-        if (currentIndex == index)
-        {
-            return;
-        }
-        else if (currentIndex < index)
-        {
-            --index;
-        }
-
-        m_layout->removeItem(m_launcherIcons[launcher]);
-
-        insertItem(index, m_launcherIcons[launcher]);
-
-        m_arrangement.removeAll(url);
-    }
-    else
-    {
-        Icon *icon = new Icon(NULL, launcher, NULL, this);
-        icon->setSize(m_itemSize);
-        icon->setFactor(m_initialFactor);
-
-        m_launcherIcons[launcher] = icon;
-
-        insertItem(index, icon);
-
-        updateSize();
-    }
-
-    m_arrangement.insert(index, url);
+    updateSize();
 
     config().writeEntry("arrangement", m_arrangement);
 
@@ -1227,7 +1220,7 @@ void Applet::showJob()
     icon->setSize(m_itemSize);
     icon->setFactor(m_initialFactor);
 
-    int index = (m_arrangement.indexOf("jobs") + m_jobs.count() - 1);
+    int index = (m_arrangement.indexOf("jobs") + m_jobIcons.count() - 1);
 
     if (m_arrangement.contains("tasks") && m_arrangement.indexOf("jobs") > m_arrangement.indexOf("tasks"))
     {
