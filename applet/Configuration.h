@@ -49,15 +49,17 @@ class Configuration : public QObject
         bool eventFilter(QObject *object, QEvent *event);
 
     protected:
+        void connectWidgets(QWidget *widget);
         bool hasEntry(const QString &entry, bool warn = true);
 
     protected slots:
-        void accepted();
+        void save();
+        void modify();
         void moveAnimationTypeChanged(int option);
         void availableEntriesCurrentItemChanged(int row);
         void currentEntriesCurrentItemChanged(int row);
-        void removeItem();
         void addItem();
+        void removeItem();
         void moveUpItem();
         void moveDownItem();
         void addLauncher(const QString &url);
@@ -83,7 +85,7 @@ class Configuration : public QObject
         Ui::findApplication m_findApplicationUi;
 
     signals:
-        void finished();
+        void accepted();
 };
 
 }

@@ -1,11 +1,14 @@
+1.1.1 (--.--.2012):
+- enable Apply button when configuration values are changed.
+
 1.1.0 (20.03.2012):
-- add per launcher task connecting rules;
+- added per launcher task connecting rules;
 - use command name for default launcher matching rules;
-- add toggle fullscreen, minimize, maximize etc actions;
+- added toggle fullscreen, minimize, maximize etc actions;
 - show item tool tip instantly;
-- add support for showing tasks from current activity only;
+- added support for showing tasks from current activity only;
 - window context menus for entries of Entries menu also for not grouped tasks;
-- add own pin task action;
+- added own pin task action;
 - preparations for removing use of libtaskmanager;
 - lots of other internal (tasks management related) improvements and fixes.
 
@@ -14,7 +17,7 @@
 - change default animation to glow;
 - make thumbnails work with raster graphics system;
 - hide option to use thumbnails if it is not available;
-- add Settings entry to icon context menu;
+- added Settings entry to icon context menu;
 - fix triggering actions with keyboard modifiers;
 - remove custom implementation of task activation.
 
@@ -127,7 +130,7 @@
 - added option to use default Plasma tool tips;
 - added hidden option to set initial zoom level for zoom move animations (add entry "initialZoomLevel" in applets configuration file with value from 0 to 1);
 - added dialog for searching for applications to add as launchers;
-- add "Empty trashcan" action if launcher points to trash:/;
+- added "Empty trashcan" action if launcher points to trash:/;
 - many improvements to icon positioning in layout;
 - load favorites from Kickoff as launchers as default set;
 - fixed previews not always shown in tool tips;

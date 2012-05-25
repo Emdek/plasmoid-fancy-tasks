@@ -166,7 +166,7 @@ void Applet::createConfigurationInterface(KConfigDialog *parent)
 {
     Configuration *configuration = new Configuration(this, parent);
 
-    connect(configuration, SIGNAL(finished()), this, SLOT(updateConfiguration()));
+    connect(configuration, SIGNAL(accepted()), this, SLOT(updateConfiguration()));
 }
 
 void Applet::constraintsEvent(Plasma::Constraints constraints)

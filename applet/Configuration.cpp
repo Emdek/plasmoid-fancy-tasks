@@ -69,6 +69,9 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     m_actionsUi.setupUi(actionsWidget);
     m_findApplicationUi.setupUi(findApplicationWidget);
 
+    connectWidgets(generalWidget);
+    connectWidgets(appearanceWidget);
+
     m_findApplicationDialog = new KDialog(parent);
     m_findApplicationDialog->setCaption(i18n("Find Application"));
     m_findApplicationDialog->setMainWidget(findApplicationWidget);
@@ -300,8 +303,10 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     parent->addPage(arrangementWidget, i18n("Arrangement"), "format-list-unordered");
     parent->addPage(actionsWidget, i18n("Actions"), "configure-shortcuts");
 
-    connect(parent, SIGNAL(okClicked()), this, SLOT(accepted()));
+    connect(parent, SIGNAL(applyClicked()), this, SLOT(save()));
+    connect(parent, SIGNAL(okClicked()), this, SLOT(save()));
     connect(m_appearanceUi.moveAnimation, SIGNAL(currentIndexChanged(int)), this, SLOT(moveAnimationTypeChanged(int)));
+    connect(m_appearanceUi.customBackgroundImage, SIGNAL(textChanged(QString)), this, SLOT(modify()));
     connect(m_arrangementUi.availableEntriesListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(availableEntriesCurrentItemChanged(int)));
     connect(m_arrangementUi.currentEntriesListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(currentEntriesCurrentItemChanged(int)));
     connect(m_arrangementUi.removeButton, SIGNAL(clicked()), this, SLOT(removeItem()));
@@ -327,7 +332,7 @@ Configuration::~Configuration()
     }
 }
 
-void Configuration::accepted()
+void Configuration::save()
 {
     KConfigGroup configuration = m_applet->config();
     QStringList arrangement;
@@ -411,7 +416,31 @@ void Configuration::accepted()
     configuration.writeEntry("jobCloseMode", m_generalUi.jobCloseMode->itemData(m_generalUi.jobCloseMode->currentIndex()).toInt());
     configuration.writeEntry("arrangement", arrangement);
 
-    emit finished();
+    static_cast<KConfigDialog*>(parent())->enableButtonApply(false);
+
+    emit accepted();
+}
+
+void Configuration::modify()
+{
+    static_cast<KConfigDialog*>(parent())->enableButtonApply(true);
+}
+
+void Configuration::connectWidgets(QWidget *widget)
+{
+    QList<QAbstractButton*> buttons = widget->findChildren<QAbstractButton*>();
+
+    for (int i = 0; i < buttons.count(); ++i)
+    {
+        connect(buttons.at(i), SIGNAL(toggled(bool)), this, SLOT(modify()));
+    }
+
+    QList<QComboBox*> comboBoxes = widget->findChildren<QComboBox*>();
+
+    for (int i = 0; i < comboBoxes.count(); ++i)
+    {
+        connect(comboBoxes.at(i), SIGNAL(currentIndexChanged(int)), this, SLOT(modify()));
+    }
 }
 
 void Configuration::moveAnimationTypeChanged(int option)
@@ -442,65 +471,81 @@ void Configuration::currentEntriesCurrentItemChanged(int row)
     }
 }
 
-void Configuration::removeItem()
-{
-    if (m_arrangementUi.currentEntriesListWidget->currentRow() >= 0)
-    {
-        QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(m_arrangementUi.currentEntriesListWidget->currentRow());
-
-        if (currentItem->text() != i18n("--- separator ---"))
-        {
-            m_arrangementUi.availableEntriesListWidget->addItem(currentItem);
-        }
-        else
-        {
-            delete currentItem;
-        }
-    }
-}
-
 void Configuration::addItem()
 {
-    if (m_arrangementUi.availableEntriesListWidget->currentRow() >= 0)
+    if (m_arrangementUi.availableEntriesListWidget->currentRow() < 0)
     {
-        QListWidgetItem *currentItem = m_arrangementUi.availableEntriesListWidget->takeItem(m_arrangementUi.availableEntriesListWidget->currentRow());
-
-        if (currentItem->text() == i18n("--- separator ---"))
-        {
-            m_arrangementUi.availableEntriesListWidget->insertItem(0, currentItem->clone());
-        }
-
-        m_arrangementUi.currentEntriesListWidget->insertItem((m_arrangementUi.currentEntriesListWidget->currentRow() + 1), currentItem);
-        m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
-        m_arrangementUi.availableEntriesListWidget->setCurrentItem(NULL);
+        return;
     }
+
+    QListWidgetItem *currentItem = m_arrangementUi.availableEntriesListWidget->takeItem(m_arrangementUi.availableEntriesListWidget->currentRow());
+
+    if (currentItem->text() == i18n("--- separator ---"))
+    {
+        m_arrangementUi.availableEntriesListWidget->insertItem(0, currentItem->clone());
+    }
+
+    m_arrangementUi.currentEntriesListWidget->insertItem((m_arrangementUi.currentEntriesListWidget->currentRow() + 1), currentItem);
+    m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
+    m_arrangementUi.availableEntriesListWidget->setCurrentItem(NULL);
+
+    modify();
+}
+
+void Configuration::removeItem()
+{
+    if (m_arrangementUi.currentEntriesListWidget->currentRow() < 0)
+    {
+        return;
+    }
+
+    QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(m_arrangementUi.currentEntriesListWidget->currentRow());
+
+    if (currentItem->text() != i18n("--- separator ---"))
+    {
+        m_arrangementUi.availableEntriesListWidget->addItem(currentItem);
+    }
+    else
+    {
+        delete currentItem;
+    }
+
+    modify();
 }
 
 void Configuration::moveUpItem()
 {
     const int currentRow = m_arrangementUi.currentEntriesListWidget->currentRow();
 
-    if (currentRow > 0)
+    if (currentRow < 1)
     {
-        QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(currentRow);
-
-        m_arrangementUi.currentEntriesListWidget->insertItem((currentRow - 1), currentItem);
-        m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
+        return;
     }
+
+    QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(currentRow);
+
+    m_arrangementUi.currentEntriesListWidget->insertItem((currentRow - 1), currentItem);
+    m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
+
+    modify();
 }
 
 void Configuration::moveDownItem()
 {
     const int currentRow = m_arrangementUi.currentEntriesListWidget->currentRow();
 
-    if (currentRow < (m_arrangementUi.currentEntriesListWidget->count() - 1))
+    if (currentRow >= (m_arrangementUi.currentEntriesListWidget->count() - 1))
     {
-        QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(currentRow);
-
-        m_arrangementUi.currentEntriesListWidget->insertItem((currentRow + 1), currentItem);
-
-        m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
+        return;
     }
+
+    QListWidgetItem *currentItem = m_arrangementUi.currentEntriesListWidget->takeItem(currentRow);
+
+    m_arrangementUi.currentEntriesListWidget->insertItem((currentRow + 1), currentItem);
+
+    m_arrangementUi.currentEntriesListWidget->setCurrentItem(currentItem);
+
+    modify();
 }
 
 void Configuration::addLauncher(const QString &url)
@@ -521,6 +566,8 @@ void Configuration::addLauncher(const QString &url)
     m_arrangementUi.currentEntriesListWidget->model()->setData(index, launcher.icon(), Qt::DecorationRole);
     m_arrangementUi.currentEntriesListWidget->model()->setData(index, launcher.launcherUrl().pathOrUrl(), Qt::ToolTipRole);
     m_arrangementUi.currentEntriesListWidget->setCurrentRow(row);
+
+    modify();
 }
 
 void Configuration::addLauncher()
@@ -582,6 +629,8 @@ void Configuration::changeLauncher(Launcher *launcher, const KUrl &oldUrl)
     }
 
     m_rules[url] = qMakePair(launcher->rules(), launcher->isExcluded());
+
+    modify();
 }
 
 void Configuration::addMenu(QAction *action)
@@ -725,6 +774,8 @@ void Configuration::actionClicked(const QModelIndex &index)
 
     m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 0));
     m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 1));
+
+    modify();
 }
 
 bool Configuration::hasTrigger(const QString &trigger)
