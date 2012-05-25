@@ -72,6 +72,9 @@ class Configuration : public QObject
         void closeFindApplicationDialog();
         void closeActionEditors();
         void actionClicked(const QModelIndex &index);
+        void actionSelectionChanged();
+        void addAction();
+        void removeAction();
 
     private:
         QPointer<Applet> m_applet;

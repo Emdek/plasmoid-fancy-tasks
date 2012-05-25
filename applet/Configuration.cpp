@@ -315,6 +315,9 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     connect(m_arrangementUi.moveDownButton, SIGNAL(clicked()), this, SLOT(moveDownItem()));
     connect(m_arrangementUi.editLauncherButton, SIGNAL(clicked()), this, SLOT(editLauncher()));
     connect(m_actionsUi.actionsTableWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(actionClicked(QModelIndex)));
+    connect(m_actionsUi.actionsTableWidget->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(actionSelectionChanged()));
+    connect(m_actionsUi.addButton, SIGNAL(clicked()), this, SLOT(addAction()));
+    connect(m_actionsUi.removeButton, SIGNAL(clicked()), this, SLOT(removeAction()));
     connect(m_findApplicationUi.query, SIGNAL(textChanged(QString)), this, SLOT(findApplication(QString)));
     connect(addLauncherApplicationAction, SIGNAL(triggered()), m_findApplicationDialog, SLOT(show()));
     connect(addLauncherApplicationAction, SIGNAL(triggered()), m_findApplicationUi.query, SLOT(setFocus()));
@@ -774,6 +777,35 @@ void Configuration::actionClicked(const QModelIndex &index)
 
     m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 0));
     m_actionsUi.actionsTableWidget->openPersistentEditor(m_actionsUi.actionsTableWidget->item(index.row(), 1));
+
+    modify();
+}
+
+void Configuration::actionSelectionChanged()
+{
+    m_actionsUi.removeButton->setEnabled(m_actionsUi.actionsTableWidget->selectionModel()->hasSelection());
+}
+
+void Configuration::addAction()
+{
+    QTableWidgetItem *triggerItem = new QTableWidgetItem();
+    triggerItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+    QTableWidgetItem *actionItem = new QTableWidgetItem("0");
+    actionItem->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+    const int rowCount = m_actionsUi.actionsTableWidget->rowCount();
+
+    m_actionsUi.actionsTableWidget->setRowCount(rowCount + 1);
+    m_actionsUi.actionsTableWidget->setItem(rowCount, 0, actionItem);
+    m_actionsUi.actionsTableWidget->setItem(rowCount, 1, triggerItem);
+
+    modify();
+}
+
+void Configuration::removeAction()
+{
+    m_actionsUi.actionsTableWidget->removeRow(m_actionsUi.actionsTableWidget->currentRow());
 
     modify();
 }
