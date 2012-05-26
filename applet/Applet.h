@@ -119,7 +119,6 @@ class Applet : public Plasma::Applet
         void focusIcon(bool next, bool activateWindow = false);
         void needsVisualFocus();
         void showMenu();
-        void showDropZone(int index);
         void hideDropZone();
         void updateSize();
         void requestFocus();

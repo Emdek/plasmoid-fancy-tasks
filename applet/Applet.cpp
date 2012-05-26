@@ -1449,17 +1449,6 @@ void Applet::showMenu()
     menu->deleteLater();
 }
 
-void Applet::showDropZone(int index)
-{
-    if (m_dropZone->index() != index)
-    {
-        m_layout->removeItem(m_dropZone);
-        m_layout->insertItem(index, m_dropZone);
-
-        m_dropZone->show(index);
-    }
-}
-
 void Applet::hideDropZone()
 {
     if (!m_dropZone->isUnderMouse())
@@ -1699,40 +1688,50 @@ void Applet::itemDropped(Icon *icon, int index)
 
 void Applet::itemDragged(Icon *icon, const QPointF &position, const QMimeData *mimeData)
 {
-    if (((mimeData->hasFormat("windowsystem/winid") || mimeData->hasFormat("windowsystem/multiple-winids")) && m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting && icon && icon->task()) || (KUrl::List::canDecode(mimeData) && immutability() == Plasma::Mutable && !mimeData->hasFormat("windowsystem/winid") && !mimeData->hasFormat("windowsystem/multiple-winids")))
+    if (!(icon && icon->task() && m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting) && !(icon && !icon->task() && KUrl::List::canDecode(mimeData) && immutability() == Plasma::Mutable))
     {
-        int index = 0;
+        return;
+    }
 
-        for (int i = 0; i < m_layout->count(); ++i)
+    int index = 0;
+
+    for (int i = 0; i < m_layout->count(); ++i)
+    {
+        QObject *object = dynamic_cast<QObject*>(m_layout->itemAt(i)->graphicsItem());
+
+        if (!object || (object->objectName() != "FancyTasksIcon" && object->objectName() != "FancyTasksSeparator"))
         {
-            QObject *object = dynamic_cast<QObject*>(m_layout->itemAt(i)->graphicsItem());
-
-            if (!object || (object->objectName() != "FancyTasksIcon" && object->objectName() != "FancyTasksSeparator"))
-            {
-                continue;
-            }
-
-            if (object == icon)
-            {
-                break;
-            }
-
-            ++index;
+            continue;
         }
 
-        if (location() == Plasma::LeftEdge || location() == Plasma::RightEdge)
+        if (object == icon)
         {
-            if (position.y() > (icon->boundingRect().height() / 2))
-            {
-                ++index;
-            }
+            break;
         }
-        else if (position.x() > (icon->boundingRect().width() / 2))
+
+        ++index;
+    }
+
+    if (location() == Plasma::LeftEdge || location() == Plasma::RightEdge)
+    {
+        if (position.y() > (icon->boundingRect().height() / 2))
         {
             ++index;
         }
+    }
+    else if (position.x() > (icon->boundingRect().width() / 2))
+    {
+        ++index;
+    }
 
-        showDropZone(index + 1);
+    ++index;
+
+    if (m_dropZone->index() != index)
+    {
+        m_layout->removeItem(m_dropZone);
+        m_layout->insertItem(index, m_dropZone);
+
+        m_dropZone->show(index);
     }
 }
 
