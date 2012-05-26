@@ -57,7 +57,7 @@
 namespace FancyTasks
 {
 
-Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *applet) : QGraphicsWidget(applet),
+Icon::Icon(int id, Task *task, Launcher *launcher, Job *job, Applet *applet) : QGraphicsWidget(applet),
     m_applet(applet),
     m_task(NULL),
     m_launcher(NULL),
@@ -67,6 +67,7 @@ Icon::Icon(Task *task, Launcher *launcher, Job *job, Applet *applet) : QGraphics
     m_jobAnimationTimeLine(NULL),
     m_itemType(OtherType),
     m_factor(applet->initialFactor()),
+    m_id(id),
     m_animationProgress(-1),
     m_jobsProgress(0),
     m_jobsAnimationProgress(0),
@@ -667,6 +668,7 @@ void Icon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QMimeData *mimeData = new QMimeData;
+    mimeData->setData("plasmoid-fancytasks/iconid", QString::number(m_id).toAscii());
 
     if (m_launcher)
     {

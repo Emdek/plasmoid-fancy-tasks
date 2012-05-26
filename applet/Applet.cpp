@@ -821,9 +821,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
     {
         int index = (((m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting)?m_taskIcons.count():m_groupManager->rootGroup()->members().indexOf(abstractItem)) + m_arrangement.indexOf("tasks") + 1);
 
-        icon = new Icon(task, launcherForTask(task), NULL, this);
-        icon->setSize(m_itemSize);
-        icon->setFactor(m_initialFactor);
+        icon = createIcon(task, launcherForTask(task), NULL);
 
         if (m_arrangement.contains("jobs") && m_arrangement.indexOf("tasks") > m_arrangement.indexOf("jobs"))
         {
@@ -946,9 +944,7 @@ void Applet::addLauncher(Launcher *launcher, int index)
     }
     else
     {
-        icon = new Icon(NULL, launcher, NULL, this);
-        icon->setSize(m_itemSize);
-        icon->setFactor(m_initialFactor);
+        icon = createIcon(NULL, launcher, NULL);
     }
 
     m_launcherIcons[launcher] = icon;
@@ -1216,9 +1212,7 @@ void Applet::showJob()
 
     }
 
-    Icon *icon = new Icon(NULL, NULL, job, this);
-    icon->setSize(m_itemSize);
-    icon->setFactor(m_initialFactor);
+    Icon *icon = createIcon(NULL, NULL, job);
 
     int index = (m_arrangement.indexOf("jobs") + m_jobIcons.count() - 1);
 
@@ -1696,6 +1690,7 @@ void Applet::itemDragged(Icon *icon, const QPointF &position, const QMimeData *m
     }
 
     int index = 0;
+    const int id = (mimeData->hasFormat("plasmoid-fancytasks/iconid")?QString(mimeData->data("plasmoid-fancytasks/iconid")).toInt():0);
 
     for (int i = 0; i < m_layout->count(); ++i)
     {
@@ -2037,6 +2032,26 @@ TaskManager::GroupManager* Applet::groupManager()
 Plasma::Svg* Applet::theme()
 {
     return m_theme;
+}
+
+Icon* Applet::createIcon(Task *task, Launcher *launcher, Job *job)
+{
+    int id = qrand();
+
+    while (m_icons.contains(id))
+    {
+        id = qrand();
+    }
+
+    m_icons[id] = NULL;
+
+    Icon *icon = new Icon(id, task, launcher, job, this);
+    icon->setSize(m_itemSize);
+    icon->setFactor(m_initialFactor);
+
+    m_icons[id] = icon;
+
+    return icon;
 }
 
 QStringList Applet::arrangement() const

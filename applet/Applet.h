@@ -135,6 +135,7 @@ class Applet : public Plasma::Applet
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void wheelEvent(QGraphicsSceneWheelEvent *event);
         void focusInEvent(QFocusEvent *event);
+        Icon* createIcon(Task *task, Launcher *launcher, Job *job);
         bool focusNextPrevChild(bool next);
 
     private:
@@ -146,6 +147,7 @@ class Applet : public Plasma::Applet
         QList<QPair<QPointer<Icon>, QDateTime> > m_startups;
         QMap<WId, QPointer<Task> > m_tasks;
         QMap<QString, QPointer<Job> > m_jobs;
+        QMap<int, QPointer<Icon> > m_icons;
         QMap<AbstractGroupableItem*, QPointer<Icon> > m_taskIcons;
         QMap<AbstractGroupableItem*, QPointer<Icon> > m_launcherTaskIcons;
         QMap<Launcher*, QPointer<Icon> > m_launcherIcons;

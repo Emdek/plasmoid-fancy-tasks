@@ -51,7 +51,7 @@ class Icon : public QGraphicsWidget
     Q_OBJECT
 
     public:
-        Icon(Task *task, Launcher *launcher, Job *job, Applet *applet);
+        Icon(int id, Task *task, Launcher *launcher, Job *job, Applet *applet);
 
         ItemType itemType() const;
         QPointer<Task> task();
@@ -134,6 +134,7 @@ class Icon : public QGraphicsWidget
         qreal m_size;
         qreal m_factor;
         qreal m_animationProgress;
+        int m_id;
         int m_jobsProgress;
         int m_jobsAnimationProgress;
         int m_dragTimer;
