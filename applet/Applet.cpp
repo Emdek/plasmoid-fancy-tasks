@@ -1688,7 +1688,9 @@ void Applet::itemDropped(Icon *icon, int index)
 
 void Applet::itemDragged(Icon *icon, const QPointF &position, const QMimeData *mimeData)
 {
-    if (!(icon && icon->task() && m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting) && !(icon && !icon->task() && KUrl::List::canDecode(mimeData) && immutability() == Plasma::Mutable))
+    const bool hasWindows = (mimeData->hasFormat("windowsystem/winid") || mimeData->hasFormat("windowsystem/multiple-winids"));
+
+    if (!(hasWindows && icon && icon->task() && m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting) && !(!hasWindows && KUrl::List::canDecode(mimeData) && immutability() == Plasma::Mutable))
     {
         return;
     }
