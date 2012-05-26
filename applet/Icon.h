@@ -62,6 +62,7 @@ class Icon : public QGraphicsWidget
         QPainterPath shape() const;
         KIcon icon();
         qreal factor() const;
+        int id() const;
         bool isVisible() const;
         bool isDemandingAttention() const;
 

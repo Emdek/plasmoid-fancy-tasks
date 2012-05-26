@@ -1,5 +1,6 @@
 1.1.1 (--.--.2012):
 - enable Add / Remove action buttons;
+- do not propose to drop icon in place which equals its current index;
 - enable Apply button when configuration values are changed.
 
 1.1.0 (20.03.2012):

@@ -1684,29 +1684,43 @@ void Applet::itemDragged(Icon *icon, const QPointF &position, const QMimeData *m
 {
     const bool hasWindows = (mimeData->hasFormat("windowsystem/winid") || mimeData->hasFormat("windowsystem/multiple-winids"));
 
-    if (!(hasWindows && icon && icon->task() && m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting) && !(!hasWindows && KUrl::List::canDecode(mimeData) && immutability() == Plasma::Mutable))
+    if (!icon && !(hasWindows && icon->task() && m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting) && !(!hasWindows && KUrl::List::canDecode(mimeData) && immutability() == Plasma::Mutable))
     {
         return;
     }
 
-    int index = 0;
-    const int id = (mimeData->hasFormat("plasmoid-fancytasks/iconid")?QString(mimeData->data("plasmoid-fancytasks/iconid")).toInt():0);
+    QList<int> items;
 
     for (int i = 0; i < m_layout->count(); ++i)
     {
         QObject *object = dynamic_cast<QObject*>(m_layout->itemAt(i)->graphicsItem());
 
-        if (!object || (object->objectName() != "FancyTasksIcon" && object->objectName() != "FancyTasksSeparator"))
+        if (!object)
         {
             continue;
         }
 
-        if (object == icon)
+        if (object->objectName() == "FancyTasksIcon")
         {
-            break;
-        }
+            Icon *currentIcon = dynamic_cast<Icon*>(object);
 
-        ++index;
+            if (currentIcon)
+            {
+                items.append(currentIcon->id());
+            }
+        }
+        else if (object->objectName() == "FancyTasksSeparator")
+        {
+            items.append(-1);
+        }
+    }
+
+    int index = items.indexOf(icon->id());
+    const int draggedIndex = items.indexOf(mimeData->hasFormat("plasmoid-fancytasks/iconid")?QString(mimeData->data("plasmoid-fancytasks/iconid")).toInt():-1);
+
+    if (index < 0 || icon->id() < 0 || (index >= (draggedIndex - 1) && index <= (draggedIndex + 1)))
+    {
+        return;
     }
 
     if (location() == Plasma::LeftEdge || location() == Plasma::RightEdge)

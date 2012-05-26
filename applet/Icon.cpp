@@ -67,8 +67,8 @@ Icon::Icon(int id, Task *task, Launcher *launcher, Job *job, Applet *applet) : Q
     m_jobAnimationTimeLine(NULL),
     m_itemType(OtherType),
     m_factor(applet->initialFactor()),
-    m_id(id),
     m_animationProgress(-1),
+    m_id(id),
     m_jobsProgress(0),
     m_jobsAnimationProgress(0),
     m_dragTimer(0),
@@ -1869,6 +1869,11 @@ KIcon Icon::icon()
 qreal Icon::factor() const
 {
     return m_factor;
+}
+
+int Icon::id() const
+{
+    return m_id;
 }
 
 bool Icon::isVisible() const
