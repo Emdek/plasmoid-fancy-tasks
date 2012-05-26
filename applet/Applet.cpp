@@ -1682,9 +1682,16 @@ void Applet::itemDropped(Icon *icon, int index)
 
 void Applet::itemDragged(Icon *icon, const QPointF &position, const QMimeData *mimeData)
 {
-    const bool hasWindows = (mimeData->hasFormat("windowsystem/winid") || mimeData->hasFormat("windowsystem/multiple-winids"));
+    if (!icon)
+    {
+        return;
+    }
 
-    if (!icon && !(hasWindows && icon->task() && m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting) && !(!hasWindows && KUrl::List::canDecode(mimeData) && immutability() == Plasma::Mutable))
+    const bool hasWindows = (mimeData->hasFormat("windowsystem/winid") || mimeData->hasFormat("windowsystem/multiple-winids"));
+    const bool isPossibleTask = (hasWindows && icon->task() && m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting);
+    const bool isPossibleLauncher = (!hasWindows && KUrl::List::canDecode(mimeData) && immutability() == Plasma::Mutable);
+
+    if (!isPossibleTask && !isPossibleLauncher)
     {
         return;
     }
