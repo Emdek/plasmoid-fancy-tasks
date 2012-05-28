@@ -75,9 +75,11 @@ void DropZone::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 
 void DropZone::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-    if (event->mimeData()->hasFormat("windowsystem/winid") || event->mimeData()->hasFormat("windowsystem/multiple-winids"))
+    Icon *icon = m_applet->iconForMimeData(event->mimeData());
+
+    if (icon)
     {
-        m_applet->itemDropped(m_applet->iconForMimeData(event->mimeData()), m_index);
+        m_applet->itemDropped(icon, m_index);
 
         event->accept();
     }

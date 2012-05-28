@@ -704,7 +704,6 @@ void Applet::updateConfiguration()
 
 void Applet::insertItem(int index, QGraphicsLayoutItem *item)
 {
-
     if (index >= (m_layout->count() - 1))
     {
         index = (m_layout->count() - 2);
@@ -954,12 +953,14 @@ void Applet::addLauncher(Launcher *launcher, int index)
         m_arrangement.insert(index, url);
     }
 
-    if (m_arrangement.contains("tasks") && index >= m_arrangement.indexOf("tasks"))
+    const int originalIndex = index;
+
+    if (m_arrangement.contains("tasks") && originalIndex >= m_arrangement.indexOf("tasks"))
     {
         index += m_taskIcons.count();
     }
 
-    if (m_arrangement.contains("jobs") && index >= m_arrangement.indexOf("jobs"))
+    if (m_arrangement.contains("jobs") && originalIndex >= m_arrangement.indexOf("jobs"))
     {
         index += m_jobIcons.count();
     }
@@ -1636,49 +1637,30 @@ void Applet::itemDropped(Icon *icon, int index)
         return;
     }
 
-    if (immutability() != Plasma::Mutable)
+    if (immutability() != Plasma::Mutable || !icon->launcher())
     {
         return;
-    }
-
-    KConfigGroup configuration = config();
-    QStringList arrangement;
-
-    if (m_arrangement.contains("tasks") && index >= m_arrangement.indexOf("tasks") && index <= (m_arrangement.indexOf("tasks") + m_taskIcons.count()))
-    {
-        index = 1;
     }
 
     m_layout->removeItem(icon);
 
     insertItem(index, icon);
 
-    for (int i = 0; i < m_layout->count(); ++i)
+    const int originalIndex = index;
+
+    if (m_arrangement.contains("tasks") && originalIndex >= m_arrangement.indexOf("tasks"))
     {
-        QString objectName = dynamic_cast<QObject*>(m_layout->itemAt(i)->graphicsItem())->objectName();
-
-        if (objectName == "FancyTasksIcon")
-        {
-            Icon *icon = static_cast<Icon*>(m_layout->itemAt(i)->graphicsItem());
-
-            if (icon && icon->itemType() == LauncherType)
-            {
-                arrangement.append(icon->launcher()->launcherUrl().pathOrUrl());
-            }
-            else if (!arrangement.contains("tasks"))
-            {
-                arrangement.append("tasks");
-            }
-        }
-        else if (objectName == "FancyTasksSeparator")
-        {
-            arrangement.append("separator");
-        }
+        index -= m_taskIcons.count();
     }
 
-    m_arrangement = arrangement;
+    if (m_arrangement.contains("jobs") && originalIndex >= m_arrangement.indexOf("jobs"))
+    {
+        index -= m_jobIcons.count();
+    }
 
-    configuration.writeEntry("arrangement", m_arrangement);
+    m_arrangement.move(m_arrangement.indexOf(icon->launcher()->launcherUrl().pathOrUrl()), qMin((index - 1), (m_arrangement.count() - 1)));
+
+    config().writeEntry("arrangement", m_arrangement);
 
     emit configNeedsSaving();
 }
@@ -1974,6 +1956,16 @@ Launcher* Applet::launcherForTask(Task *task)
 
 Icon* Applet::iconForMimeData(const QMimeData *mimeData)
 {
+    if (mimeData->hasFormat("plasmoid-fancytasks/iconid"))
+    {
+        const int id = QString(mimeData->data("plasmoid-fancytasks/iconid")).toInt();
+
+        if (m_icons.contains(id))
+        {
+            return m_icons[id];
+        }
+    }
+
     Icon *icon = NULL;
 
     if (!mimeData->hasFormat("windowsystem/winid") && !mimeData->hasFormat("windowsystem/multiple-winids"))
