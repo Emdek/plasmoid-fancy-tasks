@@ -949,7 +949,7 @@ void Applet::addLauncher(Launcher *launcher, int index)
 
     m_launcherIcons[launcher] = icon;
 
-    if (m_arrangement.contains(url))
+    if (!m_arrangement.contains(url))
     {
         m_arrangement.insert(index, url);
     }
