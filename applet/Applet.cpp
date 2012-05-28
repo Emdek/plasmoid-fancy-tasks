@@ -547,7 +547,7 @@ void Applet::updateConfiguration()
     const bool showOnlyTasksWithLaunchers = configuration.readEntry("showOnlyTasksWithLaunchers", false);
     const bool addTasks = ((!m_arrangement.contains("tasks") && arrangement.contains("tasks")) || m_showOnlyTasksWithLaunchers != showOnlyTasksWithLaunchers);
     const bool addJobs = (!m_arrangement.contains("jobs") && arrangement.contains("jobs"));
-    const bool disconnectlauncherTaskIcons = (m_sortingStrategy == TaskManager::GroupManager::NoSorting && sortingStrategy != m_sortingStrategy);
+    const bool disconnectLauncherTaskIcons = (m_sortingStrategy == TaskManager::GroupManager::NoSorting && sortingStrategy != m_sortingStrategy);
 
     if (!m_customBackgroundImage.isEmpty() && (customBackgroundImage.isEmpty() || !KUrl(customBackgroundImage).isValid()))
     {
@@ -680,7 +680,7 @@ void Applet::updateConfiguration()
 
     configChanged();
 
-    if (disconnectlauncherTaskIcons)
+    if (disconnectLauncherTaskIcons)
     {
         QList<QPointer<Icon> > launcherTaskIcons = m_launcherTaskIcons.values();
 
@@ -2244,6 +2244,9 @@ QPixmap Applet::windowPreview(WId window, int size)
     {
         thumbnail = thumbnail.scaledToHeight(size, Qt::SmoothTransformation);
     }
+#else
+    Q_UNUSED(window)
+    Q_UNUSED(size)
 #endif
 
     return thumbnail;
