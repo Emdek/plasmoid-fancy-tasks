@@ -949,7 +949,10 @@ void Applet::addLauncher(Launcher *launcher, int index)
 
     m_launcherIcons[launcher] = icon;
 
-    m_arrangement.insert(index, url);
+    if (m_arrangement.contains(url))
+    {
+        m_arrangement.insert(index, url);
+    }
 
     if (m_arrangement.contains("tasks") && index >= m_arrangement.indexOf("tasks"))
     {
