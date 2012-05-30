@@ -8,12 +8,11 @@ This applet uses standard libtaskmanager like other task managers in KDE, so bef
 Included panel is not stable yet and has some issues, use it at own risk.
 
 Tips:
-- To make applet more usable you can put it on panel with enabled option "Windows can cover" or similar.
-- You can use theme with panel background similar to that of dock (for example Sabre Tiger) or modify current using Desktop Theme Details.
-- You can add launchers to applet by drag and drop of URLs and desktop files when Plasma is unlocked or using configuration dialog.
-- You can set "No Sorting" to make tasks show icon instead of launcher icon (not in tasks area);
-- To show only launchers you need to remove tasks area item from arrangement.
-- To show application jobs you need to add jobs area.
+- to make applet more usable you can put it on panel with enabled option "Windows can cover" or similar;
+- you can use theme with panel background similar to that of dock (for example Sabre Tiger) or modify current one using Desktop Theme Details;
+- you can add launchers to applet by drag and drop of URLs and desktop files when Plasma is unlocked or using configuration dialog;
+- to show only launchers you need to remove tasks area item from arrangement;
+- to show application jobs you need to add jobs area.
 
 Hidden options:
 You can set them in applets configuration file (usually located at "~/.kde4/share/config/plasma-desktop-appletsrc"), in group containing line "plugin=fancytasks" or "plugin=fancypanel".
@@ -25,10 +24,11 @@ Features:
 - manages your tasks, launchers and application jobs;
 - tasks filtering, grouping (including manual) and sorting;
 - keyboard navigation (Tab and Shift+Tab);
-- launcher to task transition with custom connecting rules (icons of launchers with running tasks are hidden);
-- preview of windows with (live previews with KWin Taskbar Thumbnail effect enabled);
-- dropping files on launchers runs command with parameters or gives option to move, copy or link them (if this is directory);
-- visual drop indicator that helps in manual tasks sorting and dropping launchers;
+- launcher to task transition with custom connecting rules (icons of launchers with running tasks are hidden if sorting other than manual is enabled);
+- tool tips with live preview of windows when KWin Taskbar Thumbnail effect is enabled;
+- highlighting windows when hovering cursor over task or window preview when KWin Highlight Window effect is enabled;
+- dropping files on launchers runs command with parameters or gives option to move, copy or link them (if target is directory);
+- visual drop indicator that helps in manual tasks sorting and rearranging launchers;
 - possibility to browse directories of directory launchers using context menu;
 - possibility to add application menus;
 - menu with list of all icons shown after activating keyboard shortcut;
