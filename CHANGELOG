@@ -2,6 +2,8 @@
 - enable Add / Remove action buttons;
 - do not propose to drop icon in place which equals its current index;
 - fixed manual sorting;
+- do not lose connection with launcher when group gets created (if grouping by program);
+- reuse launcher icons by tasks also when using manual sorting;
 - enable Apply button when configuration values are changed;
 - some other fixes and changes.
 

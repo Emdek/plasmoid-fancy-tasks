@@ -547,7 +547,7 @@ void Applet::updateConfiguration()
     const bool showOnlyTasksWithLaunchers = configuration.readEntry("showOnlyTasksWithLaunchers", false);
     const bool addTasks = ((!m_arrangement.contains("tasks") && arrangement.contains("tasks")) || m_showOnlyTasksWithLaunchers != showOnlyTasksWithLaunchers);
     const bool addJobs = (!m_arrangement.contains("jobs") && arrangement.contains("jobs"));
-    const bool disconnectLauncherTaskIcons = (m_sortingStrategy == TaskManager::GroupManager::NoSorting && sortingStrategy != m_sortingStrategy);
+    const bool disconnectLauncherTaskIcons = ((m_sortingStrategy == TaskManager::GroupManager::NoSorting || m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting) && sortingStrategy != m_sortingStrategy);
 
     if (!m_customBackgroundImage.isEmpty() && (customBackgroundImage.isEmpty() || !KUrl(customBackgroundImage).isValid()))
     {
@@ -737,7 +737,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
         task = new Task(abstractItem, this);
     }
 
-    if (m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || m_showOnlyTasksWithLaunchers)
+    if (m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting || m_showOnlyTasksWithLaunchers)
     {
         if (m_groupManager->groupingStrategy() == TaskManager::GroupManager::ProgramGrouping)
         {
@@ -818,7 +818,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
 
     if (!icon)
     {
-        int index = (((m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting)?m_taskIcons.count():m_groupManager->rootGroup()->members().indexOf(abstractItem)) + m_arrangement.indexOf("tasks") + 1);
+        int index = (((m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting)?m_taskIcons.count():m_groupManager->rootGroup()->members().indexOf(abstractItem)) + m_arrangement.indexOf("tasks") + 1);
 
         icon = createIcon(task, launcherForTask(task), NULL);
 
@@ -879,7 +879,7 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
 
 void Applet::changeTaskPosition(AbstractGroupableItem *abstractItem)
 {
-    if (m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || !m_arrangement.contains("tasks"))
+    if (m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting || !m_arrangement.contains("tasks"))
     {
         return;
     }
