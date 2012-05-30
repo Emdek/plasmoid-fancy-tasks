@@ -65,7 +65,6 @@ Icon::Icon(int id, Task *task, Launcher *launcher, Job *job, Applet *applet) : Q
     m_layout(new QGraphicsLinearLayout(this)),
     m_animationTimeLine(new QTimeLine(1000, this)),
     m_jobAnimationTimeLine(NULL),
-    m_itemType(OtherType),
     m_factor(applet->initialFactor()),
     m_animationProgress(-1),
     m_id(id),
@@ -151,7 +150,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     qreal width = 0;
     qreal height = 0;
     const bool showLabel = (m_applet->titleLabelMode() != NoLabel && !title().isEmpty() && (m_applet->titleLabelMode() == AlwaysShowLabel || (m_task && m_task->isActive() && m_applet->titleLabelMode() == ActiveIconLabel) || (isUnderMouse() && m_applet->titleLabelMode() == MouseOverLabel)));
-    const bool useThumbnail = (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && m_itemType != GroupType);
+    const bool useThumbnail = (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && itemType() != GroupType);
 
     switch (m_applet->location())
     {
@@ -578,14 +577,16 @@ void Icon::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
     killTimer(m_dragTimer);
 
-    if (m_itemType == TaskType || m_itemType == GroupType)
+    const ItemType type = itemType();
+
+    if (type == TaskType || type == GroupType)
     {
         update();
 
         m_dragTimer = startTimer(300);
     }
 
-    if (m_itemType != LauncherType)
+    if (type != LauncherType)
     {
         event->ignore();
     }
@@ -600,7 +601,7 @@ void Icon::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
     QTimer::singleShot(500, m_applet, SLOT(hideDropZone()));
 
-    if (m_itemType != LauncherType)
+    if (itemType() != LauncherType)
     {
         event->ignore();
     }
@@ -612,9 +613,11 @@ void Icon::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 
 void Icon::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
+    const ItemType type = itemType();
+
     m_applet->hideDropZone();
 
-    if (m_applet->groupManager()->groupingStrategy() == TaskManager::GroupManager::ManualGrouping && (event->mimeData()->hasFormat("windowsystem/winid") || event->mimeData()->hasFormat("windowsystem/multiple-winids")) && (m_itemType == TaskType || m_itemType == GroupType))
+    if (m_applet->groupManager()->groupingStrategy() == TaskManager::GroupManager::ManualGrouping && (event->mimeData()->hasFormat("windowsystem/winid") || event->mimeData()->hasFormat("windowsystem/multiple-winids")) && (type == TaskType || type == GroupType))
     {
         Icon *droppedIcon = m_applet->iconForMimeData(event->mimeData());
 
@@ -627,7 +630,7 @@ void Icon::dropEvent(QGraphicsSceneDragDropEvent *event)
             return;
         }
     }
-    else if (m_itemType == LauncherType && KUrl::List::canDecode(event->mimeData()))
+    else if (type == LauncherType && KUrl::List::canDecode(event->mimeData()))
     {
         m_launcher->dropUrls(KUrl::List::fromMimeData(event->mimeData()), event->modifiers());
 
@@ -652,7 +655,9 @@ void Icon::mousePressEvent(QGraphicsSceneMouseEvent *event)
         m_isDemandingAttention = false;
     }
 
-    if (m_itemType == TaskType || m_itemType == GroupType)
+    const ItemType type = itemType();
+
+    if (type == TaskType || type == GroupType)
     {
         publishGeometry(m_task);
     }
@@ -662,7 +667,9 @@ void Icon::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Icon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton)).length() < QApplication::startDragDistance() || m_itemType == StartupType || (m_itemType == LauncherType && m_applet->immutability() != Plasma::Mutable))
+    const ItemType type = itemType();
+
+    if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton)).length() < QApplication::startDragDistance() || type == StartupType || (type == LauncherType && m_applet->immutability() != Plasma::Mutable))
     {
         return;
     }
@@ -675,11 +682,11 @@ void Icon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         m_launcher->launcherUrl().populateMimeData(mimeData);
     }
 
-    if (m_itemType == TaskType || m_itemType == GroupType)
+    if (type == TaskType || type == GroupType)
     {
         m_task->addMimeData(mimeData);
     }
-    else if (m_itemType != LauncherType)
+    else if (type != LauncherType)
     {
         return;
     }
@@ -732,18 +739,20 @@ void Icon::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
 void Icon::timerEvent(QTimerEvent *event)
 {
+    const ItemType type = itemType();
+
     if (event->timerId() == m_dragTimer && isUnderMouse())
     {
-        if (m_itemType == TaskType)
+        if (type == TaskType)
         {
             m_task->activate();
         }
-        else if (m_itemType == GroupType)
+        else if (type == GroupType)
         {
             performAction(ShowItemChildrenListAction);
         }
     }
-    else if (event->timerId() == m_highlightTimer && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::HighlightWindows) && (m_itemType == TaskType || m_itemType == GroupType))
+    else if (event->timerId() == m_highlightTimer && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::HighlightWindows) && (type == TaskType || type == GroupType))
     {
         Plasma::WindowEffects::highlightWindows(m_applet->window(), m_task->windows());
     }
@@ -755,7 +764,7 @@ void Icon::show()
 {
     m_isVisible = true;
 
-    if (m_itemType == OtherType)
+    if (itemType() == OtherType)
     {
         return;
     }
@@ -787,7 +796,7 @@ void Icon::activate()
 {
     QList<WId> windows;
 
-    switch (m_itemType)
+    switch (itemType())
     {
         case LauncherType:
             performAction(ActivateLauncherAction);
@@ -910,12 +919,14 @@ void Icon::setThumbnail(const KFileItem &item, const QPixmap thumbnail)
 {
     Q_UNUSED(item)
 
-    if (!m_applet->useThumbnails() || (m_itemType != TaskType && (m_itemType != LauncherType || thumbnail.isNull())))
+    const ItemType type = itemType();
+
+    if (!m_applet->useThumbnails() || (type != TaskType && (type != LauncherType || thumbnail.isNull())))
     {
         return;
     }
 
-    if (m_itemType == TaskType && m_task->windows().count() > 0)
+    if (type == TaskType && m_task->windows().count() > 0)
     {
         m_thumbnailPixmap = Applet::windowPreview(m_task->windows().at(0), ((200 > m_size)?200:m_size));
     }
@@ -931,33 +942,16 @@ void Icon::setThumbnail(const KFileItem &item, const QPixmap thumbnail)
 
 void Icon::validate()
 {
-    if ((m_itemType == JobType && m_jobs.count() > 0) || (m_itemType == LauncherType && m_launcher))
+    if (itemType() == OtherType)
     {
-        return;
-    }
-
-    if (!m_task && !m_launcher && m_jobs.isEmpty())
-    {
-        m_itemType = OtherType;
-
         deleteLater();
 
         return;
     }
 
-    if (m_jobs.count())
+    if (m_launcher)
     {
-        m_itemType = JobType;
-    }
-    else if (m_launcher)
-    {
-        m_itemType = LauncherType;
-
         setLauncher(m_launcher);
-    }
-    else
-    {
-        deleteLater();
     }
 }
 
@@ -1071,27 +1065,17 @@ void Icon::taskChanged(ItemChanges changes)
         return;
     }
 
+    const ItemType type = itemType();
+
     if (changes & OtherChanges)
     {
-        if (m_itemType == StartupType && m_task->taskType() != StartupType)
+        if (type == StartupType && m_task->taskType() != StartupType)
         {
             stopAnimation();
         }
 
-        if (m_task->taskType() == StartupType)
+        if (m_task->taskType() == TaskType || m_task->taskType() == GroupType)
         {
-            m_itemType = StartupType;
-        }
-        else if (m_task->taskType() == TaskType)
-        {
-            m_itemType = TaskType;
-
-            setLauncher(m_applet->launcherForTask(m_task));
-        }
-        else if (m_task->taskType() == GroupType)
-        {
-            m_itemType = GroupType;
-
             setLauncher(m_applet->launcherForTask(m_task));
         }
     }
@@ -1125,7 +1109,7 @@ void Icon::taskChanged(ItemChanges changes)
         setFactor(m_task->isActive()?1:m_applet->initialFactor());
     }
 
-    if (changes & WindowsChanged && m_itemType == TaskType)
+    if (changes & WindowsChanged && type == TaskType)
     {
         QTimer::singleShot(200, this, SLOT(setThumbnail()));
     }
@@ -1145,7 +1129,7 @@ void Icon::taskChanged(ItemChanges changes)
 
 void Icon::launcherChanged(ItemChanges changes)
 {
-    if (!m_launcher || m_itemType != LauncherType)
+    if (!m_launcher || itemType() != LauncherType)
     {
         return;
     }
@@ -1262,7 +1246,9 @@ void Icon::jobDemandsAttention()
 
 void Icon::setLauncher(Launcher *launcher)
 {
-    if (m_launcher && m_itemType != LauncherType)
+    const ItemType type = itemType();
+
+    if (m_launcher && type != LauncherType)
     {
         m_launcher->removeItem(this);
     }
@@ -1271,19 +1257,14 @@ void Icon::setLauncher(Launcher *launcher)
 
     if (m_launcher)
     {
-        if (m_itemType == OtherType)
-        {
-            m_itemType = LauncherType;
-        }
-
-        if (m_itemType != LauncherType)
+        if (type != LauncherType)
         {
             m_launcher->addItem(this);
         }
 
         launcherChanged(EveythingChanged);
 
-        if (m_itemType == LauncherType)
+        if (type == LauncherType)
         {
             connect(m_launcher, SIGNAL(hide()), this, SLOT(hide()));
             connect(m_launcher, SIGNAL(show()), this, SLOT(show()));
@@ -1305,11 +1286,6 @@ void Icon::addJob(Job *job)
         return;
     }
 
-    if (m_itemType == OtherType)
-    {
-        m_itemType = JobType;
-    }
-
     m_jobs.append(job);
 
     jobChanged(StateChanged);
@@ -1323,7 +1299,7 @@ void Icon::removeJob(Job *job)
 {
     m_jobs.removeAll(job);
 
-    if (m_itemType == JobType && !m_jobs.count())
+    if (itemType() == OtherType)
     {
         deleteLater();
 
@@ -1494,6 +1470,7 @@ void Icon::performAction(IconAction action, Task *task)
     }
 
     KMenu *menu = NULL;
+    const ItemType type = itemType();
 
     switch (action)
     {
@@ -1528,7 +1505,7 @@ void Icon::performAction(IconAction action, Task *task)
 
             break;
         case ShowItemMenuAction:
-            if (m_itemType == OtherType)
+            if (type == OtherType)
             {
                 break;
             }
@@ -1550,7 +1527,7 @@ void Icon::performAction(IconAction action, Task *task)
             {
                 menu = m_launcher->contextMenu();
             }
-            else if (m_itemType == JobType && m_jobs.count() == 1)
+            else if (type == JobType && m_jobs.count() == 1)
             {
                 menu = m_jobs.at(0)->contextMenu();
             }
@@ -1561,7 +1538,7 @@ void Icon::performAction(IconAction action, Task *task)
 
             m_menuVisible = true;
 
-            if (m_task == task && m_jobs.count() && (m_itemType != JobType || m_jobs.count() > 1))
+            if (m_task == task && m_jobs.count() && (type != JobType || m_jobs.count() > 1))
             {
                 if (menu->actions().count())
                 {
@@ -1619,7 +1596,7 @@ void Icon::performAction(IconAction action, Task *task)
 
             break;
         case ShowItemWindowsAction:
-            if (task && m_itemType == GroupType && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::PresentWindowsGroup))
+            if (task && type == GroupType && Plasma::WindowEffects::isEffectAvailable(Plasma::WindowEffects::PresentWindowsGroup))
             {
                 Plasma::WindowEffects::presentWindows(m_applet->window(), task->windows());
             }
@@ -1680,7 +1657,9 @@ void Icon::toolTipHidden()
 
 void Icon::updateToolTip()
 {
-    if (m_itemType == OtherType)
+    const ItemType type = itemType();
+
+    if (type == OtherType)
     {
         return;
     }
@@ -1722,7 +1701,7 @@ void Icon::updateToolTip()
     data.setHighlightWindows(true);
     data.setInstantPopup(true);
 
-    if ((m_itemType == TaskType || m_itemType == GroupType) && m_task)
+    if (type == TaskType || type == GroupType)
     {
         data.setWindowsToPreview(m_task->windows());
     }
@@ -1732,7 +1711,31 @@ void Icon::updateToolTip()
 
 ItemType Icon::itemType() const
 {
-    return m_itemType;
+    if (m_task)
+    {
+        if (m_task->taskType() == StartupType)
+        {
+            return StartupType;
+        }
+        else if (m_task->taskType() == TaskType)
+        {
+            return TaskType;
+        }
+        else if (m_task->taskType() == GroupType)
+        {
+            return GroupType;
+        }
+    }
+    else if (m_jobs.count())
+    {
+        return JobType;
+    }
+    else if (m_launcher)
+    {
+        return LauncherType;
+    }
+
+    return OtherType;
 }
 
 QPointer<Task> Icon::task()
@@ -1752,14 +1755,14 @@ QList<QPointer<Job> > Icon::jobs()
 
 QString Icon::title() const
 {
-    switch (m_itemType)
+    switch (itemType())
     {
         case StartupType:
         case TaskType:
         case GroupType:
-            return (m_task?m_task->title():QString());
+            return m_task->title();
         case LauncherType:
-            return (m_launcher?m_launcher->title():QString());
+            return m_launcher->title();
         case JobType:
             if (m_jobs.count() > 1)
             {
@@ -1784,14 +1787,14 @@ QString Icon::description() const
 {
     QString description;
 
-    switch (m_itemType)
+    switch (itemType())
     {
         case StartupType:
         case TaskType:
         case GroupType:
-            return (m_task?m_task->description():QString());
+            return m_task->description();
         case LauncherType:
-            return (m_launcher?m_launcher->description():QString());
+            return m_launcher->description();
         case JobType:
             if (m_jobs.count() > 0)
             {
@@ -1852,14 +1855,14 @@ QPainterPath Icon::shape() const
 
 KIcon Icon::icon()
 {
-    switch (m_itemType)
+    switch (itemType())
     {
         case StartupType:
         case TaskType:
         case GroupType:
-            return (m_task?m_task->icon():KIcon());
+            return m_task->icon();
         case LauncherType:
-            return (m_launcher?m_launcher->icon():KIcon());
+            return m_launcher->icon();
         case JobType:
             return m_jobs.at(0)->icon();
         default:

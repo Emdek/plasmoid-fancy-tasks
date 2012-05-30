@@ -128,7 +128,6 @@ class Icon : public QGraphicsWidget
         QGraphicsLinearLayout *m_layout;
         QTimeLine *m_animationTimeLine;
         QTimeLine *m_jobAnimationTimeLine;
-        ItemType m_itemType;
         QPixmap m_visualizationPixmap;
         QPixmap m_thumbnailPixmap;
         AnimationType m_animationType;
