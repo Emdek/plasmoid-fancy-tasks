@@ -315,12 +315,9 @@ void Task::removeItem(AbstractGroupableItem *abstractItem)
     if (task && task->task())
     {
         emit windowRemoved(task->task()->window());
-        emit changed(WindowsChanged);
     }
-    else
-    {
-        emit changed(EveythingChanged);
-    }
+
+    emit changed(EveythingChanged);
 }
 
 void Task::pinLauncher()

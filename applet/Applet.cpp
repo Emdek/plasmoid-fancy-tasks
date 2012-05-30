@@ -841,7 +841,14 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
     {
         if (m_launcherTaskIcons[abstractItem])
         {
-            m_launcherTaskIcons[abstractItem]->setTask(NULL);
+            if (m_launcherTaskIcons[abstractItem]->task() && m_launcherTaskIcons[abstractItem]->task()->abstractItem() && abstractItem != m_launcherTaskIcons[abstractItem]->task()->abstractItem())
+            {
+                m_launcherTaskIcons[m_launcherTaskIcons[abstractItem]->task()->abstractItem()] = m_launcherTaskIcons[abstractItem];
+            }
+            else
+            {
+                m_launcherTaskIcons[abstractItem]->setTask(NULL);
+            }
         }
 
         m_launcherTaskIcons.remove(abstractItem);
