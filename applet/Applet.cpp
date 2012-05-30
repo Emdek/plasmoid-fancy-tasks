@@ -1625,14 +1625,9 @@ void Applet::itemDropped(Icon *icon, int index)
 
     if ((icon->itemType() == TaskType || icon->itemType() == GroupType) && icon->task() && icon->task()->abstractItem())
     {
-        index -= (m_arrangement.indexOf("tasks") + 1);
+        m_layout->removeItem(icon);
 
-        if (index < 0)
-        {
-            index = 0;
-        }
-
-        m_groupManager->manualSortingRequest(icon->task()->abstractItem(), index);
+        insertItem(index, icon);
 
         return;
     }
