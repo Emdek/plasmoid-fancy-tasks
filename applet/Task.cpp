@@ -393,13 +393,21 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
         m_group = qobject_cast<TaskGroup*>(abstractItem);
         m_taskType = GroupType;
 
-        if (m_group->name().isEmpty() && m_group->members().count() && m_applet->groupManager()->groupingStrategy() != TaskManager::GroupManager::ManualGrouping)
+        if (m_applet->groupManager()->groupingStrategy() != TaskManager::GroupManager::ManualGrouping && m_group->members().count())
         {
             TaskItem *task = qobject_cast<TaskItem*>(m_group->members().first());
 
             if (task && task->task())
             {
-                m_group->setName(task->task()->visibleName());
+                if (m_group->name().isEmpty())
+                {
+                    m_group->setName(task->task()->visibleName());
+                }
+
+                if (m_applet->groupManager()->groupingStrategy() == TaskManager::GroupManager::ProgramGrouping)
+                {
+                    m_command = command(task->task()->pid());
+                }
             }
         }
 
@@ -422,15 +430,7 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
 
         if (m_taskType == TaskType)
         {
-            KSysGuard::Processes processes;
-            processes.updateAllProcesses();
-
-            KSysGuard::Process *process = processes.getProcess(m_task->task()->pid());
-
-            if (process)
-            {
-                m_command = process->command;
-            }
+            m_command = command(m_task->task()->pid());
 
             emit windowAdded(windows().at(0));
         }
@@ -518,23 +518,7 @@ AbstractGroupableItem* Task::abstractItem()
     return m_abstractItem;
 }
 
-QList<AbstractGroupableItem*> Task::members()
-{
-    QList<AbstractGroupableItem*> members;
-
-    if (m_group)
-    {
-        members = m_group->members();
-    }
-    else if (m_abstractItem)
-    {
-        members.append(m_abstractItem);
-    }
-
-    return members;
-}
-
-KIcon Task::icon()
+KIcon Task::icon() const
 {
     switch (m_taskType)
     {
@@ -596,9 +580,40 @@ QString Task::command() const
     return m_command;
 }
 
-QList<WId> Task::windows()
+QString Task::command(int pid) const
+{
+    KSysGuard::Processes processes;
+    processes.updateAllProcesses();
+
+    KSysGuard::Process *process = processes.getProcess(pid);
+
+    if (process)
+    {
+        return process->command;
+    }
+
+    return QString();
+}
+
+QList<WId> Task::windows() const
 {
     return (m_abstractItem?m_abstractItem->winIds().toList():QList<WId>());
+}
+
+QList<AbstractGroupableItem*> Task::members() const
+{
+    QList<AbstractGroupableItem*> members;
+
+    if (m_group)
+    {
+        members = m_group->members();
+    }
+    else if (m_abstractItem)
+    {
+        members.append(m_abstractItem);
+    }
+
+    return members;
 }
 
 bool Task::isActive() const

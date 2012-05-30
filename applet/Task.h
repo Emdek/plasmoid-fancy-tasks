@@ -60,12 +60,12 @@ class Task : public QObject
         void publishIconGeometry(const QRect &geometry);
         ItemType taskType() const;
         KMenu* contextMenu();
-        KIcon icon();
+        KIcon icon() const;
         KUrl launcherUrl() const;
         QString title() const;
         QString description() const;
         QString command() const;
-        QList<WId> windows();
+        QList<WId> windows() const;
         bool isActive() const;
         bool isDemandingAttention() const;
 
@@ -85,7 +85,8 @@ class Task : public QObject
         void timerEvent(QTimerEvent *event);
         void fixMenu(QMenu *menu, Task *task = NULL);
         AbstractGroupableItem* abstractItem();
-        QList<AbstractGroupableItem*> members();
+        QString command(int pid) const;
+        QList<AbstractGroupableItem*> members() const;
 
     protected slots:
         void validate();
