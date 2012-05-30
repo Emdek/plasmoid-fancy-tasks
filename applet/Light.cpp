@@ -135,7 +135,7 @@ void Light::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     if (m_icon && m_task)
     {
-        m_icon->performAction(ShowItemMenuAction);
+        m_icon->performAction(ShowItemMenuAction, m_task);
     }
 
     event->accept();

@@ -1533,7 +1533,7 @@ void Icon::performAction(IconAction action, Task *task)
                 break;
             }
 
-            if (task && (m_itemType == TaskType || m_itemType == GroupType))
+            if (task)
             {
                 menu = task->contextMenu();
 
@@ -1599,7 +1599,8 @@ void Icon::performAction(IconAction action, Task *task)
             menu->deleteLater();
 
             m_menuVisible = false;
-        break;
+
+            break;
         case ShowItemChildrenListAction:
             if (m_menuVisible || !task)
             {
