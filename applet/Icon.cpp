@@ -1091,6 +1091,8 @@ void Icon::taskChanged(ItemChanges changes)
         else if (m_task->taskType() == GroupType)
         {
             m_itemType = GroupType;
+
+            setLauncher(m_applet->launcherForTask(m_task));
         }
     }
 
@@ -1719,7 +1721,7 @@ void Icon::updateToolTip()
     data.setHighlightWindows(true);
     data.setInstantPopup(true);
 
-    if (m_itemType == TaskType || m_itemType == GroupType)
+    if ((m_itemType == TaskType || m_itemType == GroupType) && m_task)
     {
         data.setWindowsToPreview(m_task->windows());
     }
@@ -1786,9 +1788,9 @@ QString Icon::description() const
         case StartupType:
         case TaskType:
         case GroupType:
-            return m_task->description();
+            return (m_task?m_task->description():QString());
         case LauncherType:
-            return m_launcher->description();
+            return (m_launcher?m_launcher->description():QString());
         case JobType:
             if (m_jobs.count() > 0)
             {
