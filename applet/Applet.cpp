@@ -792,25 +792,20 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
     {
         const QString title = task->title();
         const QString command = task->command();
-        QList<QPair<QPointer<Icon>, QDateTime> >::iterator iterator;
+        QMap<AbstractGroupableItem*, QPointer<Icon> >::iterator taskIconsIterator;
 
-        for (iterator = m_startups.begin(); iterator != m_startups.end(); ++iterator)
+        for (taskIconsIterator = m_taskIcons.begin(); taskIconsIterator != m_taskIcons.end(); ++taskIconsIterator)
         {
-            QPair<QPointer<Icon>, QDateTime> pair = * iterator;
-
-            if (!pair.first || !pair.first->task())
+            if (!taskIconsIterator.value())
             {
-                m_startups.erase(iterator);
+                m_taskIcons.erase(taskIconsIterator);
 
                 continue;
             }
 
-            if (((!title.isEmpty() && title.contains(pair.first->task()->title(), Qt::CaseInsensitive)) || (command.isEmpty() && command.contains(pair.first->task()->command(), Qt::CaseInsensitive))) && pair.first->itemType() == StartupType)
+            if (taskIconsIterator.value()->task() && taskIconsIterator.value()->task()->taskType() == StartupType && ((!title.isEmpty() && title.contains(taskIconsIterator.value()->task()->title(), Qt::CaseInsensitive)) || (command.isEmpty() && command.contains(taskIconsIterator.value()->task()->command(), Qt::CaseInsensitive))))
             {
-                icon = pair.first;
-                icon->setTask(task);
-
-                m_startups.erase(iterator);
+                taskIconsIterator.value()->setTask(task);
 
                 break;
             }
@@ -859,9 +854,7 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
 
                             m_taskIcons.remove(taskIconsIterator.key());
 
-                            m_launcherTaskIcons.remove(abstractItem);
-
-                            return;
+                            break;
                         }
                     }
                 }
@@ -890,10 +883,6 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
 
     if (icon && icon->itemType() == StartupType)
     {
-        m_startups.append(qMakePair(icon, QDateTime::currentDateTime()));
-
-        QTimer::singleShot(2000, this, SLOT(cleanup()));
-
         return;
     }
 
@@ -1266,25 +1255,9 @@ void Applet::showJob()
 
 void Applet::cleanup()
 {
-    QList<QPair<QPointer<Icon>, QDateTime> >::iterator startupsIterator;
     QMap<AbstractGroupableItem*, QPointer<Icon> >::iterator taskIconsIterator;
     QMap<Launcher*, QPointer<Icon> >::iterator launcherIconsIterator;
     QMap<Job*, QPointer<Icon> >::iterator jobIconsIterator;
-
-    for (startupsIterator = m_startups.begin(); startupsIterator != m_startups.end(); ++startupsIterator)
-    {
-        QPair<QPointer<Icon>, QDateTime> pair = * startupsIterator;
-
-        if (pair.second.secsTo(QDateTime::currentDateTime()) > 1 && (!pair.first || pair.first->itemType() == StartupType))
-        {
-            if (pair.first)
-            {
-                pair.first->deleteLater();
-            }
-
-            m_startups.erase(startupsIterator);
-        }
-    }
 
     for (taskIconsIterator = m_taskIcons.begin(); taskIconsIterator != m_taskIcons.end(); ++taskIconsIterator)
     {

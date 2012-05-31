@@ -144,7 +144,6 @@ class Applet : public Plasma::Applet
         QQueue<QPointer<Job> > m_jobsQueue;
         QList<QGraphicsWidget*> m_visibleItems;
         QList<QPointer<Launcher> > m_launchers;
-        QList<QPair<QPointer<Icon>, QDateTime> > m_startups;
         QMap<WId, QPointer<Task> > m_tasks;
         QMap<QString, QPointer<Job> > m_jobs;
         QMap<int, QPointer<Icon> > m_icons;

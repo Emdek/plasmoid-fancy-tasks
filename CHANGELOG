@@ -5,7 +5,7 @@
 - do not lose connection with launcher when group gets created (if grouping by program);
 - reuse launcher icons by tasks also when using manual sorting;
 - enable Apply button when configuration values are changed;
-- some other fixes and changes.
+- many other fixes and changes.
 
 1.1.0 (20.03.2012):
 - added per launcher task connecting rules;
