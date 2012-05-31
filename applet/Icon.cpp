@@ -1069,7 +1069,7 @@ void Icon::taskChanged(ItemChanges changes)
 
     if (changes & OtherChanges)
     {
-        if (type == StartupType && m_task->taskType() != StartupType)
+        if (m_task->taskType() != StartupType)
         {
             stopAnimation();
         }
