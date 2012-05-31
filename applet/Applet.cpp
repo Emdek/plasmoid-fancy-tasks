@@ -763,20 +763,19 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
         {
             icon = m_launcherIcons[launcher];
 
-            if (task->taskType() == GroupType && icon->task())
+            if (!icon->task())
             {
-                m_launcherTaskIcons.remove(icon->task()->abstractItem());
+                if (task->taskType() == GroupType && icon->task())
+                {
+                    m_launcherTaskIcons.remove(icon->task()->abstractItem());
+                }
 
                 m_launcherTaskIcons[abstractItem] = icon;
-            }
-            else if (task->taskType() == TaskType && !icon->task())
-            {
-                m_launcherTaskIcons[abstractItem] = icon;
-            }
 
-            icon->setTask(task);
+                icon->setTask(task);
 
-            return;
+                return;
+            }
         }
 
         if (m_showOnlyTasksWithLaunchers)
