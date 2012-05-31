@@ -763,7 +763,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
         {
             icon = m_launcherIcons[launcher];
 
-            if (!icon->task())
+            if (icon && (!icon->task() || task->taskType() == GroupType))
             {
                 if (task->taskType() == GroupType && icon->task())
                 {
@@ -776,6 +776,8 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
 
                 return;
             }
+
+            icon = NULL;
         }
 
         if (m_showOnlyTasksWithLaunchers)
@@ -842,7 +844,31 @@ void Applet::removeTask(AbstractGroupableItem *abstractItem)
         {
             if (m_launcherTaskIcons[abstractItem]->task() && m_launcherTaskIcons[abstractItem]->task()->abstractItem() && abstractItem != m_launcherTaskIcons[abstractItem]->task()->abstractItem())
             {
-                m_launcherTaskIcons[m_launcherTaskIcons[abstractItem]->task()->abstractItem()] = m_launcherTaskIcons[abstractItem];
+                if (m_groupManager->groupingStrategy() == TaskManager::GroupManager::NoGrouping)
+                {
+                    QMap<AbstractGroupableItem*, QPointer<Icon> >::iterator taskIconsIterator;
+
+                    for (taskIconsIterator = m_taskIcons.begin(); taskIconsIterator != m_taskIcons.end(); ++taskIconsIterator)
+                    {
+                        if (taskIconsIterator.value()->launcher() && taskIconsIterator.value()->launcher() == m_launcherTaskIcons[abstractItem]->launcher())
+                        {
+                            m_launcherTaskIcons[abstractItem]->setTask(taskIconsIterator.value()->task());
+                            m_launcherTaskIcons[taskIconsIterator.value()->task()->abstractItem()] = m_launcherTaskIcons[abstractItem];
+
+                            m_taskIcons[taskIconsIterator.key()]->deleteLater();
+
+                            m_taskIcons.remove(taskIconsIterator.key());
+
+                            m_launcherTaskIcons.remove(abstractItem);
+
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    m_launcherTaskIcons[m_launcherTaskIcons[abstractItem]->task()->abstractItem()] = m_launcherTaskIcons[abstractItem];
+                }
             }
             else
             {
