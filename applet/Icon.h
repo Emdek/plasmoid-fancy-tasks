@@ -60,7 +60,7 @@ class Icon : public QGraphicsWidget
         QString title() const;
         QString description() const;
         QPainterPath shape() const;
-        KIcon icon();
+        KIcon icon() const;
         qreal factor() const;
         int id() const;
         bool isVisible() const;

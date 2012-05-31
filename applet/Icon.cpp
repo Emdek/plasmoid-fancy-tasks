@@ -1065,19 +1065,11 @@ void Icon::taskChanged(ItemChanges changes)
         return;
     }
 
-    const ItemType type = itemType();
-
-    if (changes & OtherChanges)
+    if (changes & OtherChanges && m_task->taskType() != StartupType)
     {
-        if (m_task->taskType() != StartupType)
-        {
-            stopAnimation();
-        }
+        stopAnimation();
 
-        if (m_task->taskType() == TaskType || m_task->taskType() == GroupType)
-        {
-            setLauncher(m_applet->launcherForTask(m_task));
-        }
+        setLauncher(m_applet->launcherForTask(m_task));
     }
 
     if (changes & StateChanged)
@@ -1109,7 +1101,7 @@ void Icon::taskChanged(ItemChanges changes)
         setFactor(m_task->isActive()?1:m_applet->initialFactor());
     }
 
-    if (changes & WindowsChanged && type == TaskType)
+    if (changes & WindowsChanged && itemType() == TaskType)
     {
         QTimer::singleShot(200, this, SLOT(setThumbnail()));
     }
@@ -1246,9 +1238,7 @@ void Icon::jobDemandsAttention()
 
 void Icon::setLauncher(Launcher *launcher)
 {
-    const ItemType type = itemType();
-
-    if (m_launcher && type != LauncherType)
+    if (m_launcher && !launcher)
     {
         m_launcher->removeItem(this);
     }
@@ -1257,14 +1247,14 @@ void Icon::setLauncher(Launcher *launcher)
 
     if (m_launcher)
     {
-        if (type != LauncherType)
+        if (m_task)
         {
             m_launcher->addItem(this);
         }
 
         launcherChanged(EveythingChanged);
 
-        if (type == LauncherType)
+        if (itemType() == LauncherType)
         {
             connect(m_launcher, SIGNAL(hide()), this, SLOT(hide()));
             connect(m_launcher, SIGNAL(show()), this, SLOT(show()));
@@ -1404,6 +1394,11 @@ void Icon::setTask(Task *task)
     }
 
     m_task = task;
+
+    if (m_launcher)
+    {
+        m_launcher->addItem(this);
+    }
 
     connect(m_task, SIGNAL(destroyed()), this, SLOT(validate()));
     connect(m_task, SIGNAL(changed(ItemChanges)), this, SLOT(taskChanged(ItemChanges)));
@@ -1853,7 +1848,7 @@ QPainterPath Icon::shape() const
     return path;
 }
 
-KIcon Icon::icon()
+KIcon Icon::icon() const
 {
     switch (itemType())
     {
