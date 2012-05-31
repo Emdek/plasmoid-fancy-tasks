@@ -717,14 +717,30 @@ void Applet::insertItem(int index, QGraphicsLayoutItem *item)
     m_layout->insertItem(index, item);
 }
 
-void Applet::addTask(AbstractGroupableItem *abstractItem)
+void Applet::checkStartup()
+{
+    if (m_startups.isEmpty())
+    {
+        return;
+    }
+
+    QPointer<Task> task = m_startups.dequeue();
+
+    if (task)
+    {
+        addTask(task->abstractItem(), true);
+
+        task->deleteLater();
+    }
+}
+
+void Applet::addTask(AbstractGroupableItem *abstractItem, bool force)
 {
     if (!abstractItem || (!m_arrangement.contains("tasks") && !m_showOnlyTasksWithLaunchers) || m_groupManager->rootGroup()->members().indexOf(abstractItem) < 0)
     {
         return;
     }
 
-    Icon *icon = NULL;
     Task *task = NULL;
 
     if (abstractItem->itemType() == TaskManager::TaskItemType)
@@ -736,6 +752,17 @@ void Applet::addTask(AbstractGroupableItem *abstractItem)
     {
         task = new Task(abstractItem, this);
     }
+
+    if (task->taskType() == StartupType && !force)
+    {
+        m_startups.enqueue(task);
+
+        QTimer::singleShot(250, this, SLOT(checkStartup()));
+
+        return;
+    }
+
+    Icon *icon = NULL;
 
     if (m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting || m_showOnlyTasksWithLaunchers)
     {

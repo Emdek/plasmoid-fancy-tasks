@@ -1,10 +1,10 @@
 1.1.1 (01.06.2012):
-- enable Add / Remove action buttons;
-- do not propose to drop icon in place which equals its current index;
-- fixed manual sorting;
-- do not lose connection with launcher when group gets created (if grouping by program);
 - reuse launcher icons by tasks also when using manual sorting;
+- let startups connect to launcher icons (when there is no sorting or it set to manual);
+- do not lose connection with launcher when group is created (if grouping by program);
 - enable Apply button when configuration values are changed;
+- do not propose to drop icon in place which equals its current index;
+- enable Add / Remove action buttons;
 - many other fixes and changes.
 
 1.1.0 (20.03.2012):

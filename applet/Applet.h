@@ -100,19 +100,12 @@ class Applet : public Plasma::Applet
 
     public slots:
         void configChanged();
-        void updateConfiguration();
-        void insertItem(int index, QGraphicsLayoutItem *item);
-        void addTask(AbstractGroupableItem *abstractItem);
-        void removeTask(AbstractGroupableItem *abstractItem);
-        void changeTaskPosition(AbstractGroupableItem *abstractItem);
         void addLauncher(Launcher *launcher, int index = -1);
         void removeLauncher(Launcher *launcher);
         void changeLauncher(Launcher *launcher, const KUrl &oldUrl, bool force = false);
         void updateLauncher(Launcher *launcher);
         void addJob(const QString &source);
         void removeJob(const QString &source, bool force = false);
-        void showJob();
-        void cleanup();
         void itemHoverMoved(QGraphicsWidget *item, qreal across);
         void hoverLeft();
         void moveAnimation(int progress);
@@ -138,12 +131,23 @@ class Applet : public Plasma::Applet
         Icon* createIcon(Task *task, Launcher *launcher, Job *job);
         bool focusNextPrevChild(bool next);
 
+    protected slots:
+        void updateConfiguration();
+        void insertItem(int index, QGraphicsLayoutItem *item);
+        void checkStartup();
+        void addTask(AbstractGroupableItem *abstractItem, bool force = false);
+        void removeTask(AbstractGroupableItem *abstractItem);
+        void changeTaskPosition(AbstractGroupableItem *abstractItem);
+        void showJob();
+        void cleanup();
+
     private:
         QGraphicsLinearLayout *m_layout;
         GroupManager *m_groupManager;
         QQueue<QPointer<Job> > m_jobsQueue;
         QList<QGraphicsWidget*> m_visibleItems;
         QList<QPointer<Launcher> > m_launchers;
+        QQueue<QPointer<Task> > m_startups;
         QMap<WId, QPointer<Task> > m_tasks;
         QMap<QString, QPointer<Job> > m_jobs;
         QMap<int, QPointer<Icon> > m_icons;
