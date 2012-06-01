@@ -55,6 +55,9 @@ class DropZone : public QGraphicsWidget
         qreal m_size;
         int m_index;
         bool m_visible;
+
+    signals:
+        void visibilityChanged(bool visible);
 };
 
 }

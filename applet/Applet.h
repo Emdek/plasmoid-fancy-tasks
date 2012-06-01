@@ -106,14 +106,8 @@ class Applet : public Plasma::Applet
         void updateLauncher(Launcher *launcher);
         void addJob(const QString &source);
         void removeJob(const QString &source, bool force = false);
-        void itemHoverMoved(QGraphicsWidget *item, qreal across);
-        void hoverLeft();
-        void moveAnimation(int progress);
-        void focusIcon(bool next, bool activateWindow = false);
         void needsVisualFocus();
-        void showMenu();
         void hideDropZone();
-        void updateSize();
         void requestFocus();
 
     protected:
@@ -128,6 +122,7 @@ class Applet : public Plasma::Applet
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void wheelEvent(QGraphicsSceneWheelEvent *event);
         void focusInEvent(QFocusEvent *event);
+        void focusIcon(bool next, bool activateWindow = false);
         Icon* createIcon(Task *task, Launcher *launcher, Job *job);
         bool focusNextPrevChild(bool next);
 
@@ -140,6 +135,11 @@ class Applet : public Plasma::Applet
         void showJob();
         void cleanup();
         void reload();
+        void itemHoverMoved(QGraphicsWidget *item, qreal across);
+        void hoverLeft();
+        void moveAnimation(int progress);
+        void showMenu();
+        void updateSize();
 
     private:
         QGraphicsLinearLayout *m_layout;

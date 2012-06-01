@@ -110,10 +110,6 @@ Icon::Icon(int id, Task *task, Launcher *launcher, Job *job, Applet *applet) : Q
         addJob(job);
     }
 
-    connect(this, SIGNAL(destroyed()), m_applet, SLOT(updateSize()));
-    connect(this, SIGNAL(destroyed()), m_applet, SLOT(cleanup()));
-    connect(this, SIGNAL(hoverMoved(QGraphicsWidget*, qreal)), m_applet, SLOT(itemHoverMoved(QGraphicsWidget*, qreal)));
-    connect(this, SIGNAL(hoverLeft()), m_applet, SLOT(hoverLeft()));
     connect(m_applet, SIGNAL(sizeChanged(qreal)), this, SLOT(setSize(qreal)));
     connect(m_applet, SIGNAL(sizeChanged(qreal)), this, SIGNAL(sizeChanged(qreal)));
     connect(m_animationTimeLine, SIGNAL(finished()), this, SLOT(stopAnimation()));
@@ -771,7 +767,7 @@ void Icon::show()
 
     updateSize();
 
-    m_applet->updateSize();
+    emit visibilityChanged(true);
 
     m_visualizationPixmap = NULL;
 
@@ -789,7 +785,7 @@ void Icon::hide()
 
     updateSize();
 
-    m_applet->updateSize();
+    emit visibilityChanged(false);
 }
 
 void Icon::activate()

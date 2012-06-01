@@ -129,7 +129,7 @@ void DropZone::show(int index)
 
     m_visible = true;
 
-    m_applet->updateSize();
+    emit visibilityChanged(true);
 }
 
 void DropZone::hide(bool force)
@@ -150,7 +150,7 @@ void DropZone::hide(bool force)
 
     setPreferredSize(0, 0);
 
-    m_applet->updateSize();
+    emit visibilityChanged(false);
 }
 
 int DropZone::index() const

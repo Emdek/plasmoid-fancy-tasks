@@ -147,6 +147,7 @@ class Icon : public QGraphicsWidget
 
     signals:
         void sizeChanged(qreal size);
+        void visibilityChanged(bool visible);
         void hoverMoved(QGraphicsWidget *item, qreal across);
         void hoverLeft();
 };

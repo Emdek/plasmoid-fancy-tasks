@@ -110,6 +110,8 @@ Applet::Applet(QObject *parent, const QVariantList &args) : Plasma::Applet(paren
     setLayout(m_layout);
 
     resize(100, 100);
+
+    connect(m_dropZone, SIGNAL(visibilityChanged(bool)), this, SLOT(updateSize()));
 }
 
 Applet::~Applet()
@@ -1182,6 +1184,9 @@ void Applet::reload()
                 Separator *separator = new Separator(m_theme, this);
                 separator->setSize(m_itemSize);
 
+                connect(separator, SIGNAL(hoverMoved(QGraphicsWidget*,qreal)), this, SLOT(itemHoverMoved(QGraphicsWidget*,qreal)));
+                connect(separator, SIGNAL(hoverLeft()), this, SLOT(hoverLeft()));
+
                 insertItem(index, separator);
 
                 ++index;
@@ -1995,6 +2000,12 @@ Icon* Applet::createIcon(Task *task, Launcher *launcher, Job *job)
     Icon *icon = new Icon(id, task, launcher, job, this);
     icon->setSize(m_itemSize);
     icon->setFactor(m_initialFactor);
+
+    connect(icon, SIGNAL(hoverMoved(QGraphicsWidget*,qreal)), this, SLOT(itemHoverMoved(QGraphicsWidget*,qreal)));
+    connect(icon, SIGNAL(hoverLeft()), this, SLOT(hoverLeft()));
+    connect(icon, SIGNAL(visibilityChanged(bool)), this, SLOT(updateSize()));
+    connect(icon, SIGNAL(destroyed()), this, SLOT(updateSize()));
+    connect(icon, SIGNAL(destroyed()), this, SLOT(cleanup()));
 
     m_icons[id] = icon;
 

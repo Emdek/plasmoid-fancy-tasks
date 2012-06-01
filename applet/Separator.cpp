@@ -36,8 +36,6 @@ Separator::Separator(Plasma::Svg *svg, Applet *applet) : Plasma::SvgWidget(svg, 
 
     updateOrientation();
 
-    connect(this, SIGNAL(hoverMoved(QGraphicsWidget*, qreal)), m_applet, SLOT(itemHoverMoved(QGraphicsWidget*, qreal)));
-    connect(this, SIGNAL(hoverLeft()), m_applet, SLOT(hoverLeft()));
     connect(m_applet, SIGNAL(sizeChanged(qreal)), this, SLOT(setSize(qreal)));
     connect(m_applet, SIGNAL(locationChanged()), this, SLOT(updateOrientation()));
 }
