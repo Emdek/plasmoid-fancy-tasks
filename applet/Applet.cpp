@@ -1405,7 +1405,6 @@ void Applet::updateSize()
     QSize size;
     int separatorsGap = -1;
     int iconNumber = 0;
-    const bool updateItemSize = (m_itemSize != m_appletMaximumHeight);
 
     m_itemSize = m_appletMaximumHeight;
 
@@ -1538,10 +1537,7 @@ void Applet::updateSize()
 
     update();
 
-    if (updateItemSize)
-    {
-        emit sizeChanged(m_itemSize);
-    }
+    emit sizeChanged(m_itemSize);
 }
 
 void Applet::updateTheme()

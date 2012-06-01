@@ -1063,9 +1063,18 @@ void Icon::taskChanged(ItemChanges changes)
 
     if (changes & OtherChanges && m_task->taskType() != StartupType)
     {
-        stopAnimation();
+        if (itemType() == OtherType)
+        {
+            deleteLater();
 
-        setLauncher(m_applet->launcherForTask(m_task));
+            return;
+        }
+        else
+        {
+            stopAnimation();
+
+            setLauncher(m_applet->launcherForTask(m_task));
+        }
     }
 
     if (changes & StateChanged)
@@ -1241,28 +1250,30 @@ void Icon::setLauncher(Launcher *launcher)
 
     m_launcher = launcher;
 
-    if (m_launcher)
+    if (!m_launcher)
     {
-        if (m_task)
-        {
-            m_launcher->addItem(this);
-        }
-
-        launcherChanged(EveythingChanged);
-
-        if (itemType() == LauncherType)
-        {
-            connect(m_launcher, SIGNAL(hide()), this, SLOT(hide()));
-            connect(m_launcher, SIGNAL(show()), this, SLOT(show()));
-        }
-        else
-        {
-            disconnect(m_launcher, SIGNAL(hide()), this, SLOT(hide()));
-            disconnect(m_launcher, SIGNAL(show()), this, SLOT(show()));
-        }
-
-        connect(m_launcher, SIGNAL(changed(ItemChanges)), this, SLOT(launcherChanged(ItemChanges)));
+        return;
     }
+
+    if (m_task)
+    {
+        m_launcher->addItem(this);
+    }
+
+    launcherChanged(EveythingChanged);
+
+    if (itemType() == LauncherType)
+    {
+        connect(m_launcher, SIGNAL(hide()), this, SLOT(hide()));
+        connect(m_launcher, SIGNAL(show()), this, SLOT(show()));
+    }
+    else
+    {
+        disconnect(m_launcher, SIGNAL(hide()), this, SLOT(hide()));
+        disconnect(m_launcher, SIGNAL(show()), this, SLOT(show()));
+    }
+
+    connect(m_launcher, SIGNAL(changed(ItemChanges)), this, SLOT(launcherChanged(ItemChanges)));
 }
 
 void Icon::addJob(Job *job)
