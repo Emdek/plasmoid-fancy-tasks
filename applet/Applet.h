@@ -132,7 +132,6 @@ class Applet : public Plasma::Applet
         bool focusNextPrevChild(bool next);
 
     protected slots:
-        void updateConfiguration();
         void insertItem(int index, QGraphicsLayoutItem *item);
         void checkStartup();
         void addTask(AbstractGroupableItem *abstractItem, bool force = false);
@@ -140,14 +139,15 @@ class Applet : public Plasma::Applet
         void changeTaskPosition(AbstractGroupableItem *abstractItem);
         void showJob();
         void cleanup();
+        void reload();
 
     private:
         QGraphicsLinearLayout *m_layout;
         GroupManager *m_groupManager;
+        QQueue<QPointer<Task> > m_startupsQueue;
         QQueue<QPointer<Job> > m_jobsQueue;
         QList<QGraphicsWidget*> m_visibleItems;
         QList<QPointer<Launcher> > m_launchers;
-        QQueue<QPointer<Task> > m_startups;
         QMap<WId, QPointer<Task> > m_tasks;
         QMap<QString, QPointer<Job> > m_jobs;
         QMap<int, QPointer<Icon> > m_icons;

@@ -166,7 +166,8 @@ void Applet::createConfigurationInterface(KConfigDialog *parent)
 {
     Configuration *configuration = new Configuration(this, parent);
 
-    connect(configuration, SIGNAL(accepted()), this, SLOT(updateConfiguration()));
+    connect(configuration, SIGNAL(accepted()), this, SIGNAL(configNeedsSaving()));
+    connect(configuration, SIGNAL(accepted()), this, SLOT(configChanged()));
 }
 
 void Applet::constraintsEvent(Plasma::Constraints constraints)
@@ -420,6 +421,34 @@ void Applet::configChanged()
         m_iconActions[triggerPair] = CloseTaskAction;
     }
 
+    const QString customBackgroundImage = configuration.readEntry("customBackgroundImage", QString());
+
+    if (!m_customBackgroundImage.isEmpty() && (customBackgroundImage.isEmpty() || !KUrl(customBackgroundImage).isValid()))
+    {
+        m_background = m_theme;
+
+        update();
+    }
+    else if (!customBackgroundImage.isEmpty() && KUrl(customBackgroundImage).isValid())
+    {
+        if (m_background == m_theme)
+        {
+            m_background = new Plasma::FrameSvg(this);
+            m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
+        }
+
+        m_background->setImagePath(customBackgroundImage);
+
+        update();
+    }
+
+    m_groupingStrategy = static_cast<TaskManager::GroupManager::TaskGroupingStrategy>(configuration.readEntry("groupingStrategy", static_cast<int>(TaskManager::GroupManager::NoGrouping)));
+    m_sortingStrategy = static_cast<TaskManager::GroupManager::TaskSortingStrategy>(configuration.readEntry("sortingStrategy", static_cast<int>(TaskManager::GroupManager::ManualSorting)));
+
+    const QStringList arrangement = configuration.readEntry("arrangement", QStringList("tasks"));
+    const bool showOnlyTasksWithLaunchers = configuration.readEntry("showOnlyTasksWithLaunchers", false);
+    const bool needsReload = (m_groupingStrategy != m_groupManager->groupingStrategy() || m_sortingStrategy != m_groupManager->sortingStrategy() || showOnlyTasksWithLaunchers != m_showOnlyTasksWithLaunchers || arrangement != m_arrangement);
+
     m_jobCloseMode = static_cast<CloseJobMode>(configuration.readEntry("jobCloseMode", static_cast<int>(DelayedClose)));
     m_activeIconIndication = static_cast<ActiveIconIndication>(configuration.readEntry("activeIconIndication", static_cast<int>(FadeIndication)));
     m_moveAnimation = static_cast<AnimationType>(configuration.readEntry("moveAnimation", static_cast<int>(GlowAnimation)));
@@ -428,16 +457,14 @@ void Applet::configChanged()
     m_startupAnimation = static_cast<AnimationType>(configuration.readEntry("startupAnimation", static_cast<int>(BounceAnimation)));
     m_useThumbnails = configuration.readEntry("useThumbnails", false);
     m_titleLabelMode = static_cast<TitleLabelMode>(configuration.readEntry("titleLabelMode", static_cast<int>(AlwaysShowLabel)));
-    m_customBackgroundImage = configuration.readEntry("customBackgroundImage", QString());
+    m_customBackgroundImage = customBackgroundImage;
     m_showOnlyCurrentDesktop = configuration.readEntry("showOnlyCurrentDesktop", false);
     m_showOnlyCurrentActivity = configuration.readEntry("showOnlyCurrentActivity", true);
     m_showOnlyCurrentScreen = configuration.readEntry("showOnlyCurrentScreen", false);
     m_showOnlyMinimized = configuration.readEntry("showOnlyMinimized", false);
-    m_showOnlyTasksWithLaunchers = configuration.readEntry("showOnlyTasksWithLaunchers", false);
+    m_showOnlyTasksWithLaunchers = showOnlyTasksWithLaunchers;
     m_connectJobsWithTasks = configuration.readEntry("connectJobsWithTasks", false);
     m_groupJobs = configuration.readEntry("groupJobs", true);
-    m_groupingStrategy = static_cast<TaskManager::GroupManager::TaskGroupingStrategy>(configuration.readEntry("groupingStrategy", static_cast<int>(TaskManager::GroupManager::NoGrouping)));
-    m_sortingStrategy = static_cast<TaskManager::GroupManager::TaskSortingStrategy>(configuration.readEntry("sortingStrategy", static_cast<int>(TaskManager::GroupManager::ManualSorting)));
     m_arrangement = configuration.readEntry("arrangement", QStringList("tasks"));
     m_initialFactor = ((m_moveAnimation == ZoomAnimation)?configuration.readEntry("initialZoomLevel", 0.7):((m_moveAnimation == JumpAnimation)?0.7:0));
     m_paintReflections = configuration.readEntry("paintReflections", true);
@@ -448,6 +475,7 @@ void Applet::configChanged()
     m_groupManager->setShowOnlyCurrentActivity(m_showOnlyCurrentActivity);
     m_groupManager->setShowOnlyCurrentScreen(m_showOnlyCurrentScreen);
     m_groupManager->setShowOnlyMinimized(m_showOnlyMinimized);
+    m_groupManager->reconnect();
 
     if (containment())
     {
@@ -477,229 +505,14 @@ void Applet::configChanged()
             emit configNeedsSaving();
         }
 
-        if (!m_customBackgroundImage.isEmpty() && KUrl(m_customBackgroundImage).isValid())
-        {
-            m_background = new Plasma::FrameSvg(this);
-            m_background->setImagePath(m_customBackgroundImage);
-            m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
-        }
+        reload();
 
         connect(this, SIGNAL(activate()), this, SLOT(showMenu()));
-        connect(m_groupManager->rootGroup(), SIGNAL(itemAdded(AbstractGroupableItem*)), this, SLOT(addTask(AbstractGroupableItem*)));
-        connect(m_groupManager->rootGroup(), SIGNAL(itemRemoved(AbstractGroupableItem*)), this, SLOT(removeTask(AbstractGroupableItem*)));
-        connect(m_groupManager->rootGroup(), SIGNAL(itemPositionChanged(AbstractGroupableItem*)), this, SLOT(changeTaskPosition(AbstractGroupableItem*)));
-
-        int index = 1;
-
-        for (int i = 0; i < m_arrangement.count(); ++i)
-        {
-            if (m_arrangement.at(i) == "separator")
-            {
-                if (i > 0 && !m_arrangement.at(i - 1).isEmpty())
-                {
-                    Separator *separator = new Separator(m_theme, this);
-                    separator->setSize(m_itemSize);
-
-                    insertItem(index, separator);
-
-                    ++index;
-                }
-            }
-            else if (m_arrangement.at(i) != "tasks" && m_arrangement.at(i) != "jobs")
-            {
-                addLauncher(launcherForUrl(m_arrangement.at(i)), index);
-
-                ++index;
-            }
-        }
-
-        if (m_arrangement.contains("tasks") || m_showOnlyTasksWithLaunchers)
-        {
-            foreach (TaskManager::AbstractGroupableItem* abstractItem, m_groupManager->rootGroup()->members())
-            {
-                addTask(abstractItem);
-            }
-        }
-
-        if (m_arrangement.contains("jobs"))
-        {
-            const QStringList jobs = dataEngine("applicationjobs")->sources();
-
-            for (int i = 0; i < jobs.count(); ++i)
-            {
-                addJob(jobs.at(i));
-            }
-
-            connect(dataEngine("applicationjobs"), SIGNAL(sourceAdded(const QString)), this, SLOT(addJob(const QString)));
-            connect(dataEngine("applicationjobs"), SIGNAL(sourceRemoved(const QString)), this, SLOT(removeJob(const QString)));
-        }
     }
-
-    m_groupManager->reconnect();
-}
-
-void Applet::updateConfiguration()
-{
-    KConfigGroup configuration = config();
-    QStringList arrangement = configuration.readEntry("arrangement", QStringList("tasks"));
-    QString customBackgroundImage = configuration.readEntry("customBackgroundImage", "");
-    TaskManager::GroupManager::TaskSortingStrategy sortingStrategy = static_cast<TaskManager::GroupManager::TaskSortingStrategy>(configuration.readEntry("sortingStrategy", static_cast<int>(TaskManager::GroupManager::ManualSorting)));
-    const bool showOnlyTasksWithLaunchers = configuration.readEntry("showOnlyTasksWithLaunchers", false);
-    const bool addTasks = ((!m_arrangement.contains("tasks") && arrangement.contains("tasks")) || m_showOnlyTasksWithLaunchers != showOnlyTasksWithLaunchers);
-    const bool addJobs = (!m_arrangement.contains("jobs") && arrangement.contains("jobs"));
-    const bool disconnectLauncherTaskIcons = ((m_sortingStrategy == TaskManager::GroupManager::NoSorting || m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting) && sortingStrategy != m_sortingStrategy);
-
-    if (!m_customBackgroundImage.isEmpty() && (customBackgroundImage.isEmpty() || !KUrl(customBackgroundImage).isValid()))
+    else if (needsReload)
     {
-        m_background = m_theme;
-
-        update();
+        reload();
     }
-    else if (!customBackgroundImage.isEmpty() && KUrl(customBackgroundImage).isValid())
-    {
-        if (m_background == m_theme)
-        {
-            m_background = new Plasma::FrameSvg(this);
-            m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
-        }
-
-        m_background->setImagePath(customBackgroundImage);
-
-        update();
-    }
-
-    if (arrangement != m_arrangement || m_showOnlyTasksWithLaunchers != showOnlyTasksWithLaunchers)
-    {
-        if ((m_arrangement.contains("tasks") && !arrangement.contains("tasks")) || showOnlyTasksWithLaunchers)
-        {
-            QMap<TaskManager::AbstractGroupableItem*, QPointer<Icon> >::iterator tasksIterator;
-
-            for (tasksIterator = m_taskIcons.begin(); tasksIterator != m_taskIcons.end(); ++tasksIterator)
-            {
-                m_layout->removeItem(tasksIterator.value().data());
-
-                tasksIterator.value().data()->deleteLater();
-            }
-
-            m_taskIcons.clear();
-
-            QMap<AbstractGroupableItem*, QPointer<Icon> >::iterator launcherTaskIconsIterator;
-
-            for (launcherTaskIconsIterator = m_launcherTaskIcons.begin(); launcherTaskIconsIterator != m_launcherTaskIcons.end(); ++launcherTaskIconsIterator)
-            {
-                if (launcherTaskIconsIterator.value())
-                {
-                    launcherTaskIconsIterator.value()->setTask(NULL);
-                }
-            }
-
-            m_launcherTaskIcons.clear();
-        }
-
-        if (m_arrangement.contains("jobs") && !arrangement.contains("jobs"))
-        {
-            disconnect(dataEngine("applicationjobs"), SIGNAL(sourceAdded(const QString)), this, SLOT(addJob(const QString)));
-            disconnect(dataEngine("applicationjobs"), SIGNAL(sourceRemoved(const QString)), this, SLOT(removeJob(const QString)));
-        }
-
-        m_arrangement = arrangement;
-
-        for (int i = 0; i < m_layout->count(); ++i)
-        {
-            QObject *object = dynamic_cast<QObject*>(m_layout->itemAt(i)->graphicsItem());
-
-            if (object && (object->objectName() == "FancyTasksIcon" || object->objectName() == "FancyTasksSeparator"))
-            {
-                if (object->objectName() == "FancyTasksIcon")
-                {
-                    QPointer<Icon> icon = dynamic_cast<Icon*>(m_layout->itemAt(i)->graphicsItem());
-
-                    if (icon && icon->itemType() != LauncherType)
-                    {
-                        continue;
-                    }
-
-                    m_launcherIcons.remove(icon->launcher());
-                }
-
-                m_layout->removeItem(m_layout->itemAt(i));
-
-                delete object;
-
-                --i;
-            }
-        }
-
-        int index = 1;
-
-        for (int i = 0; i < arrangement.count(); ++i)
-        {
-            if (arrangement.at(i) == "separator")
-            {
-                Separator *separator = new Separator(m_theme, this);
-                separator->setSize(m_itemSize);
-
-                insertItem((index + ((m_arrangement.contains("tasks") && i >= m_arrangement.indexOf("tasks"))?m_taskIcons.count():0) + ((m_arrangement.contains("jobs") && i >= m_arrangement.indexOf("jobs"))?m_jobs.count():0)), separator);
-
-                ++index;
-            }
-            else if (arrangement.at(i) != "tasks" && arrangement.at(i) != "jobs")
-            {
-                addLauncher(launcherForUrl(arrangement.at(i)), index);
-
-                ++index;
-            }
-        }
-
-        if (addTasks)
-        {
-            foreach (TaskManager::AbstractGroupableItem *abstractItem, m_groupManager->rootGroup()->members())
-            {
-                addTask(abstractItem);
-            }
-        }
-
-        if (addJobs)
-        {
-            QStringList jobs = dataEngine("applicationjobs")->sources();
-
-            for (int i = 0; i < jobs.count(); ++i)
-            {
-                addJob(jobs.at(i));
-            }
-
-            connect(dataEngine("applicationjobs"), SIGNAL(sourceAdded(const QString)), this, SLOT(addJob(const QString)));
-            connect(dataEngine("applicationjobs"), SIGNAL(sourceRemoved(const QString)), this, SLOT(removeJob(const QString)));
-        }
-    }
-
-    for (int i = 0; i < m_launchers.count(); ++i)
-    {
-        updateLauncher(m_launchers.at(i));
-    }
-
-    configChanged();
-
-    if (disconnectLauncherTaskIcons)
-    {
-        QList<QPointer<Icon> > launcherTaskIcons = m_launcherTaskIcons.values();
-
-        m_launcherTaskIcons.clear();
-
-        for (int i = 0; i < launcherTaskIcons.count(); ++i)
-        {
-            if (launcherTaskIcons.at(i) && launcherTaskIcons.at(i)->task())
-            {
-                addTask(launcherTaskIcons.at(i)->task()->abstractItem());
-
-                launcherTaskIcons.at(i)->setTask(NULL);
-            }
-        }
-    }
-
-    updateSize();
-
-    emit configNeedsSaving();
 }
 
 void Applet::insertItem(int index, QGraphicsLayoutItem *item)
@@ -719,12 +532,12 @@ void Applet::insertItem(int index, QGraphicsLayoutItem *item)
 
 void Applet::checkStartup()
 {
-    if (m_startups.isEmpty())
+    if (m_startupsQueue.isEmpty())
     {
         return;
     }
 
-    QPointer<Task> task = m_startups.dequeue();
+    QPointer<Task> task = m_startupsQueue.dequeue();
 
     if (task)
     {
@@ -755,7 +568,7 @@ void Applet::addTask(AbstractGroupableItem *abstractItem, bool force)
 
     if (task->taskType() == StartupType && !force)
     {
-        m_startups.enqueue(task);
+        m_startupsQueue.enqueue(task);
 
         QTimer::singleShot(250, this, SLOT(checkStartup()));
 
@@ -1317,6 +1130,97 @@ void Applet::cleanup()
             m_jobIcons.erase(jobIconsIterator);
         }
     }
+}
+
+void Applet::reload()
+{
+    disconnect(m_groupManager->rootGroup(), SIGNAL(itemAdded(AbstractGroupableItem*)), this, SLOT(addTask(AbstractGroupableItem*)));
+    disconnect(m_groupManager->rootGroup(), SIGNAL(itemRemoved(AbstractGroupableItem*)), this, SLOT(removeTask(AbstractGroupableItem*)));
+    disconnect(m_groupManager->rootGroup(), SIGNAL(itemPositionChanged(AbstractGroupableItem*)), this, SLOT(changeTaskPosition(AbstractGroupableItem*)));
+    disconnect(dataEngine("applicationjobs"), SIGNAL(sourceAdded(const QString)), this, SLOT(addJob(const QString)));
+    disconnect(dataEngine("applicationjobs"), SIGNAL(sourceRemoved(const QString)), this, SLOT(removeJob(const QString)));
+
+    m_visibleItems.clear();
+
+    qDeleteAll(m_jobsQueue);
+    qDeleteAll(m_startupsQueue);
+    qDeleteAll(m_launchers);
+    qDeleteAll(m_tasks);
+    qDeleteAll(m_jobs);
+    qDeleteAll(m_launchers);
+
+    for (int i = 0; i < m_layout->count(); ++i)
+    {
+        QObject *object = dynamic_cast<QObject*>(m_layout->itemAt(i));
+
+        if (!object)
+        {
+            continue;
+        }
+
+        if (object->objectName() == "FancyTasksIcon" || object->objectName() == "FancyTasksSeparator")
+        {
+            object->deleteLater();
+        }
+    }
+
+    m_jobsQueue.clear();
+    m_startupsQueue.clear();
+    m_launchers.clear();
+    m_tasks.clear();
+    m_jobs.clear();
+    m_launchers.clear();
+
+    int index = 1;
+
+    for (int i = 0; i < m_arrangement.count(); ++i)
+    {
+        if (m_arrangement.at(i) == "separator")
+        {
+            if (i > 0 && !m_arrangement.at(i - 1).isEmpty())
+            {
+                Separator *separator = new Separator(m_theme, this);
+                separator->setSize(m_itemSize);
+
+                insertItem(index, separator);
+
+                ++index;
+            }
+        }
+        else if (m_arrangement.at(i) != "tasks" && m_arrangement.at(i) != "jobs")
+        {
+            addLauncher(launcherForUrl(m_arrangement.at(i)), index);
+
+            ++index;
+        }
+    }
+
+    if (m_arrangement.contains("tasks") || m_showOnlyTasksWithLaunchers)
+    {
+        connect(m_groupManager->rootGroup(), SIGNAL(itemAdded(AbstractGroupableItem*)), this, SLOT(addTask(AbstractGroupableItem*)));
+        connect(m_groupManager->rootGroup(), SIGNAL(itemRemoved(AbstractGroupableItem*)), this, SLOT(removeTask(AbstractGroupableItem*)));
+        connect(m_groupManager->rootGroup(), SIGNAL(itemPositionChanged(AbstractGroupableItem*)), this, SLOT(changeTaskPosition(AbstractGroupableItem*)));
+
+        foreach (TaskManager::AbstractGroupableItem* abstractItem, m_groupManager->rootGroup()->members())
+        {
+            addTask(abstractItem);
+        }
+    }
+
+    if (m_arrangement.contains("jobs"))
+    {
+        connect(dataEngine("applicationjobs"), SIGNAL(sourceAdded(const QString)), this, SLOT(addJob(const QString)));
+        connect(dataEngine("applicationjobs"), SIGNAL(sourceRemoved(const QString)), this, SLOT(removeJob(const QString)));
+
+        const QStringList jobs = dataEngine("applicationjobs")->sources();
+
+        for (int i = 0; i < jobs.count(); ++i)
+        {
+            addJob(jobs.at(i));
+        }
+    }
+
+    updateSize();
 }
 
 void Applet::itemHoverMoved(QGraphicsWidget *item, qreal across)
