@@ -140,6 +140,7 @@ class Applet : public Plasma::Applet
         void moveAnimation(int progress);
         void showMenu();
         void updateSize();
+        void updateTheme();
 
     private:
         QGraphicsLinearLayout *m_layout;

@@ -112,6 +112,7 @@ Applet::Applet(QObject *parent, const QVariantList &args) : Plasma::Applet(paren
     resize(100, 100);
 
     connect(m_dropZone, SIGNAL(visibilityChanged(bool)), this, SLOT(updateSize()));
+    connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateTheme()));
 }
 
 Applet::~Applet()
@@ -141,6 +142,8 @@ void Applet::init()
     m_layout->addItem(m_dropZone);
 
     constraintsEvent(Plasma::LocationConstraint);
+
+    updateTheme();
 
     QTimer::singleShot(100, this, SLOT(configChanged()));
 
@@ -530,6 +533,8 @@ void Applet::insertItem(int index, QGraphicsLayoutItem *item)
     }
 
     m_layout->insertItem(index, item);
+
+    updateSize();
 }
 
 void Applet::checkStartup()
@@ -666,8 +671,6 @@ void Applet::addTask(AbstractGroupableItem *abstractItem, bool force)
         }
 
         insertItem(index, icon);
-
-        updateSize();
     }
 
     m_taskIcons[abstractItem] = icon;
@@ -829,8 +832,6 @@ void Applet::addLauncher(Launcher *launcher, int index)
     }
 
     insertItem(index, icon);
-
-    updateSize();
 
     config().writeEntry("arrangement", m_arrangement);
 
@@ -1089,8 +1090,6 @@ void Applet::showJob()
     }
 
     insertItem(index, icon);
-
-    updateSize();
 
     m_jobIcons[job] = icon;
 }
@@ -1406,6 +1405,7 @@ void Applet::updateSize()
     QSize size;
     int separatorsGap = -1;
     int iconNumber = 0;
+    const bool updateItemSize = (m_itemSize != m_appletMaximumHeight);
 
     m_itemSize = m_appletMaximumHeight;
 
@@ -1452,17 +1452,11 @@ void Applet::updateSize()
 
             if (separatorsGap == 0)
             {
-                if (separator->isVisible())
-                {
-                    separator->hide();
-                }
+                separator->hide();
             }
             else
             {
-                if (!separator->isVisible())
-                {
-                    separator->show();
-                }
+                separator->show();
 
                 m_appletMaximumWidth += (m_itemSize / 4);
 
@@ -1534,16 +1528,6 @@ void Applet::updateSize()
 
     m_size = size;
 
-    m_lightPixmap = QPixmap(m_theme->elementSize("task"));
-    m_lightPixmap.fill(Qt::transparent);
-
-    QPainter pixmapPainter(&m_lightPixmap);
-    pixmapPainter.setRenderHints(QPainter::SmoothPixmapTransform);
-
-    m_theme->paint(&pixmapPainter, m_lightPixmap.rect(), "task");
-
-    pixmapPainter.end();
-
     if (location() != Plasma::Floating)
     {
         emit sizeHintChanged(Qt::PreferredSize);
@@ -1554,9 +1538,24 @@ void Applet::updateSize()
 
     update();
 
-    emit sizeChanged(m_itemSize);
+    if (updateItemSize)
+    {
+        emit sizeChanged(m_itemSize);
+    }
 }
 
+void Applet::updateTheme()
+{
+    m_lightPixmap = QPixmap(m_theme->elementSize("task"));
+    m_lightPixmap.fill(Qt::transparent);
+
+    QPainter pixmapPainter(&m_lightPixmap);
+    pixmapPainter.setRenderHints(QPainter::SmoothPixmapTransform);
+
+    m_theme->paint(&pixmapPainter, m_lightPixmap.rect(), "task");
+
+    pixmapPainter.end();
+}
 void Applet::itemDropped(Icon *icon, int index)
 {
     if (!icon)
