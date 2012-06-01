@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plasma_applet_fancytasks\n"
 "Report-Msgid-Bugs-To: emdeck@gmail.com\n"
-"POT-Creation-Date: 2012-03-20 21:44+0100\n"
+"POT-Creation-Date: 2012-06-01 13:59+0200\n"
 "PO-Revision-Date: 2009-06-22 16:16+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
@@ -96,7 +96,7 @@ msgstr "នៅ​លើ​ផ្ទៃតុ​ទាំងអស់"
 msgid "Action"
 msgstr "កម្មវិធី"
 
-#: Applet.cpp:2086
+#: Applet.cpp:2059
 msgid "Entries"
 msgstr ""
 
@@ -115,111 +115,111 @@ msgstr ""
 
 #. i18n: file: ui/findApplication.ui:26
 #. i18n: ectx: property (windowTitle), widget (QWidget, findApplication)
-#: Configuration.cpp:73 locale/rc.cpp:96 rc.cpp:96
+#: Configuration.cpp:76 locale/rc.cpp:96 rc.cpp:96
 #, fuzzy
 msgid "Find Application"
 msgstr "កម្មវិធី"
 
-#: Configuration.cpp:79
+#: Configuration.cpp:82
 msgid "Do Not Group"
 msgstr "កុំ​ដាក់​ជា​ក្រុម"
 
-#: Configuration.cpp:80 Configuration.cpp:85 Configuration.cpp:100
+#: Configuration.cpp:83 Configuration.cpp:88 Configuration.cpp:103
 msgid "Manually"
 msgstr "ដោយ​ដៃ"
 
-#: Configuration.cpp:81
+#: Configuration.cpp:84
 msgid "By Program Name"
 msgstr "តាម​ឈ្មោះ​កម្មវិធី"
 
-#: Configuration.cpp:84
+#: Configuration.cpp:87
 msgid "Do Not Sort"
 msgstr "កុំ​តម្រៀប"
 
-#: Configuration.cpp:86
+#: Configuration.cpp:89
 msgid "Alphabetically"
 msgstr "តាម​អក្ខរក្រម"
 
-#: Configuration.cpp:87
+#: Configuration.cpp:90
 msgid "By Desktop"
 msgstr "តាម​ផ្ទៃតុ"
 
-#: Configuration.cpp:98
+#: Configuration.cpp:101
 msgid "Instantly"
 msgstr ""
 
-#: Configuration.cpp:99
+#: Configuration.cpp:102
 msgid "After delay"
 msgstr ""
 
-#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:132
+#: Configuration.cpp:107 Configuration.cpp:118 Configuration.cpp:135
 msgid "None"
 msgstr "គ្មាន"
 
-#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:133
+#: Configuration.cpp:107 Configuration.cpp:118 Configuration.cpp:136
 msgid "Zoom"
 msgstr "ពង្រីក"
 
-#: Configuration.cpp:104
+#: Configuration.cpp:107
 msgid "Jump"
 msgstr "លោត"
 
-#: Configuration.cpp:104 Configuration.cpp:115
+#: Configuration.cpp:107 Configuration.cpp:118
 msgid "Spotlight"
 msgstr "ភ្លើង​បញ្ចាំង"
 
-#: Configuration.cpp:104 Configuration.cpp:115 Configuration.cpp:134
+#: Configuration.cpp:107 Configuration.cpp:118 Configuration.cpp:137
 msgid "Glow"
 msgstr ""
 
-#: Configuration.cpp:104 Configuration.cpp:135
+#: Configuration.cpp:107 Configuration.cpp:138
 msgid "Fade"
 msgstr "ស្រមោល"
 
-#: Configuration.cpp:115
+#: Configuration.cpp:118
 msgid "Bounce"
 msgstr "ក្រុម"
 
-#: Configuration.cpp:115
+#: Configuration.cpp:118
 msgid "Blink"
 msgstr "លោត​ភ្លឹបភ្លែត"
 
-#: Configuration.cpp:115
+#: Configuration.cpp:118
 msgid "Rotate"
 msgstr "បង្វិល"
 
-#: Configuration.cpp:126
+#: Configuration.cpp:129
 msgid "Never"
 msgstr "កុំ"
 
-#: Configuration.cpp:127
+#: Configuration.cpp:130
 msgid "On mouse-over"
 msgstr "ពេល​ដាក់កណ្ដុរ​លើ"
 
-#: Configuration.cpp:128
+#: Configuration.cpp:131
 msgid "For active icon"
 msgstr ""
 
-#: Configuration.cpp:129
+#: Configuration.cpp:132
 msgid "Always"
 msgstr "ជា​និច្ច"
 
-#: Configuration.cpp:155 Configuration.cpp:172 Configuration.cpp:451
-#: Configuration.cpp:468
+#: Configuration.cpp:158 Configuration.cpp:175 Configuration.cpp:486
+#: Configuration.cpp:507
 msgid "--- separator ---"
 msgstr ""
 
-#: Configuration.cpp:155 Configuration.cpp:164 Configuration.cpp:363
+#: Configuration.cpp:158 Configuration.cpp:167 Configuration.cpp:371
 msgid "--- tasks area ---"
 msgstr ""
 
-#: Configuration.cpp:155 Configuration.cpp:168 Configuration.cpp:367
+#: Configuration.cpp:158 Configuration.cpp:171 Configuration.cpp:375
 msgid "--- jobs area ---"
 msgstr ""
 
 #. i18n: file: ui/general.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, general)
-#: Configuration.cpp:298 locale/rc.cpp:102 rc.cpp:102
+#: Configuration.cpp:301 locale/rc.cpp:102 rc.cpp:102
 msgid "General"
 msgstr "ទូទៅ"
 
@@ -231,42 +231,42 @@ msgstr "ទូទៅ"
 #. i18n: ectx: property (windowTitle), widget (QWidget, appearance)
 #. i18n: file: ui/appearance.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, appearanceGroupBox)
-#: Configuration.cpp:299 locale/rc.cpp:24 locale/rc.cpp:27 rc.cpp:24 rc.cpp:27
+#: Configuration.cpp:302 locale/rc.cpp:24 locale/rc.cpp:27 rc.cpp:24 rc.cpp:27
 msgid "Appearance"
 msgstr "រូបរាង"
 
 #. i18n: file: ui/arrangement.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, arrangement)
-#: Configuration.cpp:300 locale/rc.cpp:57 rc.cpp:57
+#: Configuration.cpp:303 locale/rc.cpp:57 rc.cpp:57
 msgid "Arrangement"
 msgstr ""
 
 #. i18n: file: ui/actions.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, actions)
-#: Configuration.cpp:301 locale/rc.cpp:3 rc.cpp:3
+#: Configuration.cpp:304 locale/rc.cpp:3 rc.cpp:3
 #, fuzzy
 msgid "Actions"
 msgstr "ចលនា"
 
-#: Configuration.cpp:613
+#: Configuration.cpp:665
 msgid "Add This Menu"
 msgstr ""
 
-#: Configuration.cpp:758
+#: Configuration.cpp:841
 msgid "Launcher with URL \"%1\" already exists."
 msgstr ""
 
-#: Icon.cpp:1576
+#: Icon.cpp:1548
 #, fuzzy
 msgid "Settings"
 msgstr "ការ​កំណត់ %1"
 
-#: Icon.cpp:1609 Launcher.cpp:113
+#: Icon.cpp:1582 Launcher.cpp:113
 msgctxt "@action:inmenu"
 msgid "Cancel"
 msgstr "បោះបង់"
 
-#: Icon.cpp:1761
+#: Icon.cpp:1760
 msgid "1 job"
 msgid_plural "%1 jobs"
 msgstr[0] ""
@@ -376,27 +376,27 @@ msgstr "កែសម្រួល"
 msgid "Launcher"
 msgstr "កម្មវិធី​ចាប់ផ្ដើម"
 
-#: LauncherProperties.cpp:48 Task.cpp:355
+#: LauncherProperties.cpp:50 Task.cpp:352
 msgid "%1 Settings"
 msgstr "ការ​កំណត់ %1"
 
-#: LauncherProperties.cpp:58
+#: LauncherProperties.cpp:60
 msgid "Task command"
 msgstr ""
 
-#: LauncherProperties.cpp:58
+#: LauncherProperties.cpp:60
 msgid "Task title"
 msgstr ""
 
-#: LauncherProperties.cpp:58
+#: LauncherProperties.cpp:60
 msgid "Window class"
 msgstr ""
 
-#: LauncherProperties.cpp:58
+#: LauncherProperties.cpp:60
 msgid "Window role"
 msgstr ""
 
-#: LauncherProperties.cpp:78
+#: LauncherProperties.cpp:80
 msgid "Rules"
 msgstr ""
 
@@ -406,20 +406,20 @@ msgstr ""
 msgid "Trigger"
 msgstr ""
 
-#. i18n: file: ui/actions.ui:66
-#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#. i18n: file: ui/actions.ui:63
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
 #: locale/rc.cpp:12 rc.cpp:12
 msgid "Add Action Trigger"
 msgstr ""
 
-#. i18n: file: ui/actions.ui:69
-#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#. i18n: file: ui/actions.ui:66
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
 #. i18n: file: ui/arrangement.ui:51
 #. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
 #. i18n: file: ui/arrangement.ui:88
 #. i18n: ectx: property (toolTip), widget (QToolButton, addButton)
-#. i18n: file: ui/actions.ui:69
-#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#. i18n: file: ui/actions.ui:66
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
 #. i18n: file: ui/arrangement.ui:51
 #. i18n: ectx: property (text), widget (QPushButton, addLauncherButton)
 #. i18n: file: ui/arrangement.ui:88
@@ -429,18 +429,18 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#. i18n: file: ui/actions.ui:79
-#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#. i18n: file: ui/actions.ui:76
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
 #: locale/rc.cpp:18 rc.cpp:18
 msgid "Remove Action Trigger"
 msgstr ""
 
-#. i18n: file: ui/actions.ui:82
-#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#. i18n: file: ui/actions.ui:79
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
 #. i18n: file: ui/arrangement.ui:75
 #. i18n: ectx: property (toolTip), widget (QToolButton, removeButton)
-#. i18n: file: ui/actions.ui:82
-#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#. i18n: file: ui/actions.ui:79
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
 #. i18n: file: ui/arrangement.ui:75
 #. i18n: ectx: property (toolTip), widget (QToolButton, removeButton)
 #: locale/rc.cpp:21 locale/rc.cpp:72 rc.cpp:21 rc.cpp:72
@@ -725,19 +725,19 @@ msgstr ""
 msgid "Pin This Task"
 msgstr ""
 
-#: Task.cpp:573
+#: Task.cpp:554
 msgid "Application"
 msgstr "កម្មវិធី"
 
-#: Task.cpp:584
+#: Task.cpp:565
 msgid "Starting application..."
 msgstr "កំពុង​ចាប់ផ្ដើម​កម្មវិធី..."
 
-#: Task.cpp:588
+#: Task.cpp:569
 msgid "On all desktops"
 msgstr "នៅ​លើ​ផ្ទៃតុ​ទាំងអស់"
 
-#: Task.cpp:588
+#: Task.cpp:569
 msgctxt "Which virtual desktop a window is currently on"
 msgid "On %1"
 msgstr "នៅលើ %1"
