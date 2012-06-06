@@ -146,7 +146,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     qreal width = 0;
     qreal height = 0;
     const bool showLabel = (m_applet->titleLabelMode() != NoLabel && !title().isEmpty() && (m_applet->titleLabelMode() == AlwaysShowLabel || (m_task && m_task->isActive() && m_applet->titleLabelMode() == ActiveIconLabel) || (isUnderMouse() && m_applet->titleLabelMode() == MouseOverLabel)));
-    const bool useThumbnail = (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && itemType() != GroupType);
+    const bool showThumbnail = (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && itemType() != GroupType);
 
     switch (m_applet->location())
     {
@@ -184,7 +184,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         QPainter pixmapPainter(&visualizationPixmap);
         pixmapPainter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-        if (useThumbnail)
+        if (showThumbnail)
         {
             QPixmap thumbnail = ((m_thumbnailPixmap.width() > m_thumbnailPixmap.height())?m_thumbnailPixmap.scaledToWidth(m_size, Qt::SmoothTransformation):m_thumbnailPixmap.scaledToHeight(m_size, Qt::SmoothTransformation));
 
@@ -401,14 +401,21 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     if (showLabel)
     {
         const qreal labelSize = ((m_applet->location() == Plasma::LeftEdge || m_applet->location() == Plasma::RightEdge)?this->size().width():this->size().height());
+        const qreal maximumWidth = (target.width() * 0.95);
         QFont font = targetPainter.font();
         font.setPixelSize(labelSize * 0.15);
 
         targetPainter.setFont(font);
 
         const qreal textLength = (targetPainter.fontMetrics().width(title()) + (3 * targetPainter.fontMetrics().width(' ')));
-        const qreal textFieldWidth = ((textLength > (target.width() * 0.95))?(target.width() * 0.95):textLength);
-        const QRectF textField = QRectF(QPointF(((target.width() - textFieldWidth) / 2), (target.height() * 0.53)), QSizeF(textFieldWidth, (labelSize * 0.15)));
+        const qreal textFieldWidth = ((textLength > maximumWidth)?maximumWidth:textLength);
+        QRectF textField = QRectF(QPointF(((target.width() - textFieldWidth) / 2), (target.height() * 0.53)), QSizeF(textFieldWidth, (labelSize * 0.15)));
+
+        if (showThumbnail && textFieldWidth < maximumWidth)
+        {
+            textField.moveRight(maximumWidth - (maximumWidth - textFieldWidth));
+        }
+
         QPainterPath textFieldPath;
         textFieldPath.addRoundedRect(textField, 3, 3);
 
@@ -443,7 +450,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             targetPainter.setCompositionMode(QPainter::CompositionMode_SourceOver);
         }
 
-        if (useThumbnail)
+        if (showThumbnail)
         {
             const qreal iconSize = (labelSize * 0.2);
 
