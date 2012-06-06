@@ -400,14 +400,15 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     if (showLabel)
     {
+        const qreal labelSize = ((m_applet->location() == Plasma::LeftEdge || m_applet->location() == Plasma::RightEdge)?this->size().width():this->size().height());
         QFont font = targetPainter.font();
-        font.setPixelSize(visualizationSize * 0.2);
+        font.setPixelSize(labelSize * 0.15);
 
         targetPainter.setFont(font);
 
         const qreal textLength = (targetPainter.fontMetrics().width(title()) + (3 * targetPainter.fontMetrics().width(' ')));
-        const qreal textFieldWidth = ((textLength > visualizationSize)?visualizationSize:textLength);
-        const QRectF textField = QRectF(QPointF((((visualizationSize - textFieldWidth) / 2) + xOffset), (target.height() * 0.5)), QSizeF(textFieldWidth, (visualizationSize * 0.25)));
+        const qreal textFieldWidth = ((textLength > (target.width() * 0.95))?(target.width() * 0.95):textLength);
+        const QRectF textField = QRectF(QPointF(((target.width() - textFieldWidth) / 2), (target.height() * 0.53)), QSizeF(textFieldWidth, (labelSize * 0.15)));
         QPainterPath textFieldPath;
         textFieldPath.addRoundedRect(textField, 3, 3);
 
@@ -444,9 +445,9 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
         if (useThumbnail)
         {
-            const qreal iconSize = (visualizationSize * 0.25);
+            const qreal iconSize = (labelSize * 0.2);
 
-            targetPainter.drawPixmap((m_size - iconSize), (m_size - (iconSize * 1.1)), iconSize, iconSize, icon().pixmap(iconSize));
+            targetPainter.drawPixmap((target.width() - iconSize), (target.height() * 0.51), iconSize, iconSize, icon().pixmap(iconSize));
         }
     }
 
@@ -1140,7 +1141,7 @@ void Icon::launcherChanged(ItemChanges changes)
 
         KIO::PreviewJob *job = KIO::filePreview(items, QSize(size, size));
 
-        connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), this, SLOT(setThumbnail(const KFileItem&, const QPixmap&)));
+        connect(job, SIGNAL(gotPreview(const KFileItem&,const QPixmap&)), this, SLOT(setThumbnail(const KFileItem&,const QPixmap&)));
     }
 
     if (changes & IconChanged)
