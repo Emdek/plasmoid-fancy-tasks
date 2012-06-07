@@ -409,7 +409,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
         const qreal textLength = (targetPainter.fontMetrics().width(title()) + (3 * targetPainter.fontMetrics().width(' ')));
         const qreal textFieldWidth = ((textLength > maximumWidth)?maximumWidth:textLength);
-        QRectF textField = QRectF(QPointF(((target.width() - textFieldWidth) / 2), (target.height() * 0.53)), QSizeF(textFieldWidth, (labelSize * 0.15)));
+        QRectF textField = QRectF(QPointF(((target.width() - textFieldWidth) / 2), (target.height() * 0.52)), QSizeF(textFieldWidth, (labelSize * 0.17)));
 
         if (showThumbnail && textFieldWidth < maximumWidth)
         {
@@ -890,22 +890,24 @@ void Icon::setSize(qreal size)
 
     m_size = size;
 
+    const qreal margin = (size * 1.05);
+
     switch (m_applet->location())
     {
         case Plasma::LeftEdge:
-            m_layout->setContentsMargins(0, 0, m_size, 0);
+            m_layout->setContentsMargins(0, 0, margin, 0);
 
             break;
         case Plasma::RightEdge:
-            m_layout->setContentsMargins(m_size, 0, 0, 0);
+            m_layout->setContentsMargins(margin, 0, 0, 0);
 
             break;
         case Plasma::TopEdge:
-            m_layout->setContentsMargins(0, 0, 0, m_size);
+            m_layout->setContentsMargins(0, 0, 0, margin);
 
             break;
         default:
-            m_layout->setContentsMargins(0, m_size, 0, 0);
+            m_layout->setContentsMargins(0, margin, 0, 0);
 
             break;
     }

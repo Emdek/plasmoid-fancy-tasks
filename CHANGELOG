@@ -1,5 +1,6 @@
 1.1.2 (--.06.2012):
-- fix label position for zoom animation.
+- increased task light size a bit;
+- fixed label position for zoom animation.
 
 1.1.1 (01.06.2012):
 - reuse launcher icons by tasks also when using manual sorting;
@@ -27,7 +28,7 @@
 - make thumbnails work with raster graphics system;
 - hide option to use thumbnails if it is not available;
 - added Settings entry to icon context menu;
-- fix triggering actions with keyboard modifiers;
+- fixed triggering actions with keyboard modifiers;
 - remove custom implementation of task activation.
 
 1.0.98 (26.02.2012):
@@ -51,7 +52,7 @@
 
 1.0.94 (28.08.2010):
 - use action settings also for tool tips and task indicators;
-- fix highlight windows effect in tool tip;
+- fixed highlight windows effect in tool tip;
 - some other fixes and changes.
 
 1.0.93 (27.04.2010):
@@ -91,7 +92,7 @@
 - improved dialog for adding application launchers;
 - center all pop ups over icons;
 - fixes for icon glow;
-- fix for possible crash when painting task light;
+- fixed for possible crash when painting task light;
 - code cleanups;
 - other small fixes.
 

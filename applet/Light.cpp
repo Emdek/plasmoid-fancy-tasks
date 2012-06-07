@@ -167,7 +167,7 @@ void Light::toolTipHidden()
 
 void Light::setSize(qreal size)
 {
-    size *= 0.1;
+    size *= 0.12;
 
     setPreferredSize(size, size);
 }
