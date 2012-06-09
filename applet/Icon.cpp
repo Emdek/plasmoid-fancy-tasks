@@ -958,6 +958,10 @@ void Icon::validate()
     if (m_launcher)
     {
         setLauncher(m_launcher);
+
+        m_thumbnailPixmap = NULL;
+
+        launcherChanged(NoChanges);
     }
 }
 
