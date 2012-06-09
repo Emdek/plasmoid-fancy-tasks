@@ -586,13 +586,15 @@ void Applet::addTask(AbstractGroupableItem *abstractItem, bool force)
 
     if (m_groupManager->sortingStrategy() == TaskManager::GroupManager::NoSorting || m_groupManager->sortingStrategy() == TaskManager::GroupManager::ManualSorting || m_showOnlyTasksWithLaunchers)
     {
+        Launcher *launcher = launcherForTask(task);
+
         if (m_groupManager->groupingStrategy() == TaskManager::GroupManager::ProgramGrouping)
         {
             QMap<AbstractGroupableItem*, QPointer<Icon> >::iterator launcherTaskIconsIterator;
 
             for (launcherTaskIconsIterator = m_launcherTaskIcons.begin(); launcherTaskIconsIterator != m_launcherTaskIcons.end(); ++launcherTaskIconsIterator)
             {
-                if (launcherTaskIconsIterator.value()->task() && launcherTaskIconsIterator.value()->task()->taskType() == GroupType && launcherTaskIconsIterator.value()->task()->members().indexOf(abstractItem))
+                if (launcherTaskIconsIterator.value()->launcher() == launcher && launcherTaskIconsIterator.value()->task() && launcherTaskIconsIterator.value()->task()->taskType() == GroupType && launcherTaskIconsIterator.value()->task()->members().indexOf(abstractItem))
                 {
                     launcherTaskIconsIterator.value()->setTask(task);
 
@@ -603,8 +605,6 @@ void Applet::addTask(AbstractGroupableItem *abstractItem, bool force)
                 }
             }
         }
-
-        Launcher *launcher = launcherForTask(task);
 
         if (launcher && m_launcherIcons.contains(launcher))
         {
