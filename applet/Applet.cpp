@@ -1864,7 +1864,7 @@ Launcher* Applet::launcherForTask(Task *task)
 
         for (iterator = rules.begin(); iterator != rules.end(); ++iterator)
         {
-            if (matchRule(iterator.value().expression, values[iterator.key()], iterator.value().match))
+            if (!values[iterator.key()].isEmpty() && matchRule(iterator.value().expression, values[iterator.key()], iterator.value().match))
             {
                 ++matched;
             }
