@@ -1491,7 +1491,14 @@ void Icon::performAction(IconAction action, Task *task)
     switch (action)
     {
         case ActivateItemAction:
-            activate();
+            if (type == GroupType && task != m_task)
+            {
+                task->activate();
+            }
+            else
+            {
+                activate();
+            }
 
             break;
         case ActivateTaskAction:
