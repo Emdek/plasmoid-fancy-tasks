@@ -93,9 +93,7 @@ class Applet : public Plasma::Applet
         qreal initialFactor() const;
         qreal itemSize() const;
         bool parabolicMoveAnimation() const;
-        bool useThumbnails() const;
         bool paintReflections() const;
-        static QPixmap windowPreview(WId window, int size);
         static bool matchRule(const QString &expression, const QString &value, RuleMatch match);
 
     public slots:
@@ -183,7 +181,6 @@ class Applet : public Plasma::Applet
         int m_activeItem;
         int m_focusedItem;
         bool m_initialized;
-        bool m_useThumbnails;
         bool m_parabolicMoveAnimation;
         bool m_showOnlyCurrentDesktop;
         bool m_showOnlyCurrentScreen;

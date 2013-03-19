@@ -138,7 +138,6 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     m_appearanceUi.activeIconIndication->addItem(i18n("Fade"), QVariant(FadeIndication));
     m_appearanceUi.activeIconIndication->setCurrentIndex(m_appearanceUi.activeIconIndication->findData(QVariant(configuration.readEntry("activeIconIndication", static_cast<int>(FadeIndication)))));
 
-    m_appearanceUi.useThumbnails->setChecked(configuration.readEntry("useThumbnails", false));
     m_appearanceUi.customBackgroundImage->setUrl(KUrl(configuration.readEntry("customBackgroundImage", QString())));
     m_appearanceUi.customBackgroundImage->setFilter("image/svg+xml image/svg+xml-compressed");
     m_appearanceUi.moveAnimation->setCurrentIndex(moveAnimationIds.indexOf(static_cast<AnimationType>(configuration.readEntry("moveAnimation", static_cast<int>(GlowAnimation)))));
@@ -289,15 +288,6 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
 
     moveAnimationTypeChanged(m_appearanceUi.moveAnimation->currentIndex());
 
-    m_appearanceUi.useThumbnails->hide();
-
-#ifdef FANCYTASKS_HAVE_COMPOSITING
-    if (KWindowSystem::compositingActive())
-    {
-        m_appearanceUi.useThumbnails->show();
-    }
-#endif
-
     parent->addPage(generalWidget, i18n("General"), "go-home");
     parent->addPage(appearanceWidget, i18n("Appearance"), "preferences-desktop-theme");
     parent->addPage(arrangementWidget, i18n("Arrangement"), "format-list-unordered");
@@ -403,7 +393,6 @@ void Configuration::save()
     configuration.writeEntry("parabolicMoveAnimation", m_appearanceUi.parabolicMoveAnimation->isChecked());
     configuration.writeEntry("demandsAttentionAnimation", m_appearanceUi.demandsAttentionAnimation->itemData(m_appearanceUi.demandsAttentionAnimation->currentIndex()).toInt());
     configuration.writeEntry("startupAnimation", m_appearanceUi.startupAnimation->itemData(m_appearanceUi.startupAnimation->currentIndex()).toInt());
-    configuration.writeEntry("useThumbnails", m_appearanceUi.useThumbnails->isChecked());
     configuration.writeEntry("activeIconIndication", m_appearanceUi.activeIconIndication->itemData(m_appearanceUi.activeIconIndication->currentIndex()).toInt());
     configuration.writeEntry("titleLabelMode", m_appearanceUi.titleLabelMode->itemData(m_appearanceUi.titleLabelMode->currentIndex()).toInt());
     configuration.writeEntry("customBackgroundImage", (m_appearanceUi.customBackgroundImage->url().isValid()?m_appearanceUi.customBackgroundImage->url().path():QString()));

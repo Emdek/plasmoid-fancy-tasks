@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>455</width>
-    <height>333</height>
+    <height>308</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -26,13 +26,6 @@
       <string>Appearance</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QCheckBox" name="useThumbnails">
-        <property name="text">
-         <string>Use thumbnails instead of icons</string>
-        </property>
-       </widget>
-      </item>
       <item>
        <layout class="QGridLayout" name="gridLayout">
         <item row="1" column="1">

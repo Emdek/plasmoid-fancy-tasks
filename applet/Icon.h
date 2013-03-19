@@ -35,7 +35,6 @@
 #include <QtGui/QGraphicsDropShadowEffect>
 
 #include <KIcon>
-#include <KFileItem>
 
 namespace FancyTasks
 {
@@ -116,7 +115,6 @@ class Icon : public QGraphicsWidget
         void toolTipAboutToShow();
         void toolTipHidden();
         void updateToolTip();
-        void setThumbnail(const KFileItem &item = KFileItem(), const QPixmap thumbnail = QPixmap());
 
     private:
         QPointer<Applet> m_applet;
@@ -129,7 +127,6 @@ class Icon : public QGraphicsWidget
         QTimeLine *m_animationTimeLine;
         QTimeLine *m_jobAnimationTimeLine;
         QPixmap m_visualizationPixmap;
-        QPixmap m_thumbnailPixmap;
         AnimationType m_animationType;
         qreal m_size;
         qreal m_factor;

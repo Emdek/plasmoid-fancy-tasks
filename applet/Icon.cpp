@@ -87,7 +87,6 @@ Icon::Icon(int id, Task *task, Launcher *launcher, Job *job, Applet *applet) : Q
     setLayout(m_layout);
 
     m_visualizationPixmap = NULL;
-    m_thumbnailPixmap = NULL;
 
     m_animationTimeLine->setFrameRange(0, 100);
     m_animationTimeLine->setUpdateInterval(50);
@@ -146,7 +145,6 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     qreal width = 0;
     qreal height = 0;
     const bool showLabel = (m_applet->titleLabelMode() != NoLabel && !title().isEmpty() && (m_applet->titleLabelMode() == AlwaysShowLabel || (m_task && m_task->isActive() && m_applet->titleLabelMode() == ActiveIconLabel) || (isUnderMouse() && m_applet->titleLabelMode() == MouseOverLabel)));
-    const bool showThumbnail = (m_applet->useThumbnails() && !m_thumbnailPixmap.isNull() && itemType() != GroupType);
 
     switch (m_applet->location())
     {
@@ -177,34 +175,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             return;
         }
 
-        QPixmap visualizationPixmap;
-        visualizationPixmap = QPixmap(ceil(m_size), ceil(m_size));
-        visualizationPixmap.fill(Qt::transparent);
-
-        QPainter pixmapPainter(&visualizationPixmap);
-        pixmapPainter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-
-        if (showThumbnail)
-        {
-            QPixmap thumbnail = ((m_thumbnailPixmap.width() > m_thumbnailPixmap.height())?m_thumbnailPixmap.scaledToWidth(m_size, Qt::SmoothTransformation):m_thumbnailPixmap.scaledToHeight(m_size, Qt::SmoothTransformation));
-
-            pixmapPainter.drawPixmap(((m_size - thumbnail.width()) / 2), ((m_size - thumbnail.height()) / 2), thumbnail);
-
-            if (!showLabel)
-            {
-                const qreal iconSize = (m_size * 0.3);
-
-                pixmapPainter.drawPixmap((m_size - iconSize), (m_size - iconSize), iconSize, iconSize, icon().pixmap(iconSize));
-            }
-        }
-        else
-        {
-            pixmapPainter.drawPixmap(0, 0, m_size, m_size, icon().pixmap(m_size));
-        }
-
-        pixmapPainter.end();
-
-        m_visualizationPixmap = visualizationPixmap;
+        m_visualizationPixmap = icon().pixmap(m_size);
     }
 
     painter->setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -410,12 +381,6 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         const qreal textLength = (targetPainter.fontMetrics().width(title()) + (3 * targetPainter.fontMetrics().width(' ')));
         const qreal textFieldWidth = ((textLength > maximumWidth)?maximumWidth:textLength);
         QRectF textField = QRectF(QPointF(((target.width() - textFieldWidth) / 2), (target.height() * 0.52)), QSizeF(textFieldWidth, (labelSize * 0.17)));
-
-        if (showThumbnail && textFieldWidth < maximumWidth)
-        {
-            textField.moveRight(maximumWidth - (maximumWidth - textFieldWidth));
-        }
-
         QPainterPath textFieldPath;
         textFieldPath.addRoundedRect(textField, 3, 3);
 
@@ -448,13 +413,6 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             targetPainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
             targetPainter.fillPath(textFieldPath, alphaGradient);
             targetPainter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-        }
-
-        if (showThumbnail)
-        {
-            const qreal iconSize = (labelSize * 0.2);
-
-            targetPainter.drawPixmap((target.width() - iconSize), (target.height() * 0.51), iconSize, iconSize, icon().pixmap(iconSize));
         }
     }
 
@@ -912,34 +870,7 @@ void Icon::setSize(qreal size)
             break;
     }
 
-    setThumbnail();
-
     updateSize();
-
-    m_visualizationPixmap = NULL;
-
-    update();
-}
-
-void Icon::setThumbnail(const KFileItem &item, const QPixmap thumbnail)
-{
-    Q_UNUSED(item)
-
-    const ItemType type = itemType();
-
-    if (!m_applet->useThumbnails() || (type != TaskType && (type != LauncherType || thumbnail.isNull())))
-    {
-        return;
-    }
-
-    if (type == TaskType && m_task->windows().count() > 0)
-    {
-        m_thumbnailPixmap = Applet::windowPreview(m_task->windows().at(0), ((200 > m_size)?200:m_size));
-    }
-    else
-    {
-        m_thumbnailPixmap = thumbnail;
-    }
 
     m_visualizationPixmap = NULL;
 
@@ -958,8 +889,6 @@ void Icon::validate()
     if (m_launcher)
     {
         setLauncher(m_launcher);
-
-        m_thumbnailPixmap = NULL;
 
         launcherChanged(NoChanges);
     }
@@ -1120,11 +1049,6 @@ void Icon::taskChanged(ItemChanges changes)
         setFactor(m_task->isActive()?1:m_applet->initialFactor());
     }
 
-    if (changes & WindowsChanged && itemType() == TaskType)
-    {
-        QTimer::singleShot(200, this, SLOT(setThumbnail()));
-    }
-
     if (changes & WindowsChanged || changes & TextChanged || changes & IconChanged)
     {
         updateToolTip();
@@ -1143,18 +1067,6 @@ void Icon::launcherChanged(ItemChanges changes)
     if (!m_launcher || itemType() != LauncherType)
     {
         return;
-    }
-
-    if (!m_launcher->isMenu() && !KDesktopFile::isDesktopFile(m_launcher->targetUrl().toLocalFile()))
-    {
-        KFileItemList items;
-        items.append(KFileItem(m_launcher->targetUrl(), m_launcher->mimeType()->name(), KFileItem::Unknown));
-
-        const int size = ((m_applet->itemSize() > 200)?m_applet->itemSize():200);
-
-        KIO::PreviewJob *job = KIO::filePreview(items, QSize(size, size));
-
-        connect(job, SIGNAL(gotPreview(const KFileItem&,const QPixmap&)), this, SLOT(setThumbnail(const KFileItem&,const QPixmap&)));
     }
 
     if (changes & IconChanged)
@@ -1378,8 +1290,6 @@ void Icon::setTask(Task *task)
 
             m_task->deleteLater();
             m_task = NULL;
-
-            m_thumbnailPixmap = NULL;
 
             qDeleteAll(m_windowLights);
 

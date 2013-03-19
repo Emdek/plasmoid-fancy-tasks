@@ -460,7 +460,6 @@ void Applet::configChanged()
     m_parabolicMoveAnimation = configuration.readEntry("parabolicMoveAnimation", false);
     m_demandsAttentionAnimation = static_cast<AnimationType>(configuration.readEntry("demandsAttentionAnimation", static_cast<int>(BlinkAnimation)));
     m_startupAnimation = static_cast<AnimationType>(configuration.readEntry("startupAnimation", static_cast<int>(BounceAnimation)));
-    m_useThumbnails = configuration.readEntry("useThumbnails", false);
     m_titleLabelMode = static_cast<TitleLabelMode>(configuration.readEntry("titleLabelMode", static_cast<int>(AlwaysShowLabel)));
     m_customBackgroundImage = customBackgroundImage;
     m_showOnlyCurrentDesktop = configuration.readEntry("showOnlyCurrentDesktop", false);
@@ -2127,61 +2126,9 @@ bool Applet::parabolicMoveAnimation() const
     return m_parabolicMoveAnimation;
 }
 
-bool Applet::useThumbnails() const
-{
-    return m_useThumbnails;
-}
-
 bool Applet::paintReflections() const
 {
     return m_paintReflections;
-}
-
-QPixmap Applet::windowPreview(WId window, int size)
-{
-    QPixmap thumbnail;
-
-#ifdef FANCYTASKS_HAVE_COMPOSITING
-    if (!KWindowSystem::compositingActive())
-    {
-        return thumbnail;
-    }
-
-    Display *display = QX11Info::display();
-    XWindowAttributes attributes;
-
-    XGetWindowAttributes(display, window, &attributes);
-
-    const int x = attributes.x;
-    const int y = attributes.y;
-    const int width = attributes.width;
-    const int height = attributes.height;
-
-    XImage *image = XGetImage(display, window, x, y, width, height, AllPlanes, ZPixmap);
-
-    if (!image)
-    {
-        return thumbnail;
-    }
-
-    thumbnail = QPixmap::fromImage(QImage((const uchar*) image->data, width, height, image->bytes_per_line, QImage::Format_ARGB32));
-
-    XDestroyImage(image);
-
-    if (thumbnail.width() > thumbnail.height())
-    {
-        thumbnail = thumbnail.scaledToWidth(size, Qt::SmoothTransformation);
-    }
-    else
-    {
-        thumbnail = thumbnail.scaledToHeight(size, Qt::SmoothTransformation);
-    }
-#else
-    Q_UNUSED(window)
-    Q_UNUSED(size)
-#endif
-
-    return thumbnail;
 }
 
 bool Applet::matchRule(const QString &expression, const QString &value, RuleMatch match)
