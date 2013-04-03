@@ -72,6 +72,7 @@ class Task : public QObject
     public slots:
         void activate();
         void close();
+        void kill();
         void resize();
         void move();
         void moveToDesktop(int desktop = -1);

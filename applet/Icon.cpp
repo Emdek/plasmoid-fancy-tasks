@@ -1539,6 +1539,10 @@ void Icon::performAction(IconAction action, Task *task)
             task->close();
 
             break;
+        case KillTaskAction:
+            task->kill();
+
+            break;
         case MinimizeTaskAction:
             task->setMinimized();
 

@@ -115,6 +115,31 @@ void Task::close()
     }
 }
 
+void Task::kill()
+{
+    KSysGuard::Processes processes;
+    processes.updateAllProcesses();
+
+    if (m_taskType == TaskType && m_task)
+    {
+        processes.killProcess(m_task->task()->pid());
+    }
+    else if (m_taskType == GroupType && m_group)
+    {
+        QList<AbstractGroupableItem*> members = m_group->members();
+
+        for (int i = 0; i < members.count(); ++i)
+        {
+            TaskItem *task = qobject_cast<TaskItem*>(members.at(i));
+
+            if (task)
+            {
+                processes.killProcess(task->task()->pid());
+            }
+        }
+    }
+}
+
 void Task::resize()
 {
     if (m_abstractItem)

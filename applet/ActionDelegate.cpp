@@ -38,6 +38,7 @@ ActionDelegate::ActionDelegate(QObject *parent) : QStyledItemDelegate(parent)
     m_actions[ShowItemChildrenListAction] = i18n("Show Item Children List");
     m_actions[ShowItemWindowsAction] = i18n("Show Item Windows");
     m_actions[CloseTaskAction] = i18n("Close Task");
+    m_actions[KillTaskAction] = i18n("Kill Task");
     m_actions[MinimizeTaskAction] = i18n("Minimize Task");
     m_actions[MaximizeTaskAction] = i18n("Maximize Task");
     m_actions[FullscreenTaskAction] = i18n("Toggle Fullscreen State Of Task");

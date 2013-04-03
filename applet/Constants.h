@@ -77,7 +77,8 @@ enum IconAction
     ResizeTaskAction,
     MoveTaskAction,
     MoveTaskToCurrentDesktopAction,
-    MoveTaskToAllDesktopsAction
+    MoveTaskToAllDesktopsAction,
+    KillTaskAction
 };
 
 enum AnimationType
