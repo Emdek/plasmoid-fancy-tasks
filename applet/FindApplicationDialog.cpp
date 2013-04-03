@@ -107,11 +107,18 @@ void FindApplicationDialog::findApplication(const QString &query)
     adjustSize();
 }
 
+QString FindApplicationDialog::url() const
+{
+    return m_url;
+}
+
 bool FindApplicationDialog::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress)
     {
-        emit launcherClicked(object->objectName());
+        m_url = object->objectName();
+
+        close();
     }
 
     return QObject::eventFilter(object, event);

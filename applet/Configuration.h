@@ -75,7 +75,6 @@ class Configuration : public QObject
 
     private:
         QPointer<Applet> m_applet;
-        KDialog *m_findApplicationDialog;
         Launcher *m_editedLauncher;
         QMap<QString, QPair<QMap<ConnectionRule, LauncherRule>, bool> > m_rules;
         Ui::general m_generalUi;

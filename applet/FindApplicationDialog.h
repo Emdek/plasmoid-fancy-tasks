@@ -37,6 +37,7 @@ class FindApplicationDialog : public KDialog
     public:
         FindApplicationDialog(Applet *applet, QWidget *parent);
 
+        QString url() const;
         bool eventFilter(QObject *object, QEvent *event);
 
     protected:
@@ -47,10 +48,8 @@ class FindApplicationDialog : public KDialog
 
     private:
         Applet *m_applet;
+        QString m_url;
         Ui::findApplication m_findApplicationUi;
-
-    signals:
-        void launcherClicked(QString url);
 };
 
 }

@@ -40,7 +40,6 @@ namespace FancyTasks
 
 Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(parent),
     m_applet(applet),
-    m_findApplicationDialog(NULL),
     m_editedLauncher(NULL)
 {
     KConfigGroup configuration = m_applet->config();
@@ -530,14 +529,10 @@ void Configuration::moveDownItem()
 
 void Configuration::findLauncher()
 {
-    if (!m_findApplicationDialog)
-    {
-        m_findApplicationDialog = new FindApplicationDialog(m_applet, qobject_cast<QWidget*>(parent()));
+    FindApplicationDialog dialog(m_applet, qobject_cast<QWidget*>(parent()));
+    dialog.exec();
 
-        connect(m_findApplicationDialog, SIGNAL(launcherClicked(QString)), this, SLOT(addLauncher(QString)));
-    }
-
-    m_findApplicationDialog->show();
+    addLauncher(dialog.url());
 }
 
 void Configuration::addLauncher(const QString &url)
