@@ -29,7 +29,6 @@
 #include "ui_appearance.h"
 #include "ui_arrangement.h"
 #include "ui_actions.h"
-#include "ui_findApplication.h"
 
 namespace FancyTasks
 {
@@ -46,7 +45,6 @@ class Configuration : public QObject
         ~Configuration();
 
         bool hasTrigger(const QString &trigger);
-        bool eventFilter(QObject *object, QEvent *event);
 
     protected:
         void connectWidgets(QWidget *widget);
@@ -62,14 +60,13 @@ class Configuration : public QObject
         void removeItem();
         void moveUpItem();
         void moveDownItem();
+        void findLauncher();
         void addLauncher(const QString &url);
         void addLauncher();
         void editLauncher();
         void changeLauncher(Launcher *launcher, const KUrl &oldUrl);
         void addMenu(QAction *action);
         void populateMenu();
-        void findApplication(const QString &query);
-        void closeFindApplicationDialog();
         void closeActionEditors();
         void actionClicked(const QModelIndex &index);
         void actionSelectionChanged();
@@ -85,7 +82,6 @@ class Configuration : public QObject
         Ui::appearance m_appearanceUi;
         Ui::arrangement m_arrangementUi;
         Ui::actions m_actionsUi;
-        Ui::findApplication m_findApplicationUi;
 
     signals:
         void accepted();

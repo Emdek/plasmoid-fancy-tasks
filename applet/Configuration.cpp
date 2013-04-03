@@ -22,10 +22,8 @@
 #include "Applet.h"
 #include "ActionDelegate.h"
 #include "TriggerDelegate.h"
+#include "FindApplicationDialog.h"
 #include "Launcher.h"
-
-#include <QtGui/QLabel>
-#include <QtGui/QHBoxLayout>
 
 #include <KUrl>
 #include <KIcon>
@@ -33,7 +31,6 @@
 #include <KFileDialog>
 #include <KMessageBox>
 #include <KServiceGroup>
-#include <KServiceTypeTrader>
 
 #include <taskmanager/taskmanager.h>
 #include <taskmanager/groupmanager.h>
@@ -43,6 +40,7 @@ namespace FancyTasks
 
 Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(parent),
     m_applet(applet),
+    m_findApplicationDialog(NULL),
     m_editedLauncher(NULL)
 {
     KConfigGroup configuration = m_applet->config();
@@ -51,7 +49,6 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     QWidget *appearanceWidget = new QWidget;
     QWidget *arrangementWidget = new QWidget;
     QWidget *actionsWidget = new QWidget;
-    QWidget *findApplicationWidget = new QWidget;
     QAction *addLauncherApplicationAction = addLauncherMenu->addAction(KIcon("application-x-executable"), i18n("Add Application..."));
     QAction *addLauncherFromFileAction = addLauncherMenu->addAction(KIcon("inode-directory"), i18n("Add File or Directory..."));
     QAction *addMenuLauncher = addLauncherMenu->addAction(KIcon("start-here"), i18n("Add Menu"));
@@ -67,15 +64,9 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     m_appearanceUi.setupUi(appearanceWidget);
     m_arrangementUi.setupUi(arrangementWidget);
     m_actionsUi.setupUi(actionsWidget);
-    m_findApplicationUi.setupUi(findApplicationWidget);
 
     connectWidgets(generalWidget);
     connectWidgets(appearanceWidget);
-
-    m_findApplicationDialog = new KDialog(parent);
-    m_findApplicationDialog->setCaption(i18n("Find Application"));
-    m_findApplicationDialog->setMainWidget(findApplicationWidget);
-    m_findApplicationDialog->setButtons(KDialog::Close);
 
     m_arrangementUi.addLauncherButton->setMenu(addLauncherMenu);
 
@@ -308,13 +299,10 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
     connect(m_actionsUi.actionsTableWidget->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(actionSelectionChanged()));
     connect(m_actionsUi.addButton, SIGNAL(clicked()), this, SLOT(addAction()));
     connect(m_actionsUi.removeButton, SIGNAL(clicked()), this, SLOT(removeAction()));
-    connect(m_findApplicationUi.query, SIGNAL(textChanged(QString)), this, SLOT(findApplication(QString)));
-    connect(addLauncherApplicationAction, SIGNAL(triggered()), m_findApplicationDialog, SLOT(show()));
-    connect(addLauncherApplicationAction, SIGNAL(triggered()), m_findApplicationUi.query, SLOT(setFocus()));
+    connect(addLauncherApplicationAction, SIGNAL(triggered()), this, SLOT(findLauncher()));
     connect(addLauncherFromFileAction, SIGNAL(triggered()), this, SLOT(addLauncher()));
     connect(addMenuLauncherMenu, SIGNAL(aboutToShow()), this, SLOT(populateMenu()));
     connect(addMenuLauncherMenu, SIGNAL(triggered(QAction*)), this, SLOT(addMenu(QAction*)));
-    connect(m_findApplicationDialog, SIGNAL(finished()), this, SLOT(closeFindApplicationDialog()));
 }
 
 Configuration::~Configuration()
@@ -540,6 +528,18 @@ void Configuration::moveDownItem()
     modify();
 }
 
+void Configuration::findLauncher()
+{
+    if (!m_findApplicationDialog)
+    {
+        m_findApplicationDialog = new FindApplicationDialog(m_applet, qobject_cast<QWidget*>(parent()));
+
+        connect(m_findApplicationDialog, SIGNAL(launcherClicked(QString)), this, SLOT(addLauncher(QString)));
+    }
+
+    m_findApplicationDialog->show();
+}
+
 void Configuration::addLauncher(const QString &url)
 {
     if (url.isEmpty() || hasEntry(url))
@@ -564,7 +564,7 @@ void Configuration::addLauncher(const QString &url)
 
 void Configuration::addLauncher()
 {
-    KFileDialog dialog(KUrl("~"), "", NULL);
+    KFileDialog dialog(KUrl("~"), QString(), NULL);
     dialog.setWindowModality(Qt::NonModal);
     dialog.setMode(KFile::File | KFile::Directory);
     dialog.setOperationMode(KFileDialog::Opening);
@@ -692,65 +692,6 @@ void Configuration::populateMenu()
     }
 }
 
-void Configuration::findApplication(const QString &query)
-{
-    for (int i = (m_findApplicationUi.resultsLayout->count() - 1); i >= 0; --i)
-    {
-        m_findApplicationUi.resultsLayout->takeAt(i)->widget()->deleteLater();
-        m_findApplicationUi.resultsLayout->removeItem(m_findApplicationUi.resultsLayout->itemAt(i));
-    }
-
-    if (query.length() < 3)
-    {
-        m_findApplicationDialog->adjustSize();
-
-        return;
-    }
-
-    KService::List services = KServiceTypeTrader::self()->query("Application", QString("exist Exec and ( (exist Keywords and '%1' ~subin Keywords) or (exist GenericName and '%1' ~~ GenericName) or (exist Name and '%1' ~~ Name) )").arg(query));
-
-    if (!services.isEmpty())
-    {
-        foreach (const KService::Ptr &service, services)
-        {
-            if (!service->noDisplay() && service->property("NotShowIn", QVariant::String) != "KDE")
-            {
-                Launcher launcher(KUrl(service->entryPath()), m_applet);
-                QWidget* entryWidget = new QWidget(static_cast<QWidget*>(parent()));
-                QLabel* iconLabel = new QLabel(entryWidget);
-                QLabel* textLabel = new QLabel(QString("%1<br /><small>%3</small>").arg(launcher.title()).arg(launcher.description()), entryWidget);
-
-                iconLabel->setPixmap(launcher.icon().pixmap(32, 32));
-
-                textLabel->setFixedSize(240, 40);
-
-                QHBoxLayout* entryWidgetLayout = new QHBoxLayout(entryWidget);
-                entryWidgetLayout->addWidget(iconLabel);
-                entryWidgetLayout->addWidget(textLabel);
-                entryWidgetLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
-                entryWidget->setToolTip(QString("<b>%1</b><br /><i>%2</i>").arg(launcher.title()).arg(launcher.description()));
-                entryWidget->setLayout(entryWidgetLayout);
-                entryWidget->setFixedSize(300, 40);
-                entryWidget->setObjectName(service->entryPath());
-                entryWidget->setCursor(QCursor(Qt::PointingHandCursor));
-                entryWidget->installEventFilter(this);
-
-                m_findApplicationUi.resultsLayout->addWidget(entryWidget);
-            }
-        }
-    }
-
-    m_findApplicationDialog->adjustSize();
-}
-
-void Configuration::closeFindApplicationDialog()
-{
-    findApplication(QString());
-
-    m_findApplicationUi.query->setText(QString());
-}
-
 void Configuration::closeActionEditors()
 {
     for (int i = 0; i < m_actionsUi.actionsTableWidget->rowCount(); ++i)
@@ -835,16 +776,6 @@ bool Configuration::hasEntry(const QString &entry, bool warn)
     }
 
     return false;
-}
-
-bool Configuration::eventFilter(QObject *object, QEvent *event)
-{
-    if (event->type() == QEvent::MouseButtonPress)
-    {
-        addLauncher(object->objectName());
-    }
-
-    return QObject::eventFilter(object, event);
 }
 
 }

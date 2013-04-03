@@ -6,7 +6,7 @@ include(KDE4Defaults)
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
-set(fancytasks_SRCS Applet.cpp Icon.cpp Light.cpp Separator.cpp DropZone.cpp Task.cpp Launcher.cpp LauncherProperties.cpp RuleDelegate.cpp Job.cpp Menu.cpp Configuration.cpp ActionDelegate.cpp TriggerDelegate.cpp)
+set(fancytasks_SRCS Applet.cpp Icon.cpp Light.cpp Separator.cpp DropZone.cpp Task.cpp Launcher.cpp LauncherProperties.cpp RuleDelegate.cpp Job.cpp Menu.cpp Configuration.cpp ActionDelegate.cpp TriggerDelegate.cpp FindApplicationDialog.cpp)
 
 add_subdirectory(locale)
 
