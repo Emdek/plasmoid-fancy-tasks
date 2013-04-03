@@ -45,19 +45,6 @@
 #include <Plasma/Theme>
 #include <Plasma/Corona>
 
-#ifdef Q_WS_X11
-#include <QX11Info>
-
-#include <X11/Xlib.h>
-#include <fixx11h.h>
-#endif
-
-#ifdef FANCYTASKS_HAVE_COMPOSITING
-#include <X11/extensions/Xrender.h>
-#include <X11/extensions/Xcomposite.h>
-#include <X11/extensions/shape.h>
-#endif
-
 K_EXPORT_PLASMA_APPLET(fancytasks, FancyTasks::Applet)
 
 namespace FancyTasks
