@@ -20,8 +20,10 @@
 
 #include "Task.h"
 #include "Applet.h"
+#include "FindApplicationDialog.h"
 
 #include <KLocale>
+#include <KMessageBox>
 #include <NETRootInfo>
 #include <KWindowSystem>
 #include <KServiceTypeTrader>
@@ -71,7 +73,7 @@ void Task::fixMenu(QMenu *menu, Task *task)
 
     const QString url = (task?task->launcherUrl().pathOrUrl():QString());
 
-    if (!task || url.isEmpty() || m_applet->arrangement().contains(url) || (group && m_applet->groupManager()->groupingStrategy() != TaskManager::GroupManager::ProgramGrouping))
+    if (!task || (!url.isEmpty() && m_applet->arrangement().contains(url)) || (group && m_applet->groupManager()->groupingStrategy() != TaskManager::GroupManager::ProgramGrouping))
     {
         return;
     }
@@ -326,6 +328,28 @@ void Task::pinLauncher()
 
     if (launcherAction)
     {
+        QString url(launcherAction->data().toString());
+
+        if (url.isEmpty())
+        {
+            FindApplicationDialog dialog(m_applet, qobject_cast<QWidget*>(parent()));
+            dialog.exec();
+
+            url = dialog.url();
+
+            if (url.isEmpty())
+            {
+                return;
+            }
+
+            if (m_applet->arrangement().contains(url))
+            {
+                KMessageBox::sorry(NULL, i18n("Launcher with URL \"%1\" already exists.").arg(url));
+
+                return;
+            }
+        }
+
         m_applet->addLauncher(m_applet->launcherForUrl(KUrl(launcherAction->data().toString())));
     }
 }
