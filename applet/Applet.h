@@ -182,10 +182,6 @@ class Applet : public Plasma::Applet
         int m_focusedItem;
         bool m_initialized;
         bool m_parabolicMoveAnimation;
-        bool m_showOnlyCurrentDesktop;
-        bool m_showOnlyCurrentScreen;
-        bool m_showOnlyMinimized;
-        bool m_showOnlyCurrentActivity;
         bool m_showOnlyTasksWithLaunchers;
         bool m_connectJobsWithTasks;
         bool m_groupJobs;

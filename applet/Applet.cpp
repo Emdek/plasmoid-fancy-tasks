@@ -449,10 +449,6 @@ void Applet::configChanged()
     m_startupAnimation = static_cast<AnimationType>(configuration.readEntry("startupAnimation", static_cast<int>(BounceAnimation)));
     m_titleLabelMode = static_cast<TitleLabelMode>(configuration.readEntry("titleLabelMode", static_cast<int>(AlwaysShowLabel)));
     m_customBackgroundImage = customBackgroundImage;
-    m_showOnlyCurrentDesktop = configuration.readEntry("showOnlyCurrentDesktop", false);
-    m_showOnlyCurrentActivity = configuration.readEntry("showOnlyCurrentActivity", true);
-    m_showOnlyCurrentScreen = configuration.readEntry("showOnlyCurrentScreen", false);
-    m_showOnlyMinimized = configuration.readEntry("showOnlyMinimized", false);
     m_showOnlyTasksWithLaunchers = showOnlyTasksWithLaunchers;
     m_connectJobsWithTasks = configuration.readEntry("connectJobsWithTasks", false);
     m_groupJobs = configuration.readEntry("groupJobs", true);
@@ -462,10 +458,10 @@ void Applet::configChanged()
 
     m_groupManager->setGroupingStrategy(m_groupingStrategy);
     m_groupManager->setSortingStrategy(m_sortingStrategy);
-    m_groupManager->setShowOnlyCurrentDesktop(m_showOnlyCurrentDesktop);
-    m_groupManager->setShowOnlyCurrentActivity(m_showOnlyCurrentActivity);
-    m_groupManager->setShowOnlyCurrentScreen(m_showOnlyCurrentScreen);
-    m_groupManager->setShowOnlyMinimized(m_showOnlyMinimized);
+    m_groupManager->setShowOnlyCurrentDesktop(configuration.readEntry("showOnlyCurrentDesktop", false));
+    m_groupManager->setShowOnlyCurrentActivity(configuration.readEntry("showOnlyCurrentActivity", true));
+    m_groupManager->setShowOnlyCurrentScreen(configuration.readEntry("showOnlyCurrentScreen", false));
+    m_groupManager->setShowOnlyMinimized(configuration.readEntry("showOnlyMinimized", false));
     m_groupManager->reconnect();
 
     if (containment())
