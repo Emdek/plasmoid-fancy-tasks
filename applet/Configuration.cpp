@@ -130,6 +130,12 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
 
     m_appearanceUi.customBackgroundImage->setUrl(KUrl(configuration.readEntry("customBackgroundImage", QString())));
     m_appearanceUi.customBackgroundImage->setFilter("image/svg+xml image/svg+xml-compressed");
+
+    if (m_applet->location() != Plasma::Floating && (!m_applet->containment() || m_applet->containment()->objectName() != "FancyPanel")) {
+        m_appearanceUi.customBackgroundImageLabel->hide();
+        m_appearanceUi.customBackgroundImage->hide();
+    }
+
     m_appearanceUi.moveAnimation->setCurrentIndex(moveAnimationIds.indexOf(static_cast<AnimationType>(configuration.readEntry("moveAnimation", static_cast<int>(GlowAnimation)))));
     m_appearanceUi.parabolicMoveAnimation->setChecked(configuration.readEntry("parabolicMoveAnimation", false));
     m_appearanceUi.demandsAttentionAnimation->setCurrentIndex(iconAnimationIds.indexOf(static_cast<AnimationType>(configuration.readEntry("demandsAttentionAnimation", static_cast<int>(BlinkAnimation)))));
