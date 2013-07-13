@@ -434,12 +434,11 @@ void Applet::configChanged()
         update();
     }
 
-    m_groupingStrategy = static_cast<TaskManager::GroupManager::TaskGroupingStrategy>(configuration.readEntry("groupingStrategy", static_cast<int>(TaskManager::GroupManager::NoGrouping)));
-    m_sortingStrategy = static_cast<TaskManager::GroupManager::TaskSortingStrategy>(configuration.readEntry("sortingStrategy", static_cast<int>(TaskManager::GroupManager::ManualSorting)));
-
     const QStringList arrangement = configuration.readEntry("arrangement", QStringList("tasks"));
+    const TaskManager::GroupManager::TaskGroupingStrategy groupingStrategy = static_cast<TaskManager::GroupManager::TaskGroupingStrategy>(configuration.readEntry("groupingStrategy", static_cast<int>(TaskManager::GroupManager::NoGrouping)));
+    const TaskManager::GroupManager::TaskSortingStrategy sortingStrategy = static_cast<TaskManager::GroupManager::TaskSortingStrategy>(configuration.readEntry("sortingStrategy", static_cast<int>(TaskManager::GroupManager::ManualSorting)));
     const bool showOnlyTasksWithLaunchers = configuration.readEntry("showOnlyTasksWithLaunchers", false);
-    const bool needsReload = (m_groupingStrategy != m_groupManager->groupingStrategy() || m_sortingStrategy != m_groupManager->sortingStrategy() || showOnlyTasksWithLaunchers != m_showOnlyTasksWithLaunchers || arrangement != m_arrangement);
+    const bool needsReload = (groupingStrategy != m_groupManager->groupingStrategy() || sortingStrategy != m_groupManager->sortingStrategy() || showOnlyTasksWithLaunchers != m_showOnlyTasksWithLaunchers || arrangement != m_arrangement);
 
     m_jobCloseMode = static_cast<CloseJobMode>(configuration.readEntry("jobCloseMode", static_cast<int>(DelayedClose)));
     m_activeIconIndication = static_cast<ActiveIconIndication>(configuration.readEntry("activeIconIndication", static_cast<int>(FadeIndication)));
@@ -456,8 +455,8 @@ void Applet::configChanged()
     m_initialFactor = ((m_moveAnimation == ZoomAnimation)?configuration.readEntry("initialZoomLevel", 0.7):((m_moveAnimation == JumpAnimation)?0.7:0));
     m_paintReflections = configuration.readEntry("paintReflections", true);
 
-    m_groupManager->setGroupingStrategy(m_groupingStrategy);
-    m_groupManager->setSortingStrategy(m_sortingStrategy);
+    m_groupManager->setGroupingStrategy(groupingStrategy);
+    m_groupManager->setSortingStrategy(sortingStrategy);
     m_groupManager->setShowOnlyCurrentDesktop(configuration.readEntry("showOnlyCurrentDesktop", false));
     m_groupManager->setShowOnlyCurrentActivity(configuration.readEntry("showOnlyCurrentActivity", true));
     m_groupManager->setShowOnlyCurrentScreen(configuration.readEntry("showOnlyCurrentScreen", false));
