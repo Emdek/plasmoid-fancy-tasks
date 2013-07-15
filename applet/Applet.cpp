@@ -245,7 +245,7 @@ void Applet::dropEvent(QGraphicsSceneDragDropEvent *event)
         return;
     }
 
-    KUrl::List droppedUrls = KUrl::List::fromMimeData(event->mimeData());
+    const KUrl::List droppedUrls = KUrl::List::fromMimeData(event->mimeData());
 
     for (int i = 0; i < droppedUrls.count(); ++i)
     {
