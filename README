@@ -25,12 +25,12 @@ Features:
 - tasks filtering, grouping (including manual) and sorting;
 - keyboard navigation (Tab and Shift+Tab);
 - launcher to task transition with custom connecting rules (icons of launchers with running tasks are hidden if sorting other than manual is enabled);
-- tool tips with live preview of windows when KWin Taskbar Thumbnail effect is enabled;
-- highlighting windows when hovering cursor over task or window preview when KWin Highlight Window effect is enabled;
-- dropping files on launchers runs command with parameters or gives option to move, copy or link them (if target is directory);
+- tool tips with live preview of windows (when KWin Taskbar Thumbnail effect is enabled);
+- highlighting windows when hovering cursor over task or window preview (when KWin Highlight Window effect is enabled);
 - visual drop indicator that helps in manual tasks sorting and rearranging launchers;
-- possibility to browse directories of directory launchers using context menu;
-- possibility to add application menus;
+- dropping files on directory launcher runs command with parameters or gives option to move, copy or link them;
+- possibility to browse subdirectories of directory launchers using context menu;
 - menu with list of all icons shown after activating keyboard shortcut;
+- possibility to add application menus;
 - configurable animations (zoom, jump, bounce, highlight, etc.) and appearance (optional thumbnails and text label);
 - fully animated icons (including animations of starting applications, tasks needing attention and application jobs progress).
