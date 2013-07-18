@@ -43,7 +43,7 @@ class Launcher : public QObject
     Q_OBJECT
 
     public:
-        Launcher(const KUrl &url, Applet *applet);
+        explicit Launcher(const KUrl &url, Applet *applet);
         ~Launcher();
 
         void dropUrls(const KUrl::List &urls, Qt::KeyboardModifiers modifiers);

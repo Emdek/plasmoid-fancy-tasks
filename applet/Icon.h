@@ -50,7 +50,7 @@ class Icon : public QGraphicsWidget
     Q_OBJECT
 
     public:
-        Icon(int id, Task *task, Launcher *launcher, Job *job, Applet *applet);
+        explicit Icon(int id, Task *task, Launcher *launcher, Job *job, Applet *applet);
 
         ItemType itemType() const;
         QPointer<Task> task();

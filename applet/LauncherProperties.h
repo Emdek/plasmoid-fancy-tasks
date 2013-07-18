@@ -37,7 +37,7 @@ class LauncherProperties : public KPropertiesDialog
     Q_OBJECT
 
     public:
-        LauncherProperties(Launcher *launcher);
+        explicit LauncherProperties(Launcher *launcher);
 
         bool eventFilter(QObject *object, QEvent *event);
 

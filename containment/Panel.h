@@ -30,7 +30,7 @@ class FancyPanel : public Plasma::Containment
     Q_OBJECT
 
     public:
-        FancyPanel(QObject *parent, const QVariantList &args);
+        explicit FancyPanel(QObject *parent, const QVariantList &args);
         ~FancyPanel();
 
         void init();

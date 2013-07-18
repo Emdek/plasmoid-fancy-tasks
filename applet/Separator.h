@@ -36,7 +36,7 @@ class Separator : public Plasma::SvgWidget
     Q_OBJECT
 
     public:
-        Separator(Plasma::Svg *svg, Applet *applet);
+        explicit Separator(Plasma::Svg *svg, Applet *applet);
 
         QPainterPath shape() const;
         bool isVisible() const;

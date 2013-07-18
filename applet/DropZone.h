@@ -35,7 +35,7 @@ class DropZone : public QGraphicsWidget
     Q_OBJECT
 
     public:
-        DropZone(Applet *applet);
+        explicit DropZone(Applet *applet);
 
         int index() const;
         bool isVisible() const;

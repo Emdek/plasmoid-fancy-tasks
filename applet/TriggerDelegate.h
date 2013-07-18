@@ -33,7 +33,7 @@ class TriggerDelegate : public QStyledItemDelegate
     Q_OBJECT
 
     public:
-        TriggerDelegate(Configuration *parent);
+        explicit TriggerDelegate(Configuration *parent);
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;

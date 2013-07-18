@@ -33,7 +33,7 @@ class ActionDelegate : public QStyledItemDelegate
     Q_OBJECT
 
     public:
-        ActionDelegate(QObject *parent = NULL);
+        explicit ActionDelegate(QObject *parent = NULL);
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;

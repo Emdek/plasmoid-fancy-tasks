@@ -67,7 +67,7 @@ class Applet : public Plasma::Applet
     Q_OBJECT
 
     public:
-        Applet(QObject *parent, const QVariantList &args);
+        explicit Applet(QObject *parent, const QVariantList &args);
         ~Applet();
 
         void init();

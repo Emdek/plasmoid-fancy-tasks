@@ -39,7 +39,7 @@ class Job : public QObject
     Q_OBJECT
 
     public:
-        Job(const QString &job, Applet *applet);
+        explicit Job(const QString &job, Applet *applet);
 
         JobState state() const;
         KMenu* contextMenu();

@@ -53,7 +53,7 @@ class Task : public QObject
     Q_OBJECT
 
     public:
-        Task(AbstractGroupableItem *abstractItem, Applet *applet);
+        explicit Task(AbstractGroupableItem *abstractItem, Applet *applet);
 
         void dropTask(Task *task);
         void addMimeData(QMimeData *mimeData);

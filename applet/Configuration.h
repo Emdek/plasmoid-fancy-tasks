@@ -41,7 +41,7 @@ class Configuration : public QObject
     Q_OBJECT
 
     public:
-        Configuration(Applet *applet, KConfigDialog *parent);
+        explicit Configuration(Applet *applet, KConfigDialog *parent);
         ~Configuration();
 
         bool hasTrigger(const QString &trigger);

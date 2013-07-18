@@ -31,7 +31,7 @@ class RuleDelegate : public QStyledItemDelegate
     Q_OBJECT
 
     public:
-        RuleDelegate(QObject *parent = NULL);
+        explicit RuleDelegate(QObject *parent = NULL);
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;

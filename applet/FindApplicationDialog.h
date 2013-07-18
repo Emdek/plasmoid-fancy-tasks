@@ -35,7 +35,7 @@ class FindApplicationDialog : public KDialog
     Q_OBJECT
 
     public:
-        FindApplicationDialog(Applet *applet, QWidget *parent);
+        explicit FindApplicationDialog(Applet *applet, QWidget *parent);
 
         QString url() const;
         bool eventFilter(QObject *object, QEvent *event);
