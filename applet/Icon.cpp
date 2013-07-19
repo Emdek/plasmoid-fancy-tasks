@@ -380,7 +380,7 @@ void Icon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
         const qreal textLength = (targetPainter.fontMetrics().width(title()) + (3 * targetPainter.fontMetrics().width(' ')));
         const qreal textFieldWidth = ((textLength > maximumWidth)?maximumWidth:textLength);
-        QRectF textField = QRectF(QPointF(((target.width() - textFieldWidth) / 2), (target.height() * 0.52)), QSizeF(textFieldWidth, (labelSize * 0.17)));
+        const QRectF textField = QRectF(QPointF(((target.width() - textFieldWidth) / 2), (target.height() * 0.52)), QSizeF(textFieldWidth, (labelSize * 0.17)));
         QPainterPath textFieldPath;
         textFieldPath.addRoundedRect(textField, 3, 3);
 
@@ -636,7 +636,7 @@ void Icon::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    QMimeData *mimeData = new QMimeData;
+    QMimeData *mimeData = new QMimeData();
     mimeData->setData("plasmoid-fancytasks/iconid", QString::number(m_id).toAscii());
 
     if (m_launcher)
