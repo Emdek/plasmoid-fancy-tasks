@@ -55,8 +55,8 @@ void Job::dataUpdated(const QString &source, const Plasma::DataEngine::Data &dat
     m_suspendable = data["suspendable"].toBool();
     m_killable = data["killable"].toBool();
 
-    QString state = data["state"].toString();
-    JobState previousState = m_state;
+    const QString state = data["state"].toString();
+    const JobState previousState = m_state;
 
     if (!data["error"].toString().isEmpty())
     {
@@ -170,7 +170,7 @@ void Job::destroy()
 
 KMenu* Job::contextMenu()
 {
-    KMenu *menu = new KMenu;
+    KMenu *menu = new KMenu();
 
     if (m_state == FinishedState || m_state == ErrorState)
     {
