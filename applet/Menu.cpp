@@ -96,9 +96,9 @@ void Menu::mouseMoveEvent(QMouseEvent *event)
     if (event->buttons() & Qt::LeftButton && (event->pos() - m_dragStartPosition).manhattanLength() >= QApplication::startDragDistance() && activeAction() && activeAction()->data().type() == QVariant::ULongLong)
     {
         QDrag *drag = new QDrag(this);
-        QMimeData *mimeData = new QMimeData;
+        QMimeData *mimeData = new QMimeData();
         QByteArray data;
-        WId window = activeAction()->data().toULongLong();
+        const WId window = activeAction()->data().toULongLong();
 
         data.resize(sizeof(WId));
 
