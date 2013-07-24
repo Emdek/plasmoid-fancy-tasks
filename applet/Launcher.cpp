@@ -104,7 +104,7 @@ void Launcher::dropUrls(const KUrl::List &urls, Qt::KeyboardModifiers modifiers)
         }
         else
         {
-            KMenu *menu = new KMenu;
+            KMenu *menu = new KMenu();
             QAction *moveAction = menu->addAction(KIcon("go-jump"), i18nc("@action:inmenu", "&Move Here\t<shortcut>%1</shortcut>", QKeySequence(Qt::ShiftModifier).toString()));
             QAction *copyAction = menu->addAction(KIcon("edit-copy"), i18nc("@action:inmenu", "&Copy Here\t<shortcut>%1</shortcut>", QKeySequence(Qt::ControlModifier).toString()));
             QAction *linkAction = menu->addAction(KIcon("insert-link"), i18nc("@action:inmenu", "&Link Here\t<shortcut>%1</shortcut>", QKeySequence(Qt::ControlModifier + Qt::ShiftModifier).toString()));
@@ -198,7 +198,7 @@ void Launcher::startMenuEditor()
 
 void Launcher::emptyTrash()
 {
-    QWidget *widget = new QWidget;
+    QWidget *widget = new QWidget();
 
     if (KMessageBox::warningContinueCancel(widget, i18nc("@info", "Do you really want to empty the trash? All items will be deleted."), QString(), KGuiItem(i18nc("@action:button", "Empty Trash"), KIcon("user-trash"))) == KMessageBox::Continue)
     {
@@ -298,8 +298,8 @@ void Launcher::setUrl(const KUrl &url)
 
     if (m_launcherUrl.isLocalFile() && KDesktopFile::isDesktopFile(m_launcherUrl.toLocalFile()))
     {
-        KDesktopFile desktopFile(m_launcherUrl.toLocalFile());
-        KConfigGroup config = desktopFile.desktopGroup();
+        const KDesktopFile desktopFile(m_launcherUrl.toLocalFile());
+        const KConfigGroup config = desktopFile.desktopGroup();
 
         m_executable = config.readPathEntry("Exec", QString());
         m_title = (desktopFile.readName().isEmpty()?m_launcherUrl.fileName():desktopFile.readName());
@@ -494,7 +494,7 @@ KMimeType::Ptr Launcher::mimeType()
 
 KMenu* Launcher::contextMenu()
 {
-    KMenu *menu = new KMenu;
+    KMenu *menu = new KMenu();
 
     if (m_isMenu)
     {
@@ -539,7 +539,7 @@ KMenu* Launcher::contextMenu()
 
 KMenu* Launcher::serviceMenu()
 {
-    KMenu *menu = new KMenu;
+    KMenu *menu = new KMenu();
 
     if (!m_serviceGroup || !m_serviceGroup->isValid() || m_serviceGroup->noDisplay())
     {
