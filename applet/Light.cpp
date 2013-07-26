@@ -54,7 +54,7 @@ void Light::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    QPixmap pixmap = m_applet->lightPixmap();
+    const QPixmap pixmap = m_applet->lightPixmap();
 
     painter->setRenderHints(QPainter::SmoothPixmapTransform);
     painter->drawPixmap(boundingRect().toRect(), pixmap);
