@@ -64,7 +64,7 @@ QString TriggerDelegate::displayText(const QVariant &value, const QLocale &local
 {
     Q_UNUSED(locale)
 
-    QStringList action = value.toString().split('+', QString::SkipEmptyParts);
+    const QStringList action = value.toString().split('+', QString::SkipEmptyParts);
     QStringList text;
 
     if (action.isEmpty())
