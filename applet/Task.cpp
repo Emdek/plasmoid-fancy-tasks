@@ -457,7 +457,7 @@ void Task::setTask(AbstractGroupableItem *abstractItem)
             }
         }
 
-        QList<WId> windowList = windows();
+        const QList<WId> windowList = windows();
 
         for (int i = 0; i < windowList.count(); ++i)
         {
