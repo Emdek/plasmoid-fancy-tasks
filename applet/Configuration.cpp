@@ -148,7 +148,7 @@ Configuration::Configuration(Applet *applet, KConfigDialog *parent) : QObject(pa
 
     KConfig kickoffConfiguration("kickoffrc", KConfig::NoGlobals);
     KConfigGroup favoritesGroup(&kickoffConfiguration, "Favorites");
-    QStringList currentEntries = configuration.readEntry("arrangement", QStringList("tasks"));
+    const QStringList currentEntries = configuration.readEntry("arrangement", QStringList("tasks"));
     QStringList availableEntries;
     availableEntries << i18n("--- separator ---") << i18n("--- tasks area ---") << i18n("--- jobs area ---") << "menu:/";
     availableEntries.append(favoritesGroup.readEntry("FavoriteURLs", QStringList()));
