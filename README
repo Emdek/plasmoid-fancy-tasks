@@ -5,7 +5,6 @@ KDE4 >= 4.8
 
 Warning!
 This applet uses standard libtaskmanager like other task managers in KDE, so before you report bug check if it also happens in other applets (for example Tasks).
-Included panel is not stable yet and has some issues, use it at own risk.
 
 Tips:
 - to make applet more usable you can put it on panel with enabled option "Windows can cover" or similar;
@@ -15,7 +14,7 @@ Tips:
 - to show application jobs you need to add jobs area.
 
 Hidden options:
-You can set them in applets configuration file (usually located at "~/.kde4/share/config/plasma-desktop-appletsrc"), in group containing line "plugin=fancytasks" or "plugin=fancypanel".
+You can set them in applets configuration file (usually located at "~/.kde4/share/config/plasma-desktop-appletsrc"), in group containing line "plugin=fancytasks".
 - "initialZoomLevel" - initial zoom level for zoom move animations (value ranging from 0 to 1, default: 0.7);
 - "paintBackground" - decides if background should be painted or not (true or false, default: true);
 - "paintReflections" - decides if icon reflection should be painted or not, note that it won't change icon size because of space allocation for drawing task indicators (true or false, default: true);
